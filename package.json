@@ -1,0 +1,28 @@
+{
+  "name": "librarymanagementsystem",
+  "version": "1.0.0",
+  "description": "A library management system designed specially for the college library at MGMCET, Pampakuda.",
+  "homepage": "https://github.com/CodesByAda/Library-Management-System#readme",
+  "bugs": {
+    "url": "https://github.com/CodesByAda/Library-Management-System/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CodesByAda/Library-Management-System.git"
+  },
+  "license": "ISC",
+  "author": "Adarsh Antony",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.0.8",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "method-override": "^3.0.0",
+    "mongoose": "^8.10.1",
+    "tailwindcss": "^4.0.8"
+  }
+}
