@@ -1,1 +1,10 @@
 @import "tailwindcss";
+
+@import "flowbite/src/themes/default";
+@plugin "flowbite/plugin";
+@source "../node_modules/flowbite";
+@import "flowbite";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');

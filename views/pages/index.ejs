@@ -1,13 +1,328 @@
 <!doctype html>
-<html>
+<html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="./css/mainstyle.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookNest</title>
+    <link rel="stylesheet" href="/css/mainstyle.css">
+    <link rel="stylesheet" href="/css/extras.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script>
+        // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
 </head>
+
 <body>
-  <h1 class="text-3xl font-bold underline">
-    Hello world!
-  </h1>
+    <main class="w-full m-auto bg-[url(/images/herobg.jpg)] bg-no-repeat bg-cover flex flex-col items-center">
+        <nav id="navbar" class="bg-white shadow-xl fixed w-[95%] z-20 top-4 border-gray-200 rounded-3xl">
+            <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+                <a href="/" class="flex items-center space-x-0 rtl:space-x-reverse">
+                    <img src="/images/logo.png" class="h-8" alt="BookNest Logo">
+                    <span class="self-center text-2xl font-bold whitespace-nowrap">BookNest</span>
+                </a>
+                <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+                    <button id="theme-toggle navbar-sticky" type="button" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5">
+                        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                    <button type="button" class="text-white bg-[#316de5] hover:bg-[#316df7] hover:cursor-pointer focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center">
+                        Login
+                    </button>
+                    <button data-collapse-toggle="navbar-sticky" type="button"
+                        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+                        aria-controls="navbar-sticky" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 17 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M1 1h15M1 7h15M1 13h15" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
+                    <ul
+                        class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
+                        <li>
+                            <a href="#"
+                                class="block py-2 px-3 text-white bg-blue-700 rounded-sm md:bg-transparent md:text-blue-700 md:p-0"
+                                aria-current="page">Home</a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">About</a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">Services</a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+
+        <div class="herosection m-auto text-center container h-full pt-40">
+            <div class="div m-auto">
+                <a href="#"
+                    class="inline-flex justify-between items-center py-1 px-1 pe-4 mb-7 text-sm text-black bg-blue-100 rounded-full hover:bg-blue-200">
+                    <span class="text-xs bg-[#316de5] rounded-full text-white px-4 py-1.5 me-3 font-bold">New</span>
+                    <span class="text-sm font-medium">Welcome to BookNest</span>
+                    <svg class="w-2.5 h-2.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 6 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m1 9 4-4-4-4" />
+                    </svg>
+                </a>
+            </div>
+
+            <div class="textbox m-auto text-center">
+                <h1 class="text-6xl font-black">Explore, Discover, and Learn</h1>
+                <h2 class="text-3xl pt-2 font-bold">The world of books at your fingertips</h2>
+                <p class="text-xl">Your digital gateway to an ocean of knowledge. Browse, borrow, and explore from
+                    <span class="text-blue-500 font-bold">MGM Library.</span>
+                </p>
+
+                <div
+                    class="herobtn my-4 m-auto bg-[#316de5] hover:bg-[#316df8] w-[150px] h-[50px] flex items-center justify-center rounded-3xl text-white font-bold">
+                    <a href="#">Explore Now</a>
+                </div>
+            </div>
+
+            <!-- Carousel Container -->
+            <div class="container flex justify-center items-center m-auto mt-10 mb-15 hover:cursor-pointer">
+                <div class="w-[50%] relative">
+                    <div class="swiper centered-slide-carousel swiper-container relative">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <div class="bg-[#efefef] rounded-2xl min-h-[150px] flex p-5 flex-col shadow-xl">
+                                    <span class="text-xl font-bold text-black">Computer Science & Technology</span>
+                                    <span class="pt-0.5">Stay ahead with books on programming, AI, cybersecurity, and
+                                        software development. Essential for tech enthusiasts and developers</span>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="bg-[#efefef] rounded-2xl min-h-[150px] flex p-5 flex-col shadow-xl">
+                                    <span class="text-xl font-bold text-black">Science & Engineering</span>
+                                    <span class="pt-0.5">Explore physics, electrical, mechanical, and civil engineering
+                                        concepts. Perfect for engineering students and innovators</span>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="bg-[#efefef] rounded-2xl min-h-[150px] flex p-5 flex-col shadow-xl">
+                                    <span class="text-xl font-bold text-black">Business & Management</span>
+                                    <span class="pt-0.5">Master finance, leadership, marketing, and startups. Ideal for
+                                        future entrepreneurs and business leaders</span>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="bg-[#efefef] rounded-2xl min-h-[150px] flex p-5 flex-col shadow-xl">
+                                    <span class="text-xl font-bold text-black">Literature & Fiction</span>
+                                    <span class="pt-0.5">Dive into classic and modern literature to enhance creativity,
+                                        storytelling, and critical thinking</span>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="bg-[#efefef] rounded-2xl min-h-[150px] flex p-5 flex-col shadow-xl">
+                                    <span class="text-xl font-bold text-black">Self-Improvement & Psychology</span>
+                                    <span class="pt-0.5">Improve your habits, mindset, and emotional intelligence with
+                                        psychology and self-growth books</span>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="bg-[#efefef] rounded-2xl min-h-[150px] flex p-5 flex-col shadow-md">
+                                    <span class="text-xl font-bold text-black">Exam Preparation & Reference Books</span>
+                                    <span class="pt-0.5">Prepare for competitive exams like GATE, GRE, and UPSC with
+                                        reference materials and guides</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pagination -->
+                        <div class="swiper-pagination"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <section class="featuredsection h-auto pb-10 bg-[white]">
+        <div class="features container m-auto h-full ">
+            <div class="heading m-auto items-center justify-evenly lg:w-[90%]  lg:px-16 py-10">
+                <p class="font-bold uppercase text-blue-600 ">Features</p>
+                <h2 class="text-5xl font-black">🤔What Can You Do</h2>
+            </div>
+            <div
+                class="cards flex m-auto lg:w-[90%] lg:px-16 items-center justify-center flex-wrap mt-5 gap-x-40 gap-y-20">
+                <div
+                    class="card flex flex-col justify-centre item-centre bg-white rounded-xl p-4 pt-8 min-h-[304px] hover:bg-gray-100 hover:cursor-pointer hover: shadow-2xl w-[300px] text-center">
+                    <div class="head">
+                        <div
+                            class="icon bg-blue-600 m-auto h-[100px] w-[100px] rounded-xl flex justify-center items-center">
+                            <i class="fa-regular fa-user text-white text-5xl "></i>
+                        </div>
+                        <div class="title font-bold pt-4 text-lg">User Registration</div>
+                    </div>
+                    <div class="body-text">
+                        Students register with details, and admins approve accounts before granting access.
+                    </div>
+                </div>
+
+                <div
+                    class="card flex flex-col justify-centre item-centre bg-white rounded-xl p-4 pt-8 min-h-[304px] hover:bg-gray-100 hover:cursor-pointer hover: shadow-2xl w-[300px] text-center">
+                    <div class="head">
+                        <div
+                            class="icon bg-blue-600 m-auto h-[100px] w-[100px] rounded-xl flex justify-center items-center">
+                            <i class="fa-solid fa-screwdriver-wrench text-white text-5xl "></i>
+                        </div>
+                        <div class="title font-bold pt-4 text-lg">Book Management System</div>
+                    </div>
+                    <div class="body-text">
+                        Admins can add, edit, and delete books, track availability, and organize books by categories.
+                    </div>
+                </div>
+
+                <div
+                    class="card flex flex-col justify-centre item-centre bg-white rounded-xl p-4 pt-8 min-h-[304px] hover:bg-gray-100 hover:cursor-pointer hover: shadow-2xl w-[300px] text-center">
+                    <div class="head">
+                        <div
+                            class="icon bg-blue-600 m-auto h-[100px] w-[100px] rounded-xl flex justify-center items-center">
+                            <i class="fa-solid fa-gauge-high text-white text-5xl "></i>
+                        </div>
+                        <div class="title font-bold pt-4 text-lg">Book Borrowing & Tracking</div>
+                    </div>
+                    <div class="body-text">
+                        Students can request books, track due dates, and receive return reminders, while admins monitor
+                    </div>
+                </div>
+
+                <div
+                    class="card flex flex-col justify-centre item-centre bg-white rounded-xl p-4 pt-8 min-h-[304px] hover:bg-gray-100 hover:cursor-pointer hover: shadow-2xl w-[300px] text-center">
+                    <div class="head">
+                        <div
+                            class="icon bg-blue-600 m-auto h-[100px] w-[100px] rounded-xl flex justify-center items-center">
+                            <i class="fa-solid fa-chart-simple text-white text-5xl "></i>
+                        </div>
+                        <div class="title font-bold pt-4 text-lg">Real-Time Library Analytics</div>
+                    </div>
+                    <div class="body-text">
+                        Admins can view daily visits, book issue stats, and generate reports for better management.
+                    </div>
+                </div>
+
+                <div
+                    class="card flex flex-col justify-centre item-centre bg-white rounded-xl p-4 pt-8 min-h-[304px] hover:bg-gray-100 hover:cursor-pointer hover: shadow-2xl w-[300px] text-center">
+                    <div class="head">
+                        <div
+                            class="icon bg-blue-600 m-auto h-[100px] w-[100px] rounded-xl flex justify-center items-center">
+                            <i class="fa-solid fa-magnifying-glass text-white text-5xl "></i>
+                        </div>
+                        <div class="title font-bold pt-4 text-lg">Search & Filter System</div>
+                    </div>
+                    <div class="body-text">
+                        Users can quickly find books using title, author, category, or rack location, with advanced
+                        filters for easy discovery.
+                    </div>
+                </div>
+
+                <div
+                    class="card flex flex-col justify-centre item-centre bg-white rounded-xl p-4 pt-8 min-h-[304px] hover:bg-gray-100 hover:cursor-pointer hover: shadow-2xl w-[300px] text-center">
+                    <div class="head">
+                        <div
+                            class="icon bg-blue-600 m-auto h-[100px] w-[100px] rounded-xl flex justify-center items-center">
+                            <i class="fa-solid fa-user-tie text-white text-5xl "></i>
+                        </div>
+                        <div class="title font-bold pt-4 text-lg">Multi-Admin Management</div>
+                    </div>
+                    <div class="body-text">
+                        Admins can assign different roles to other admins, ensuring smooth management of the library
+                        system.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="contact h-auto pb-8 bg-[#efefef]">
+        <div class="contact-section container m-auto h-full">
+            <div class="heading m-auto items-center justify-evenly lg:w-[90%]  lg:px-16 py-10">
+                <p class="font-bold uppercase text-blue-600 ">CONTACT US</p>
+                <h2 class="text-5xl font-black">💬Need Help? Let's Talk</h2>
+            </div>
+            <div
+                class="contact-card flex m-auto lg:w-[90%] lg:px-16 items-center justify-center bg-white rounded-xl p-4">
+                <iframe class="rounded-xl" width="100%" height="600" frameborder="0" scrolling="no" marginheight="0"
+                    marginwidth="0"
+                    src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=MGM%20College%20of%20Engineering%20and%20Technology,%20Pampakuda%20,%20Eranakulam+(College)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
+                    <a href="https://www.gps.ie/collections/drones/">gps drone</a>
+                </iframe>
+            </div>
+        </div>
+    </section>
+    <footer class="bg-[#316de5] text-white py-8">
+        <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-6">
+
+            <!-- Brand Section -->
+            <div>
+                <h2 class="text-xl font-bold text-white inline-flex items-center"><img src="/images/logo.png" alt="logo"
+                        class="h-[50px] w-[50px]">BookNest</h2>
+                <p class="mt-2 text-sm">Your digital gateway to the world of books at MGM College.</p>
+            </div>
+
+            <!-- Quick Links -->
+            <div>
+                <h3 class="text-lg font-semibold text-white">Quick Links</h3>
+                <ul class="mt-2 space-y-2">
+                    <li><a href="/" class="hover:text-blue-800">Home</a></li>
+                    <li><a href="/books" class="hover:text-blue-800">Browse Books</a></li>
+                    <li><a href="/features" class="hover:text-blue-800">Features</a></li>
+                    <li><a href="/contact" class="hover:text-blue-800">Contact Us</a></li>
+                </ul>
+            </div>
+
+            <!-- Support Section -->
+            <div>
+                <h3 class="text-lg font-semibold text-white">Support</h3>
+                <ul class="mt-2 space-y-2">
+                    <li><a href="/faq" class="hover:text-blue-800">FAQs</a></li>
+                    <li><a href="/help" class="hover:text-blue-800">Help Center</a></li>
+                    <li><a href="/terms" class="hover:text-blue-800">Terms & Policies</a></li>
+                </ul>
+            </div>
+
+            <!-- Social Media & Contact -->
+            <div>
+                <h3 class="text-lg font-semibold text-white">Follow Us</h3>
+                <div class="flex space-x-4 mt-2">
+                    <a href="#" class="hover:text-blue-800"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="hover:text-blue-800"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="hover:text-blue-800"><i class="fab fa-instagram"></i></a>
+                </div>
+                <p class="mt-4 text-sm">📩 Email: support@booknest.com</p>
+            </div>
+
+        </div>
+
+        <!-- Copyright -->
+        <div class="mt-8 border-t border-gray-700 text-center text-sm py-4">
+            &copy; <span id="year"></span> BookNest. All rights reserved.
+        </div>
+
+    </footer>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <script src="/javascript/carousal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pagedone@1.2.2/src/js/pagedone.js"></script>
 </body>
+
 </html>

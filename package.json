@@ -21,6 +21,7 @@
     "@tailwindcss/cli": "^4.0.8",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
+    "flowbite": "^3.1.2",
     "method-override": "^3.0.0",
     "mongoose": "^8.10.1",
     "tailwindcss": "^4.0.8"
