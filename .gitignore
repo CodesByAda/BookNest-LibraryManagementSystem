@@ -1,15 +1,14 @@
 # Node modules
 node_modules/
-npm-debug.log
-yarn-debug.log
-yarn-error.log
-package-lock.json
 
-# Environment variables
-.env
+# Tailwind CSS output (generated file)
+public/css/mainstyle.css
+
+# Optional: Ignore other generated CSS files if needed
+# public/css/*.css
 
 # Logs
-logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -17,16 +16,21 @@ pnpm-debug.log*
 lerna-debug.log*
 .log
 
+# Environment variables
+.env
+
+# Dependency lock files (optional, if you don’t want them in Git)
+package-lock.json
+yarn.lock
+
 # Build output
 dist/
 build/
-public/css/mainstyle.css
-public/*.map
 
-# Tailwind cache (if using JIT)
+# Tailwind cache (if using JIT mode)
 .tailwind/
 
-# VS Code settings
+# VS Code settings & workspace
 .vscode/
 *.code-workspace
 
@@ -34,9 +38,13 @@ public/*.map
 .DS_Store
 Thumbs.db
 
-# MongoDB data (if you're storing it locally)
+# MongoDB data (if storing locally)
 data/
 dump/
 
-# Dependencies
-node_modules/
+# Public assets (optional: ignore generated images, cache, or compiled assets)
+# public/images/generated/
+
+# Ignore temporary files
+*.tmp
+*.swp
