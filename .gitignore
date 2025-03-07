@@ -20,7 +20,7 @@ lerna-debug.log*
 # Build output
 dist/
 build/
-public/output.css
+public/css/mainstyle.css
 public/*.map
 
 # Tailwind cache (if using JIT)
