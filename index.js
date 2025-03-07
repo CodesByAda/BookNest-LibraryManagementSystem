@@ -24,6 +24,26 @@ app.get("/", (req,res) => {
     res.render("pages/index");
 })
 
+app.get("/login", (req,res) => {
+    res.render("pages/login");
+})
+
+app.get("/register", (req,res) => {
+    res.render("pages/register", {position:"", width:"w-full rounded-none"});
+})
+
+app.get("/admin", (req,res) => {
+    res.render("pages/admin_dashboard");
+})
+
+app.get("/admin/addbook", (req,res) => {
+    res.render("pages/addbook");
+})
+
+app.get("/books", (req,res) => {
+    res.render("pages/booklist");
+})
+
 app.listen(port, () => {
     console.log(`Listening on http://localhost:${port}/`);
 });

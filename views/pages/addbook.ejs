@@ -1,0 +1,130 @@
+<%- include("../components/header") %>
+    <!-- Form Container -->
+    <div class="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6 my-10 md:my-20">
+        <h2 class="text-2xl font-semibold text-[#316de5] text-center mb-6">📚 Add a New Book</h2>
+
+        <form action="/addbook" method="POST" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Book Title -->
+                <div>
+                    <label class="block text-gray-700 font-medium">Book Title</label>
+                    <input type="text" name="title" required placeholder="Enter book title"
+                        class="w-full p-3 border rounded focus:ring-[#316de5] focus:border-[#316de5]">
+                </div>
+
+                <!-- Author -->
+                <div>
+                    <label class="block text-gray-700 font-medium">Author</label>
+                    <input type="text" name="author" required placeholder="Enter author name"
+                        class="w-full p-3 border rounded focus:ring-[#316de5] focus:border-[#316de5]">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Category -->
+                <div>
+                    <label class="block text-gray-700 font-medium">Category</label>
+                    <select name="category" required
+                        class="w-full p-3 border rounded focus:ring-[#316de5] focus:border-[#316de5]">
+                        <option value="">Select category</option>
+                        <option>Fiction</option>
+                        <option>Non-Fiction</option>
+                        <option>Science</option>
+                        <option>History</option>
+                        <option>Technology</option>
+                    </select>
+                </div>
+
+                <!-- ISBN -->
+                <div>
+                    <label class="block text-gray-700 font-medium">ISBN</label>
+                    <input type="text" name="isbn" required placeholder="Enter ISBN number"
+                        class="w-full p-3 border rounded focus:ring-[#316de5] focus:border-[#316de5]">
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div>
+                <label class="block text-gray-700 font-medium">Description</label>
+                <textarea name="description" rows="4" placeholder="Write a short description..."
+                    class="w-full p-3 border rounded focus:ring-[#316de5] focus:border-[#316de5]"></textarea>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Availability -->
+                <div>
+                    <label class="block text-gray-700 font-medium">Availability</label>
+                    <select name="availability" required
+                        class="w-full p-3 border rounded focus:ring-[#316de5] focus:border-[#316de5]">
+                        <option value="Available">Available</option>
+                        <option value="Issued">Issued</option>
+                    </select>
+                </div>
+
+                <!-- Rack Location -->
+                <div>
+                    <label class="block text-gray-700 font-medium">Rack Location</label>
+                    <input type="text" name="rack_location" required placeholder="E.g., A1-5, B2-3"
+                        class="w-full p-3 border rounded focus:ring-[#316de5] focus:border-[#316de5]">
+                </div>
+            </div>
+
+            <!-- Upload Book Cover -->
+
+            <div class="flex items-center justify-center w-full">
+                <label for="dropzone-file"
+                    class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                    <div class="flex flex-col items-center justify-center pt-5 pb-6" id="dropzone-content">
+                        <svg class="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                            fill="none" viewBox="0 0 20 16">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                        </svg>
+                        <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag
+                            and drop</p>
+                        <p class="text-xs text-gray-500">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                    </div>
+                    <img id="preview-image" class="hidden max-h-64 max-w-full object-cover  rounded-lg" />
+                </label>
+                <input id="dropzone-file" type="file" class="hidden" accept="image/*" />
+            </div>
+
+
+
+            <!-- Submit Button -->
+            <div class="text-center">
+                <button type="submit"
+                    class="bg-[#316de5] text-white px-6 py-3 rounded-lg hover:bg-[#275bbf] transition">
+                    📖 Add Book
+                </button>
+            </div>
+        </form>
+    </div>
+    <a href="/"
+        class="fixed top-4 left-4 bg-[#316de5] text-white px-3 py-2 rounded-full shadow-lg hover:bg-[#275bbf] transition">
+        ⬅️ Home
+    </a>
+
+
+    <script>
+        document.getElementById("dropzone-file").addEventListener("change", function (event) {
+            const file = event.target.files[0]; // Get the selected file
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    // Show preview image
+                    const preview = document.getElementById("preview-image");
+                    preview.src = e.target.result;
+                    preview.classList.remove("hidden");
+        
+                    // Hide default upload UI
+                    document.getElementById("dropzone-content").classList.add("hidden");
+                };
+                reader.readAsDataURL(file); // Convert file to base64 URL
+            }
+        });
+        </script>
+        
+    </body>
+
+    </html>

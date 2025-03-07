@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book List - BookNest</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 p-6">
+    <!-- Header -->
+    <div class="flex justify-between items-center bg-white p-4 rounded-lg shadow-md mb-6">
+        <h2 class="text-xl font-semibold">📚 Available Books</h2>
+        <div class="flex space-x-4">
+            <input type="text" id="searchInput" placeholder="Search books..." 
+                class="border rounded p-2 w-72" onkeyup="searchBooks()">
+            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg">Search</button>
+        </div>
+    </div>
+
+    <!-- Book Listing -->
+    <div id="bookContainer" class="grid grid-cols-3 gap-6">
+        <!-- Book Card Template -->
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <img src="https://via.placeholder.com/150" alt="Book Cover" 
+                class="w-full h-40 object-cover rounded-md">
+            <h3 class="text-lg font-semibold mt-2">Book Title 1</h3>
+            <p class="text-gray-600">Author Name 1</p>
+            <p class="text-green-600 mt-1">Available</p>
+            <button class="mt-3 w-full bg-blue-600 text-white py-2 rounded-lg">Borrow</button>
+        </div>
+
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <img src="https://via.placeholder.com/150" alt="Book Cover" 
+                class="w-full h-40 object-cover rounded-md">
+            <h3 class="text-lg font-semibold mt-2">Book Title 2</h3>
+            <p class="text-gray-600">Author Name 2</p>
+            <p class="text-red-600 mt-1">Not Available</p>
+            <button class="mt-3 w-full bg-gray-400 text-white py-2 rounded-lg cursor-not-allowed" disabled>Unavailable</button>
+        </div>
+
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <img src="https://via.placeholder.com/150" alt="Book Cover" 
+                class="w-full h-40 object-cover rounded-md">
+            <h3 class="text-lg font-semibold mt-2">Book Title 3</h3>
+            <p class="text-gray-600">Author Name 3</p>
+            <p class="text-green-600 mt-1">Available</p>
+            <button class="mt-3 w-full bg-blue-600 text-white py-2 rounded-lg">Borrow</button>
+        </div>
+    </div>
+
+    <!-- JavaScript for Searching -->
+    <script>
+        function searchBooks() {
+            let input = document.getElementById("searchInput").value.toLowerCase();
+            let books = document.getElementById("bookContainer").children;
+
+            for (let book of books) {
+                let title = book.querySelector("h3").innerText.toLowerCase();
+                let author = book.querySelector("p").innerText.toLowerCase();
+
+                if (title.includes(input) || author.includes(input)) {
+                    book.style.display = "block";
+                } else {
+                    book.style.display = "none";
+                }
+            }
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,70 @@
+<div id="user-management" class="section hidden bg-white shadow-md rounded-lg p-6">
+    <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+        👥 User Management
+    </h2>
+    <div class="overflow-x-auto">
+        <table class="w-full border-collapse rounded-lg overflow-hidden shadow-lg">
+            <thead class="bg-[#316de5] text-white">
+                <tr>
+                    <th class="p-4 text-left">Name</th>
+                    <th class="p-4 text-left">Course</th>
+                    <th class="p-4 text-left">Semester</th>
+                    <th class="p-4 text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="border-b hover:bg-gray-100 transition">
+                    <td class="p-4">John Doe</td>
+                    <td class="p-4">Computer Science</td>
+                    <td class="p-4">5th</td>
+                    <td class="p-4 flex items-center justify-center space-x-2">
+                        <form action="/admin/approve/?_method=PATCH" method="POST">
+                            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition">
+                                Approve
+                            </button>
+                        </form>
+                        <form action="/admin/delete/?_method=DELETE" method="POST">
+                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition">
+                                Remove
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                <tr class="border-b hover:bg-gray-100 transition">
+                    <td class="p-4">John Doe</td>
+                    <td class="p-4">Computer Science</td>
+                    <td class="p-4">5th</td>
+                    <td class="p-4 flex items-center justify-center space-x-2">
+                        <form action="/admin/approve/?_method=PATCH" method="POST">
+                            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition">
+                                Approve
+                            </button>
+                        </form>
+                        <form action="/admin/delete/?_method=DELETE" method="POST">
+                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition">
+                                Remove
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                <tr class="border-b hover:bg-gray-100 transition">
+                    <td class="p-4">John Doe</td>
+                    <td class="p-4">Computer Science</td>
+                    <td class="p-4">5th</td>
+                    <td class="p-4 flex items-center justify-center space-x-2">
+                        <form action="/admin/approve/?_method=PATCH" method="POST">
+                            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition">
+                                Approve
+                            </button>
+                        </form>
+                        <form action="/admin/delete/?_method=DELETE" method="POST">
+                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition">
+                                Remove
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

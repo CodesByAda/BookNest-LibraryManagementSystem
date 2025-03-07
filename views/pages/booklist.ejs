@@ -1,0 +1,45 @@
+
+<%- include("../components/header") %>
+    <div class="h-screen flex flex-col">
+        <nav class="bg-white border-b border-gray-200">
+            <div class="max-w-full flex justify-between items-center mx-auto px-6 py-3 shadow-md">
+                <a href="/" class="text-2xl font-bold text-[#316de5]">BookNest</a>
+                <div class="space-x-6 flex items-center">
+                    <a href="/admin" class="text-gray-700 hover:text-[#316de5]">Admin Panel</a>
+                    <a href="/booklist" class="text-gray-700 hover:text-[#316de5]">Booklist</a>
+                    <a href="/login" class="text-gray-700 hover:text-[#316de5]">Login</a>
+                    <a href="/register" class="bg-[#316de5] text-white px-4 py-2 rounded-lg hover:bg-[#275bbf]">Register</a>
+                </div>
+            </div>
+        </nav>
+    
+        <!-- Main Layout -->
+        <div class="flex flex-1 overflow-hidden">
+            <!-- Sidebar (Filters) -->
+            <%- include("../components/booklist/filter") %>
+    
+            <!-- Right Section (Scrollable Book List) -->
+            <main class="flex-1 p-6 overflow-y-auto">
+                <!-- Search Bar -->
+                <div class="flex mb-6">
+                    <input type="text" placeholder="Search for books..." class="w-full p-3 border rounded-l">
+                    <button class="bg-[#316de5] text-white px-6 rounded-r hover:bg-[#275bbf]">Search</button>
+                </div>
+    
+                <!-- Book List Grid -->
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    
+                    <%-include("../components/booklist/bookcard", {bookimage: "/images/herobg.jpg", bookname: "The Alchemist", authorname: "Paulo Coelho"}) %>
+                    <%-include("../components/booklist/bookcard", {bookimage: "/images/herobg.jpg", bookname: "The Great Gatsby", authorname: "F. Scott Fitzgerald"}) %>
+                    <%-include("../components/booklist/bookcard", {bookimage: "/images/herobg.jpg", bookname: "To Kill a Mockingbird", authorname: "Harper Lee"}) %>
+                    <%-include("../components/booklist/bookcard", {bookimage: "/images/herobg.jpg", bookname: "1984", authorname: "George Orwell"}) %>
+                    <%-include("../components/booklist/bookcard", {bookimage: "/images/herobg.jpg", bookname: "Pride and Prejudice", authorname: "Jane Austen"}) %>
+                    <%-include("../components/booklist/bookcard", {bookimage: "/images/herobg.jpg", bookname: "The Catcher in the Rye", authorname: "J.D. Salinger"}) %>
+                    <%-include("../components/booklist/bookcard", {bookimage: "/images/herobg.jpg", bookname: "The Alchemist", authorname: "Paulo Coelho"}) %>
+                    <%-include("../components/booklist/bookcard", {bookimage: "/images/herobg.jpg", bookname: "The Great Gatsby", authorname: "F. Scott Fitzgerald"}) %>
+                    <%-include("../components/booklist/bookcard", {bookimage: "/images/herobg.jpg", bookname: "To Kill a Mockingbird", authorname: "Harper Lee"}) %>
+                    
+                </div>
+            </main>
+        </div>
+    </div>

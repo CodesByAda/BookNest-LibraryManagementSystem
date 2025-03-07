@@ -1,0 +1,85 @@
+<%- include("../components/header") %>
+<div class="flex h-screen overflow-hidden">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-[#316de5] text-white p-5 space-y-6">
+        <a href="/" class="flex items-center space-x-0 rtl:space-x-reverse">
+            <img src="/images/logo.png" class="h-8" alt="BookNest Logo">
+            <span class="self-center text-2xl font-bold whitespace-nowrap">BookNest</span>
+        </a>
+        <nav>
+            <ul class="space-y-4">
+                <li><button onclick="showSection('dashboard')"
+                        class="block w-full text-left hover:bg-white hover:text-[#316de5] p-2 rounded">Dashboard</button>
+                </li>
+                <li><button onclick="showSection('manage-books')"
+                        class="block w-full text-left hover:bg-white hover:text-[#316de5] p-2 rounded">Manage
+                        Books</button></li>
+                <li><button onclick="showSection('user-management')"
+                        class="block w-full text-left hover:bg-white hover:text-[#316de5] p-2 rounded">User
+                        Management</button></li>
+                <li><button onclick="showSection('library-stats')"
+                        class="block w-full text-left hover:bg-white hover:text-[#316de5] p-2 rounded">Library
+                        Stats</button></li>
+                <li><button onclick="showSection('requests')"
+                        class="block w-full text-left hover:bg-white hover:text-[#316de5] p-2 rounded">Requests &
+                        Notifications</button></li>
+                <li><button onclick="showSection('settings')"
+                        class="block w-full text-left hover:bg-white hover:text-[#316de5] p-2 rounded">Settings</button>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6 overflow-auto   ">
+        <!-- Navbar -->
+        <div class="flex justify-between items-center bg-white p-4 rounded-lg shadow-md mb-6">
+            <h2 class="text-xl font-semibold">Admin Dashboard</h2>
+            <div class="flex space-x-4">
+                <input type="text" placeholder="Search books/users" class="border rounded p-2">
+                <button class="bg-red-500 text-white px-4 py-2 rounded-lg">Logout</button>
+            </div>
+        </div>
+
+        <!-- Dashboard Overview -->
+        <%- include("../components/admin/dashboard") %>
+        <%- include("../components/admin/manageBooks") %>
+        <%- include("../components/admin/users") %>
+    </main>
+</div>
+
+<script>
+    function showSection(sectionId) {
+        document.querySelectorAll('.section').forEach(section => {
+            section.classList.add('hidden');
+        });
+        document.getElementById(sectionId).classList.remove('hidden');
+    }
+
+    // Borrowing Trends Chart
+    document.addEventListener("DOMContentLoaded", function () {
+        const ctx = document.getElementById('borrowingChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+                datasets: [{
+                    label: 'Books Borrowed',
+                    data: [20, 45, 60, 80, 100, 130, 150],
+                    borderColor: '#316de5',
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    });
+</script>
+
+</body>
+
+</html>
