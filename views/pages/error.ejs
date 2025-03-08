@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= errorCode %> - Error
+    </title>
+    <link rel="stylesheet" href="/css/mainstyle.css">
+</head>
+
+<body class="flex items-center justify-center h-screen">
+    <div class="text-center">
+        <img src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/404/404-computer.svg" alt="Not Found"
+            class="mx-auto w-96">
+
+        <h1 class="text-4xl font-bold mt-6">
+            <%= errorCode %> - <%= errorTitle %>
+        </h1>
+        <p class="text-gray-400 mt-2">
+            <%= errorMessage %>
+        </p>
+
+        <div class="mt-6">
+            <a href="/" class="text-blue-400 hover:underline">Go Home</a>
+        </div>
+    </div>
+</body>
+
+</html>

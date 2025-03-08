@@ -49,35 +49,38 @@
 </div>
 
 <script>
-    function showSection(sectionId) {
-        document.querySelectorAll('.section').forEach(section => {
-            section.classList.add('hidden');
-        });
-        document.getElementById(sectionId).classList.remove('hidden');
+    document.addEventListener("DOMContentLoaded", function () {
+    // Check if a section is provided in the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const sectionFromUrl = urlParams.get("section");
+
+    // Get last section from localStorage OR use section from URL OR default to "dashboard"
+    const lastSection = sectionFromUrl || localStorage.getItem("activeSection") || "dashboard";
+
+    showSection(lastSection);
+});
+
+function showSection(sectionId) {
+    // Store the active section in localStorage
+    localStorage.setItem("activeSection", sectionId);
+
+    // Hide all sections
+    document.querySelectorAll(".section").forEach(section => {
+        section.classList.add("hidden");
+    });
+
+    // Show the selected section
+    const activeSection = document.getElementById(sectionId);
+    if (activeSection) {
+        activeSection.classList.remove("hidden");
     }
 
-    // Borrowing Trends Chart
-    document.addEventListener("DOMContentLoaded", function () {
-        const ctx = document.getElementById('borrowingChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-                datasets: [{
-                    label: 'Books Borrowed',
-                    data: [20, 45, 60, 80, 100, 130, 150],
-                    borderColor: '#316de5',
-                    fill: false
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: { beginAtZero: true }
-                }
-            }
-        });
-    });
+    // Update URL without reloading
+    const newUrl = new URL(window.location);
+    newUrl.searchParams.set("section", sectionId);
+    window.history.replaceState({}, "", newUrl);
+}
+
 </script>
 
 </body>

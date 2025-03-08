@@ -1,47 +1,53 @@
-document.getElementById("studentForm").addEventListener("submit", function(event) {
-    event.preventDefault(); // Prevent form submission
+document.getElementById("studentForm").addEventListener("submit", function (event) {
+    event.preventDefault();
 
     let valid = true;
 
-    function validateField(id, errorId) {
-        let value = document.getElementById(id).value.trim();
-        if (value === "") {
-            document.getElementById(errorId).classList.remove("hidden");
+    function validateField(selector, errorSelector) {
+        let field = document.querySelector(selector);
+        let errorMessage = document.querySelector(errorSelector);
+
+        if (field.value.trim() === "") {
+            errorMessage.classList.remove("hidden");
             valid = false;
         } else {
-            document.getElementById(errorId).classList.add("hidden");
+            errorMessage.classList.add("hidden");
         }
     }
 
-    validateField("name", "nameError");
-    validateField("password", "passwordError");
-    validateField("department", "departmentError");
-    validateField("semester", "semesterError");
+    // Validate required fields
+    validateField("input[name='name']", "#nameError");
+    validateField("input[name='address']", "#addressError");
+    validateField("input[name='course']", "#courseError");
+    validateField("input[name='semester']", "#semesterError");
+    validateField("input[name='rollno']", "#rollnoError");
+    validateField("input[name='password']", "#passwordError");
 
     // Phone Number Validation
-    let phone = document.getElementById("phone").value.trim();
+    let phone = document.querySelector("input[name='phone']");
+    let phoneError = document.querySelector("#phoneError");
     let phoneRegex = /^[6-9]\d{9}$/;
-    if (!phoneRegex.test(phone)) {
-        document.getElementById("phoneError").classList.remove("hidden");
-        document.getElementById("phoneTick").classList.add("hidden");
+
+    if (!phone || !phoneRegex.test(phone.value.trim())) {
+        phoneError.classList.remove("hidden");
         valid = false;
     } else {
-        document.getElementById("phoneError").classList.add("hidden");
-        document.getElementById("phoneTick").classList.remove("hidden");
+        phoneError.classList.add("hidden");
     }
 
     // Email Validation
-    let email = document.getElementById("email").value.trim();
+    let email = document.querySelector("input[name='email']");
+    let emailError = document.querySelector("#emailError");
     let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        document.getElementById("emailError").classList.remove("hidden");
-        document.getElementById("emailTick").classList.add("hidden");
+
+    if (!email || !emailRegex.test(email.value.trim())) {
+        emailError.classList.remove("hidden");
         valid = false;
     } else {
-        document.getElementById("emailError").classList.add("hidden");
-        document.getElementById("emailTick").classList.remove("hidden");
+        emailError.classList.add("hidden");
     }
 
+    // If form is valid, show loader and submit the form
     if (valid) {
         let loaderdiv = document.getElementById("loader");
 
@@ -49,14 +55,14 @@ document.getElementById("studentForm").addEventListener("submit", function(event
             loaderdiv.classList.remove("hidden");
             loaderdiv.classList.add("flex");
         }, 1000);
-        
 
         setTimeout(() => {
-            window.location.href = "/";
+            document.getElementById("studentForm").submit();
         }, 5000);
+
         setTimeout(() => {
             loaderdiv.classList.add("hidden");
-            loaderdiv.classList.remove("flex"); 
+            loaderdiv.classList.remove("flex");
         }, 7000);
     }
 });

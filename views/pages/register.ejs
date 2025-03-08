@@ -1,77 +1,74 @@
 <%- include("../components/header") %>
     <%- include("../components/navbar")%>
+        <div class="flex items-center justify-center">
+            <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md my-4">
+                <h2 class="text-2xl font-bold text-center mb-6 text-blue-600">Register for BookNest</h2>
 
-        <!-- Centering Wrapper -->
-        <div id="registrationdiv"
-            class="registrationdiv flex items-center justify-center mt-4">
-            <form id="studentForm" class="max-w-lg w-full bg-white p-6 rounded-lg shadow-md">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Student Registration</h2>
+                <form id="studentForm" action="/register" method="POST" class="space-y-4">
+                    <div>
+                        <input type="text" id="name" name="name" placeholder="Full Name"
+                            class="w-full p-2 border rounded focus:outline-blue-500">
+                        <p id="nameError" class="text-red-500 text-sm min-h-[20px] hidden">Full Name is required</p>
+                    </div>
 
-                <!-- Name -->
-                <label class="block mb-2 text-gray-700 font-semibold">Full Name</label>
-                <input type="text" id="name" name="name"
-                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600">
-                <p class="text-red-500 text-sm mt-1 hidden" id="nameError">Name is required.</p>
+                    <div>
+                        <input type="text" id="address" name="address" placeholder="Address"
+                            class="w-full p-2 border rounded focus:outline-blue-500">
+                        <p id="addressError" class="text-red-500 text-sm min-h-[20px] hidden">Address is required</p>
+                    </div>
 
-                <!-- Name -->
-                <label class="block mb-2 text-gray-700 font-semibold">Password</label>
-                <input type="password" id="password" name="password"
-                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600">
-                <p class="text-red-500 text-sm mt-1 hidden" id="passwordError">Password is required.</p>
+                    <div>
+                        <input type="text" id="course" name="course" placeholder="Course"
+                            class="w-full p-2 border rounded focus:outline-blue-500">
+                        <p id="courseError" class="text-red-500 text-sm min-h-[20px] hidden">Course is required</p>
+                    </div>
 
-                <!-- Department -->
-                <label class="block mt-3 mb-2 text-gray-700 font-semibold">Department</label>
-                <input type="text" id="department" name="department"
-                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600">
-                <p class="text-red-500 text-sm mt-1 hidden" id="departmentError">Department is required.</p>
+                    <div>
+                        <input type="number" id="semester" name="semester" placeholder="Semester"
+                            class="w-full p-2 border rounded focus:outline-blue-500">
+                        <p id="semesterError" class="text-red-500 text-sm min-h-[20px] hidden">Semester is required</p>
+                    </div>
 
-                <!-- Semester -->
-                <label class="block mt-3 mb-2 text-gray-700 font-semibold">Semester</label>
-                <select id="semester" name="semester"
-                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600">
-                    <option value="" disabled selected>Select Semester</option>
-                    <option value="1">1st</option>
-                    <option value="2">2nd</option>
-                    <option value="3">3rd</option>
-                    <option value="4">4th</option>
-                    <option value="5">5th</option>
-                    <option value="6">6th</option>
-                    <option value="7">7th</option>
-                    <option value="8">8th</option>
-                </select>
-                <p class="text-red-500 text-sm mt-1 hidden" id="semesterError">Please select a semester.</p>
+                    <div>
+                        <input type="text" id="rollno" name="rollno" placeholder="Roll Number"
+                            class="w-full p-2 border rounded focus:outline-blue-500">
+                        <p id="rollnoError" class="text-red-500 text-sm min-h-[20px] hidden">Roll Number is required</p>
+                    </div>
 
-                <!-- Phone Number -->
-                <label class="block mt-3 mb-2 text-gray-700 font-semibold">Phone Number</label>
-                <div class="relative">
-                    <input type="tel" id="phone" name="phone"
-                        class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600">
-                    <span id="phoneTick" class="absolute right-3 top-3 hidden text-green-600">✅</span>
-                </div>
-                <p class="text-red-500 text-sm mt-1 hidden" id="phoneError">Enter a valid 10-digit phone number.</p>
+                    <div>
+                        <input type="email" id="email" name="email" placeholder="Email"
+                            class="w-full p-2 border rounded focus:outline-blue-500">
+                        <p id="emailError" class="text-red-500 text-sm min-h-[20px] hidden">Enter a valid email</p>
+                    </div>
 
-                <!-- Email -->
-                <label class="block mt-3 mb-2 text-gray-700 font-semibold">Email</label>
-                <div class="relative">
-                    <input type="email" id="email" name="email"
-                        class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-600">
-                    <span id="emailTick" class="absolute right-3 top-3 hidden text-green-600">✅</span>
-                </div>
-                <p class="text-red-500 text-sm mt-1 hidden" id="emailError">Enter a valid email.</p>
+                    <div>
+                        <input type="text" id="phone" name="phone" placeholder="Phone Number"
+                            class="w-full p-2 border rounded focus:outline-blue-500">
+                        <p id="phoneError" class="text-red-500 text-sm min-h-[20px] hidden">Enter a valid phone number
+                        </p>
+                    </div>
 
-                <!-- Submit Button -->
-                <button type="submit"
-                    class="w-full bg-[#316de5] text-white font-semibold py-2 mt-4 rounded-lg transition">
-                    Register
-                </button>
-            </form>
+                    <div>
+                        <input type="password" id="password" name="password" placeholder="Password"
+                            class="w-full p-2 border rounded focus:outline-blue-500">
+                        <p id="passwordError" class="text-red-500 text-sm min-h-[20px] hidden">Password is required</p>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Register</button>
+                </form>
+
+
+                <p class="text-center text-gray-600 mt-4">Already have an account?
+                    <a href="/login" class="text-blue-600 hover:underline">Login</a>
+                </p>
+            </div>
         </div>
 
 
         <div role="status" id="loader"
             class="fixed top-0 left-0 hidden bg-white w-full h-full items-center justify-center flex-col">
-            <h2 class="font-black text-lg">Registration Sucessfull!</h2>
-            <p>You will receive an email from the library admin when your account is ready to be logged in!</p>
+            <p>You will receive an email from the library admin if your registration was sucessfull.Then your account is ready to be logged in!</p>
             <p>Redirecting to Homepage</p>
             <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
                 viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">

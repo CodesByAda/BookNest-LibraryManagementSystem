@@ -1,0 +1,185 @@
+<%- include("../components/header") %>
+    <nav class="flex justify-center my-6" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+            <li class="inline-flex items-center">
+                <a href="/" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
+                    <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z" />
+                    </svg>
+                    Home
+                </a>
+            </li>
+            <li>
+                <div class="flex items-center">
+                    <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m1 9 4-4-4-4" />
+                    </svg>
+                    <a href="/books"
+                        class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2">BookList</a>
+                </div>
+            </li>
+            <li aria-current="page">
+                <div class="flex items-center">
+                    <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m1 9 4-4-4-4" />
+                    </svg>
+                    <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2">Profile</span>
+                </div>
+            </li>
+        </ol>
+    </nav>
+
+    <!-- Profile Header -->
+    <div class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md">
+        <div class="flex items-center space-x-4">
+            <img src="https://ui-avatars.com/api/?name=<%= profile.name %>&background=316de5&color=fff"
+                alt="Profile Picture" class="w-20 h-20 rounded-full">
+            <div>
+                <h2 class="text-2xl font-semibold">
+                    <%= profile.name %>
+                </h2>
+                <p class="text-gray-500">Role: <span class="font-medium">
+                        <%= profile.role %>
+                    </span></p>
+                <p class="text-gray-500">Email: <%= profile.email %>
+                </p>
+            </div>
+        </div>
+
+        <% if (profile.role==="student" ) { %>
+            <div class="mt-6">
+                <h3 class="text-lg font-medium mb-2">Account Details</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-gray-600">Course</p>
+                        <p class="text-gray-900 font-medium">
+                            <%= profile.course %>
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600">Semester</p>
+                        <p class="text-gray-900 font-medium">
+                            <%= profile.semester %> Semester
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600">Address</p>
+                        <p class="text-gray-900 font-medium">
+                            <%= profile.address %>
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600">Roll Number</p>
+                        <p class="text-gray-900 font-medium">
+                            <%= profile.rollno %>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+                <!-- Borrowed Books (Only for Students) -->
+                <div class="mt-6">
+                    <h3 class="text-lg font-medium mb-2">Currently Borrowed Books</h3>
+                    <div class="bg-gray-100 p-4 rounded-md">
+                        <!-- <% if (profile.borrowedBooks && profile.borrowedBooks.length> 0) { %>
+                        <ul class="space-y-3">
+                            <% profile.borrowedBooks.forEach(book=> { %>
+                                <li class="flex justify-between text-gray-700">
+                                    <span>📖 <%= book.title %></span>
+                                    <span class="text-red-500">Due: <%= book.dueDate %></span>
+                                </li>
+                                <% }); %>
+                        </ul>
+                        <% } else { %>
+                            <p class="text-gray-500">No borrowed books.</p>
+                            <% } %> -->
+                    </div>
+                </div>
+
+                    <!-- Action Buttons -->
+                    <div class="mt-6 flex space-x-4">
+                        <button data-modal-target="editProfileModal" data-modal-toggle="editProfileModal"
+                            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Edit Profile</button>
+                        <button data-modal-target="changePasswordModal" data-modal-toggle="changePasswordModal"
+                            class="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600">Change
+                            Password</button>
+                        <a href="/logout" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">Logout</a>
+                    </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="editProfileModal" tabindex="-1"
+        class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-100">
+        <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+            <h3 class="text-xl font-semibold text-gray-700 mb-4">Edit Profile</h3>
+            <form action="/profile/edit/<%= profile._id %>" method="POST">
+                <!-- Name Field (Visible for Everyone) -->
+                <div class="mb-4">
+                    <label class="block text-gray-600">Name</label>
+                    <input type="text" name="name" value="<%= profile.name %>" class="w-full border rounded p-2">
+                </div>
+
+                <% if (profile.role !=="admin" ) { %>
+                    <!-- Only Students Can See & Edit These Fields -->
+                    <div class="mb-4">
+                        <label class="block text-gray-600">Address</label>
+                        <input type="text" name="address" value="<%= profile.address %>"
+                            class="w-full border rounded p-2">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-600">Course</label>
+                        <input type="text" name="course" value="<%= profile.course %>"
+                            class="w-full border rounded p-2">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-600">Semester</label>
+                        <input type="number" name="semester" value="<%= profile.semester %>"
+                            class="w-full border rounded p-2">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-600">Roll Number</label>
+                        <input type="number" name="rollno" value="<%= profile.rollno %>"
+                            class="w-full border rounded p-2">
+                    </div>
+                    <% } %>
+
+                        <div class="flex justify-end space-x-2">
+                            <button type="button" data-modal-hide="editProfileModal"
+                                class="px-4 py-2 bg-gray-400 text-white rounded-md">Cancel</button>
+                            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md">Save</button>
+                        </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Change Password Modal -->
+    <div id="changePasswordModal" tabindex="-1"
+        class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-100">
+        <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+            <h3 class="text-xl font-semibold text-gray-700 mb-4">Change Password</h3>
+            <form action="/profile/change-password/<%= profile._id %>" method="POST">
+                <div class="mb-4">
+                    <label class="block text-gray-600">Current Password</label>
+                    <input type="password" name="currentPassword" required class="w-full border rounded p-2">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-600">New Password</label>
+                    <input type="password" name="newPassword" required class="w-full border rounded p-2">
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" data-modal-hide="changePasswordModal"
+                        class="px-4 py-2 bg-gray-400 text-white rounded-md">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded-md">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>

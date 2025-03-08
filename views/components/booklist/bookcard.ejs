@@ -1,6 +1,7 @@
-<div class="bg-white shadow-md rounded-lg p-4">
-    <img src="<%= bookimage %>" alt="Book Image" class="w-full h-40 object-cover rounded-md">
-    <h3 class="text-lg font-semibold mt-3"><%= bookname %></h3>
+<div class="bg-white shadow-md rounded-lg p-4 max-w-[200px] h-[290px] flex flex-col justify-between">
+    <img src="/images/herobg.jpg" alt="Book Image" class="w-full h-40 object-cover rounded-md">
+    <h3 class="text-lg font-semibold mt-3 book-title"><%= bookname %></h3>
     <p class="text-sm text-gray-600"><%= authorname %></p>
-    <button class="mt-3 w-full bg-[#316de5] text-white py-2 rounded-lg hover:bg-[#275bbf]">View Details</button>
+    <p class="text-sm text-gray-600"><%= availability %></p>
+    <a href="/books/<%= bookid %>" class="text-blue-600 hover:underline">View Details</a>
 </div>

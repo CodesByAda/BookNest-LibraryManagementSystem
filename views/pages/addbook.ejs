@@ -3,19 +3,19 @@
     <div class="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6 my-10 md:my-20">
         <h2 class="text-2xl font-semibold text-[#316de5] text-center mb-6">📚 Add a New Book</h2>
 
-        <form action="/addbook" method="POST" class="space-y-6">
+        <form action="/books" method="POST" class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Book Title -->
                 <div>
                     <label class="block text-gray-700 font-medium">Book Title</label>
-                    <input type="text" name="title" required placeholder="Enter book title"
+                    <input type="text" name="book[bookname]" required placeholder="Enter book title"
                         class="w-full p-3 border rounded focus:ring-[#316de5] focus:border-[#316de5]">
                 </div>
 
                 <!-- Author -->
                 <div>
                     <label class="block text-gray-700 font-medium">Author</label>
-                    <input type="text" name="author" required placeholder="Enter author name"
+                    <input type="text" name="book[authorname]" required placeholder="Enter author name"
                         class="w-full p-3 border rounded focus:ring-[#316de5] focus:border-[#316de5]">
                 </div>
             </div>
@@ -24,7 +24,7 @@
                 <!-- Category -->
                 <div>
                     <label class="block text-gray-700 font-medium">Category</label>
-                    <select name="category" required
+                    <select name="book[category]" required
                         class="w-full p-3 border rounded focus:ring-[#316de5] focus:border-[#316de5]">
                         <option value="">Select category</option>
                         <option>Fiction</option>
@@ -38,7 +38,7 @@
                 <!-- ISBN -->
                 <div>
                     <label class="block text-gray-700 font-medium">ISBN</label>
-                    <input type="text" name="isbn" required placeholder="Enter ISBN number"
+                    <input type="text" name="book[isbn]" required placeholder="Enter ISBN number"
                         class="w-full p-3 border rounded focus:ring-[#316de5] focus:border-[#316de5]">
                 </div>
             </div>
@@ -46,7 +46,7 @@
             <!-- Description -->
             <div>
                 <label class="block text-gray-700 font-medium">Description</label>
-                <textarea name="description" rows="4" placeholder="Write a short description..."
+                <textarea name="book[description]" rows="4" placeholder="Write a short description..."
                     class="w-full p-3 border rounded focus:ring-[#316de5] focus:border-[#316de5]"></textarea>
             </div>
 
@@ -54,7 +54,7 @@
                 <!-- Availability -->
                 <div>
                     <label class="block text-gray-700 font-medium">Availability</label>
-                    <select name="availability" required
+                    <select name="book[availability]" required
                         class="w-full p-3 border rounded focus:ring-[#316de5] focus:border-[#316de5]">
                         <option value="Available">Available</option>
                         <option value="Issued">Issued</option>
@@ -64,7 +64,7 @@
                 <!-- Rack Location -->
                 <div>
                     <label class="block text-gray-700 font-medium">Rack Location</label>
-                    <input type="text" name="rack_location" required placeholder="E.g., A1-5, B2-3"
+                    <input type="text" name="book[rack_location]" required placeholder="E.g., A1-5, B2-3"
                         class="w-full p-3 border rounded focus:ring-[#316de5] focus:border-[#316de5]">
                 </div>
             </div>
@@ -95,12 +95,12 @@
             <div class="text-center">
                 <button type="submit"
                     class="bg-[#316de5] text-white px-6 py-3 rounded-lg hover:bg-[#275bbf] transition">
-                    📖 Add Book
+                    Add Book
                 </button>
             </div>
         </form>
     </div>
-    <a href="/"
+    <a href="/books"
         class="fixed top-4 left-4 bg-[#316de5] text-white px-3 py-2 rounded-full shadow-lg hover:bg-[#275bbf] transition">
         ⬅️ Home
     </a>
@@ -116,15 +116,15 @@
                     const preview = document.getElementById("preview-image");
                     preview.src = e.target.result;
                     preview.classList.remove("hidden");
-        
+
                     // Hide default upload UI
                     document.getElementById("dropzone-content").classList.add("hidden");
                 };
                 reader.readAsDataURL(file); // Convert file to base64 URL
             }
         });
-        </script>
-        
+    </script>
+
     </body>
 
     </html>
