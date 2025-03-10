@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@tailwindcss/cli": "^4.0.8",
+    "connect-mongo": "^5.1.0",
     "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
     "express": "^4.21.2",

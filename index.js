@@ -8,19 +8,18 @@ const Book = require("./models/book");
 const User = require("./models/user");
 const Admin = require("./models/admin");
 const Bookreq = require("./models/bookreq");
+const MongoStore = require("connect-mongo");
 
 const app = express();
 const port = 8080;
 
 async function main() {
-    await mongoose.connect(process.env.MONGO_URL, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    });
+    await mongoose.connect(process.env.MONGO_URL);
     console.log("✅Connected to MongoDB");
 }
 
-main().catch(err => console.error("❌ MongoDB Connection Error:", err));
+main().catch(err => console.error("❌MongoDB Connection Error:", err));
+
 
 app.set("views", path.join(__dirname, "/views"));
 app.set("view engine", "ejs");
@@ -36,6 +35,10 @@ app.use(
         secret: "library_secret",
         resave: false,
         saveUninitialized: false,
+        store: MongoStore.create({
+            mongoUrl: process.env.MONGO_URL, // MongoDB connection string
+            collectionName: "sessions" // Name of the collection in MongoDB
+        }),
         cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 } // 1-week session
     })
 );
