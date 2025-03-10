@@ -1,4 +1,6 @@
+require('dotenv').config();
 const express = require("express");
+const multer = require('multer');
 const path = require("path");
 const methodOverride = require("method-override");
 const mongoose = require("mongoose");
@@ -6,22 +8,38 @@ const session = require("express-session");
 const Book = require("./models/book");
 const User = require("./models/user");
 const Admin = require("./models/admin");
+const Bookreq = require("./models/bookreq");
 
 const app = express();
 const port = 8080;
 
-main()
-    .then(() => console.log("✅ Connected to MongoDB"))
-    .catch(err => console.error("❌ MongoDB Connection Error:", err));
-
 async function main() {
-    await mongoose.connect("mongodb://localhost:27017/LMS-MGMCET");
+    await mongoose.connect(process.env.MONGO_URL, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    });
+    console.log("✅Connected to MongoDB");
 }
+
+main().catch(err => console.error("❌ MongoDB Connection Error:", err));
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'public/uploads');
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({ storage: storage });
 
 app.set("views", path.join(__dirname, "/views"));
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
-app.use(express.urlencoded({ extended: true }));
+app.use('/uploads', express.static('public/uploads'));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(methodOverride("_method"));
 
 // 🔹 Session setup (Persistent Login)
@@ -93,6 +111,7 @@ app.post("/register", async (req, res, next) => {
         let newUser = new User({ ...req.body, approved: false, role: "student" });
         await newUser.save();
         console.log("✅ User registered successfully:", newUser);
+
         res.redirect("/");
     } catch (err) {
         next(err); // Pass error to the centralized error handler
@@ -211,25 +230,104 @@ app.get("/profile/:id", isLoggedIn, async (req, res, next) => {
                 errorMessage: "You need to log in to access this page."
             });
         }
+        let profile = await Admin.findById(id) || await User.findById(id);
 
-        let profile = await User.findById(id) || await Admin.findById(id);
+        if (profile instanceof User) {
+            await profile.populate({
+                path: "borrowedBooks.bookId",
+                select: "bookname authorname coverImage"
+            });
+
+        }
+
 
         if (!profile) {
             return res.status(404).render("pages/error", {
                 errorCode: 404,
                 errorTitle: "Profile Not Found",
-                errorMessage: "No user or admin found with this ID."
+                errorMessage: "No user found with this ID."
             });
         }
 
-        // Check if the logged-in user is the owner of the profile
         let isOwner = loggedInUser._id.toString() === id;
+        let isAdmin = await Admin.findById(req.session.userId) ? true : false;
 
-        res.render("pages/profile", { profile, isOwner, session: req.session });
+        res.render("pages/profile", { profile, isOwner, isAdmin });
     } catch (err) {
         next(err);
     }
 });
+
+app.post("/profile/:id/addBook", isLoggedIn, async (req, res) => {
+    try {
+        if (!req.session.userId) {
+            return res.status(401).render("pages/error", {
+                errorCode: 401,
+                errorTitle: "Unauthorized",
+                errorMessage: "You need to log in to access this page."
+            });
+        }
+
+        const admin = await Admin.findById(req.session.userId);
+        if (!admin || admin.role !== "admin") {
+            return res.status(403).render("pages/error", {
+                errorCode: 403,
+                errorTitle: "Forbidden",
+                errorMessage: "Only admins can add books to a user."
+            });
+        }
+
+        const { bookId, dueDate } = req.body;
+        console.log(req.body);
+
+
+        if (!bookId) {
+            return res.status(400).render("pages/error", {
+                errorCode: 400,
+                errorTitle: "Invalid Book Data",
+                errorMessage: "No book ID was provided."
+            });
+        }
+
+        // Validate that the book exists
+        const book = await Book.findById(bookId);
+        if (!book) {
+            return res.status(404).render("pages/error", {
+                errorCode: 404,
+                errorTitle: "Book Not Found",
+                errorMessage: "The book you are trying to add does not exist."
+            });
+        }
+
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return res.status(404).render("pages/error", {
+                errorCode: 404,
+                errorTitle: "User Not Found",
+                errorMessage: "The requested user does not exist."
+            });
+        }
+
+        // Initialize borrowedBooks if not exists
+        if (!user.borrowedBooks) user.borrowedBooks = [];
+
+        // Add the single book with due date
+        user.borrowedBooks.push({ bookId: bookId, dueDate });
+
+        await user.save();
+        res.redirect(`/profile/${req.params.id}`);
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).render("pages/error", {
+            errorCode: 500,
+            errorTitle: "Internal Server Error",
+            errorMessage: "Something went wrong. Please try again later."
+        });
+    }
+});
+
+
 
 app.post("/profile/edit/:id", isLoggedIn, async (req, res, next) => {
     try {
@@ -305,7 +403,7 @@ app.get("/books", isLoggedIn, async (req, res, next) => {
         let user = await User.findById(req.session.userId);
         let admin = await Admin.findById(req.session.userId);
         res.render("pages/booklist", { books, session: req.session, user, admin });
-        console.log("Session Data:", req.session);
+        //console.log("Session Data:", req.session);
     } catch (err) {
         next(err);
     }
@@ -384,7 +482,10 @@ app.get("/admin", isAdmin, async (req, res, next) => {
         const users = await User.find({}); // Fetch all users
         const admins = await Admin.find({}); // Fetch all admins
         const books = await Book.find({}); // Fetch all books
-        res.render("pages/admin_dashboard", { users, books, admins });
+
+        const pendingApprovals = await User.countDocuments({ approved: false });
+
+        res.render("pages/admin_dashboard", { users, books, admins, pendingApprovals });
     } catch (err) {
         next(err);
     }
@@ -438,13 +539,55 @@ app.get("/admin/addbook", isAdmin, (req, res) => {
 
 app.post("/books", isAdmin, async (req, res, next) => {
     try {
-        let newBook = new Book(req.body.book);
+        const bookData = req.body.book; // Access nested book object
+
+        console.log("Full request body:", req.body); // Debugging
+
+        if (!bookData) {
+            return res.status(400).render("pages/error", {
+                errorCode: 400,
+                errorTitle: "Validation Error",
+                errorMessage: "Book data is missing."
+            });
+        }
+
+        let newBook = new Book(bookData); // Create new book with nested object data
+
+        // Debugging: Check Base64 Image
+        console.log("Base64 Image String:", bookData.coverImage?.substring(0, 100)); // Show only first 100 chars
+
         await newBook.save();
         res.redirect("/books");
+    } catch (error) {
+        console.error("Error adding book:", error);
+        res.status(400).render("pages/error", {
+            errorCode: 400,
+            errorTitle: "Validation Error",
+            errorMessage: "Failed to add book. Please check all required fields."
+        });
+    }
+});
+
+app.get("/request-book", isLoggedIn, async (req, res, next) => {
+    try {
+        res.render("pages/request_book");
     } catch (err) {
         next(err);
     }
 });
+
+app.post("/request-book", async (req, res, next) => {
+    try {
+        console.log("📥 Received book request:", req.body);
+        let newBookRequest = new Bookreq(req.body);
+        await newBookRequest.save();
+        console.log("✅ Book request added successfully:", newBookRequest);
+        res.redirect("/books"); // Redirect to /books page after submission
+    } catch (err) {
+        next(err); // Pass error to the centralized error handler
+    }
+});
+
 
 // ❌ Catch 404 Errors (Page Not Found)
 app.use((req, res) => {

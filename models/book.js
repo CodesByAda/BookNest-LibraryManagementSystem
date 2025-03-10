@@ -30,6 +30,10 @@ const bookSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    coverImage: {
+        type: String,
+        default: '/images/book.jpg'
+    }
 });
 
 const Book = mongoose.model('Book', bookSchema);

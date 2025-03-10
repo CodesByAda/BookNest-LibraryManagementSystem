@@ -1,99 +1,97 @@
 <%- include("../components/header") %>
-<div class="h-screen flex flex-col">
-    <nav class="bg-[#316de5]  border-b border-gray-200">
-        <div class="max-w-full flex justify-between items-center mx-auto px-6 py-3 shadow-md">
-            <a href="/" class="text-2xl font-bold text-white">BookNest</a>
-            <div class="space-x-6 flex items-center">
-                <%- include("../components/usericon") %>
+    <div class="h-screen flex flex-col">
+        <nav class="bg-[#316de5]  border-b border-gray-200">
+            <div class="max-w-full flex justify-between items-center mx-auto px-6 py-3 shadow-md">
+                <a href="/" class="text-2xl font-bold text-white">BookNest</a>
+                <div class="space-x-6 flex items-center">
+                    <%- include("../components/usericon") %>
+                </div>
             </div>
+        </nav>
+
+        <!-- Main Layout -->
+        <div class="flex flex-1 overflow-hidden">
+            <main class="flex-1 p-6 overflow-y-auto">
+                <!-- Search Bar -->
+                <div class="relative mb-6">
+                    <input type="text" id="searchInput" placeholder="Search for books..."
+                        class="w-full p-3 border rounded" autocomplete="off">
+                    <!-- Suggestions Dropdown -->
+                    <div id="suggestions" class="absolute w-full bg-white border rounded shadow-md hidden"></div>
+                </div>
+
+                <!-- Book List Grid -->
+                <div id="bookList" class="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-2">
+
+                    <% for(let book of books) { %>
+                        <div class="book-card">
+                            <%- include("../components/booklist/bookcard", { bookname: book.bookname, authorname:
+                                book.authorname, availability: book.availability, bookid: book._id, coverImage:
+                                book.coverImage}) %>
+                        </div>
+                        <% } %>
+                </div>
+
+            </main>
         </div>
-    </nav>
-
-    <!-- Main Layout -->
-    <div class="flex flex-1 overflow-hidden">
-        <main class="flex-1 p-6 overflow-y-auto">
-            <!-- Search Bar -->
-            <div class="relative mb-6">
-                <input type="text" id="searchInput" placeholder="Search for books..." 
-                    class="w-full p-3 border rounded" autocomplete="off">
-                <!-- Suggestions Dropdown -->
-                <div id="suggestions" class="absolute w-full bg-white border rounded shadow-md hidden"></div>
-            </div>
-
-            <!-- Book List Grid -->
-            <div id="bookList" class="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-2">
-
-                <% for(let book of books) { %>
-                    <div class="book-card">
-                        <%- include("../components/booklist/bookcard", { 
-                            bookname: book.bookname, 
-                            authorname: book.authorname, 
-                            availability: book.availability, 
-                            bookid: book._id 
-                        }) %>
-                    </div>
-                <% } %>
-            </div>
-        </main>
     </div>
-</div>
 
-<script>
-    const searchInput = document.getElementById("searchInput");
-    const bookList = document.getElementById("bookList");
-    const suggestions = document.getElementById("suggestions");
+    <script>
+        const searchInput = document.getElementById("searchInput");
+        const bookList = document.getElementById("bookList");
+        const suggestions = document.getElementById("suggestions");
 
-    const books = document.querySelectorAll(".book-card"); 
-    const bookTitles = Array.from(books).map(book => book.querySelector(".book-title").textContent.trim());
+        const books = document.querySelectorAll(".book-card");
+        const bookTitles = Array.from(books).map(book => book.querySelector(".book-title").textContent.trim());
 
-    searchInput.addEventListener("input", function () {
-        let filter = searchInput.value.toLowerCase().trim();
-        let suggestionList = [];
+        searchInput.addEventListener("input", function () {
+            let filter = searchInput.value.toLowerCase().trim();
+            let suggestionList = [];
 
-        suggestions.innerHTML = ""; // Clear previous suggestions
-        books.forEach(book => {
-            let title = book.querySelector(".book-title").textContent.toLowerCase();
-            if (title.includes(filter)) {
-                book.style.display = "block";
-                if (!suggestionList.includes(title)) {
-                    suggestionList.push(title);
+            suggestions.innerHTML = ""; // Clear previous suggestions
+            books.forEach(book => {
+                let title = book.querySelector(".book-title").textContent.toLowerCase();
+                if (title.includes(filter)) {
+                    book.style.display = "block";
+                    if (!suggestionList.includes(title)) {
+                        suggestionList.push(title);
+                    }
+                } else {
+                    book.style.display = "none";
                 }
+            });
+
+            // Show suggestions if there are matching books
+            if (filter.length > 0 && suggestionList.length > 0) {
+                suggestions.classList.remove("hidden");
+                suggestionList.forEach(title => {
+                    let suggestionItem = document.createElement("div");
+                    suggestionItem.textContent = title;
+                    suggestionItem.className = "p-2 cursor-pointer hover:bg-gray-100";
+
+                    suggestionItem.addEventListener("click", function () {
+                        searchInput.value = title;
+                        suggestions.classList.add("hidden");
+                        filterBooks(title);
+                    });
+
+                    suggestions.appendChild(suggestionItem);
+                });
             } else {
-                book.style.display = "none";
+                suggestions.classList.add("hidden");
             }
         });
 
-        // Show suggestions if there are matching books
-        if (filter.length > 0 && suggestionList.length > 0) {
-            suggestions.classList.remove("hidden");
-            suggestionList.forEach(title => {
-                let suggestionItem = document.createElement("div");
-                suggestionItem.textContent = title;
-                suggestionItem.className = "p-2 cursor-pointer hover:bg-gray-100";
-
-                suggestionItem.addEventListener("click", function () {
-                    searchInput.value = title;
-                    suggestions.classList.add("hidden");
-                    filterBooks(title);
-                });
-
-                suggestions.appendChild(suggestionItem);
+        function filterBooks(query) {
+            books.forEach(book => {
+                let title = book.querySelector(".book-title").textContent.toLowerCase();
+                book.style.display = title.includes(query.toLowerCase()) ? "block" : "none";
             });
-        } else {
-            suggestions.classList.add("hidden");
         }
-    });
 
-    function filterBooks(query) {
-        books.forEach(book => {
-            let title = book.querySelector(".book-title").textContent.toLowerCase();
-            book.style.display = title.includes(query.toLowerCase()) ? "block" : "none";
+        document.addEventListener("click", function (e) {
+            if (!searchInput.contains(e.target) && !suggestions.contains(e.target)) {
+                suggestions.classList.add("hidden");
+            }
         });
-    }
-
-    document.addEventListener("click", function (e) {
-        if (!searchInput.contains(e.target) && !suggestions.contains(e.target)) {
-            suggestions.classList.add("hidden");
-        }
-    });
-</script>
+    </script>

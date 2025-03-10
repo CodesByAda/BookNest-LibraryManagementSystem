@@ -4,73 +4,58 @@
         <h2 class="text-2xl font-semibold text-[#316de5] text-center mb-6">📚 Add a New Book</h2>
 
         <form action="/books" method="POST" class="space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Book Title -->
-                <div>
-                    <label class="block text-gray-700 font-medium">Book Title</label>
-                    <input type="text" name="book[bookname]" required placeholder="Enter book title"
-                        class="w-full p-3 border rounded focus:ring-[#316de5] focus:border-[#316de5]">
-                </div>
-
-                <!-- Author -->
-                <div>
-                    <label class="block text-gray-700 font-medium">Author</label>
-                    <input type="text" name="book[authorname]" required placeholder="Enter author name"
-                        class="w-full p-3 border rounded focus:ring-[#316de5] focus:border-[#316de5]">
-                </div>
+            <!-- Book Name -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Book Name</label>
+                <input type="text" name="book[bookname]" required class="w-full border rounded-lg px-3 py-2">
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Category -->
-                <div>
-                    <label class="block text-gray-700 font-medium">Category</label>
-                    <select name="book[category]" required
-                        class="w-full p-3 border rounded focus:ring-[#316de5] focus:border-[#316de5]">
-                        <option value="">Select category</option>
-                        <option>Fiction</option>
-                        <option>Non-Fiction</option>
-                        <option>Science</option>
-                        <option>History</option>
-                        <option>Technology</option>
-                    </select>
-                </div>
+            <!-- Author Name -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Author Name</label>
+                <input type="text" name="book[authorname]" required class="w-full border rounded-lg px-3 py-2">
+            </div>
 
-                <!-- ISBN -->
-                <div>
-                    <label class="block text-gray-700 font-medium">ISBN</label>
-                    <input type="text" name="book[isbn]" required placeholder="Enter ISBN number"
-                        class="w-full p-3 border rounded focus:ring-[#316de5] focus:border-[#316de5]">
-                </div>
+            <!-- Category -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Category</label>
+                <select name="book[category]" required class="w-full border rounded-lg px-3 py-2">
+                    <option value="Fiction">Fiction</option>
+                    <option value="Non-Fiction">Non-Fiction</option>
+                    <option value="Science">Science</option>
+                    <option value="History">History</option>
+                    <option value="Technology">Technology</option>
+                </select>
+            </div>
+
+            <!-- ISBN -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700">ISBN</label>
+                <input type="text" name="book[isbn]" required class="w-full border rounded-lg px-3 py-2">
             </div>
 
             <!-- Description -->
             <div>
-                <label class="block text-gray-700 font-medium">Description</label>
-                <textarea name="book[description]" rows="4" placeholder="Write a short description..."
-                    class="w-full p-3 border rounded focus:ring-[#316de5] focus:border-[#316de5]"></textarea>
+                <label class="block text-sm font-medium text-gray-700">Description</label>
+                <textarea name="book[description]" class="w-full border rounded-lg px-3 py-2"></textarea>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Availability -->
-                <div>
-                    <label class="block text-gray-700 font-medium">Availability</label>
-                    <select name="book[availability]" required
-                        class="w-full p-3 border rounded focus:ring-[#316de5] focus:border-[#316de5]">
-                        <option value="Available">Available</option>
-                        <option value="Issued">Issued</option>
-                    </select>
-                </div>
+            <!-- Availability -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Availability</label>
+                <select name="book[availability]" required class="w-full border rounded-lg px-3 py-2">
+                    <option value="Available">Available</option>
+                    <option value="Unavailable">Unavailable</option>
+                </select>
+            </div>
 
-                <!-- Rack Location -->
-                <div>
-                    <label class="block text-gray-700 font-medium">Rack Location</label>
-                    <input type="text" name="book[rack_location]" required placeholder="E.g., A1-5, B2-3"
-                        class="w-full p-3 border rounded focus:ring-[#316de5] focus:border-[#316de5]">
-                </div>
+            <!-- Rack Location -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Rack Location</label>
+                <input type="text" name="book[rack_location]" required class="w-full border rounded-lg px-3 py-2">
             </div>
 
             <!-- Upload Book Cover -->
-
             <div class="flex items-center justify-center w-full">
                 <label for="dropzone-file"
                     class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
@@ -82,16 +67,17 @@
                         </svg>
                         <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag
                             and drop</p>
-                        <p class="text-xs text-gray-500">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                        <p class="text-xs text-gray-500">PNG, JPG, JPEG (Max 2MB)</p>
                     </div>
-                    <img id="preview-image" class="hidden max-h-64 max-w-full object-cover  rounded-lg" />
+                    <img id="preview-image" class="hidden max-h-64 max-w-full object-cover rounded-lg" />
                 </label>
-                <input id="dropzone-file" type="file" class="hidden" accept="image/*" />
+                <!-- Add a hidden input field to store Base64 string -->
+                <input type="hidden" id="base64Image" name="book[coverImage]">
+
+                <!-- File input (hidden) -->
+                <input id="dropzone-file" type="file" accept="image/*" class="hidden">
             </div>
 
-
-
-            <!-- Submit Button -->
             <div class="text-center">
                 <button type="submit"
                     class="bg-[#316de5] text-white px-6 py-3 rounded-lg hover:bg-[#275bbf] transition">
@@ -99,6 +85,20 @@
                 </button>
             </div>
         </form>
+        <script>
+            document.getElementById("dropzone-file").addEventListener("change", function (event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = function () {
+                        const base64String = reader.result; // Get Base64 encoded string
+                        document.getElementById("base64Image").value = base64String; // Store in hidden input
+                    };
+                }
+            });
+        </script>
+
     </div>
     <a href="/books"
         class="fixed top-4 left-4 bg-[#316de5] text-white px-3 py-2 rounded-full shadow-lg hover:bg-[#275bbf] transition">

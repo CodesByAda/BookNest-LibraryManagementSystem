@@ -10,6 +10,12 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
     approved: { type: Boolean, default: false },
     role: { type: String, default: "student" },
+
+    // New field: Array of borrowed books
+    borrowedBooks: [{
+        bookId: { type: mongoose.Schema.Types.ObjectId, ref: "Book" }, // Reference to Book model
+        dueDate: { type: Date, required: true } // Due date for returning the book
+    }]
 });
 
 module.exports = mongoose.model("User", userSchema);

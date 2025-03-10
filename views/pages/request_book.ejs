@@ -1,0 +1,78 @@
+<%- include("../components/header") %>
+
+    <div class="max-w-lg mx-auto mt-10 bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold mb-4">Request a New Book</h2>
+
+        <form id="bookRequestForm" action="/request-book" method="POST" class="space-y-4">
+            <div>
+                <label for="bookname" class="block font-medium">Book Name</label>
+                <input type="text" id="bookname" name="bookname" required class="w-full px-4 py-2 border rounded-lg">
+                <p id="booknameError" class="text-red-500 text-sm mt-1"></p>
+            </div>
+
+            <div>
+                <label for="authorname" class="block font-medium">Author Name</label>
+                <input type="text" id="authorname" name="authorname" required
+                    class="w-full px-4 py-2 border rounded-lg">
+                <p id="authornameError" class="text-red-500 text-sm mt-1"></p>
+            </div>
+
+            <div>
+                <label for="referenceLink" class="block font-medium">Reference Link</label>
+                <input type="text" id="referenceLink" name="referenceLink" required
+                    class="w-full px-4 py-2 border rounded-lg">
+                <p id="referenceLinkError" class="text-red-500 text-sm mt-1"></p>
+            </div>
+
+            <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
+                Submit Request
+            </button>
+        </form>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("bookRequestForm");
+
+            form.addEventListener("submit", function (event) {
+                // Get form fields
+                const bookname = document.getElementById("bookname");
+                const authorname = document.getElementById("authorname");
+                const referenceLink = document.getElementById("referenceLink");
+
+                // Error containers
+                const booknameError = document.getElementById("booknameError");
+                const authornameError = document.getElementById("authornameError");
+                const referenceLinkError = document.getElementById("referenceLinkError");
+
+                let valid = true;
+
+                // Reset errors
+                booknameError.textContent = "";
+                authornameError.textContent = "";
+                referenceLinkError.textContent = "";
+
+                // Validation Checks
+                if (bookname.value.trim().length < 3) {
+                    booknameError.textContent = "Book Name must be at least 3 characters.";
+                    valid = false;
+                }
+                if (authorname.value.trim().length < 3) {
+                    authornameError.textContent = "Author Name must be at least 3 characters.";
+                    valid = false;
+                }
+                if (referenceLink.value.trim() === "") {
+                    referenceLinkError.textContent = "Reference Link cannot be empty.";
+                    valid = false;
+                }
+
+                if (!valid) {
+                    event.preventDefault(); // Prevent form submission if validation fails
+                }
+            });
+        });
+
+
+    </script>
+    </body>
+
+    </html>
