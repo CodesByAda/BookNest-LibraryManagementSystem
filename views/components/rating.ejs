@@ -1,0 +1,78 @@
+<h2 class="text-2xl font-semibold mt-8 mb-4">Reviews & Ratings</h2>
+
+<!-- Average Rating Display -->
+<div class="flex items-center space-x-2 mb-4">
+    <div class="flex text-yellow-500">
+        <% let totalRating=0; %>
+            <% if (book.reviews.length> 0) { %>
+                <% book.reviews.forEach(review=> { totalRating += review.rating; }); %>
+                    <% let avgRating=totalRating / book.reviews.length; %>
+                        <% for (let i=1; i <=5; i++) { %>
+                            <% if (i <=avgRating) { %>
+                                <i class="fa-solid fa-star text-yellow-500"></i>
+                                <% } else { %>
+                                    <i class="fa-regular fa-star text-gray-300"></i>
+                                    <% } %>
+                                        <% } %>
+                                            <p class="text-gray-700">
+                                                <%= avgRating.toFixed(1) %> out of 5 (<%= book.reviews.length %>
+                                                        ratings)
+                                            </p>
+                                            <% } else { %>
+                                                <p class="text-gray-700">No ratings yet.</p>
+                                                <% } %>
+    </div>
+</div>
+
+<!-- Reviews -->
+<div id="reviews" class="space-y-4">
+    <% book.reviews.forEach(review=> { %>
+        <div class="p-4 bg-gray-100 rounded">
+            <p class="text-lg font-medium">
+                <%= review.username %>
+            </p>
+            <p class="text-yellow-500">
+                <% for (let i=1; i <=5; i++) { %>
+                    <% if (i <=review.rating) { %>
+                        <i class="fa-solid fa-star text-yellow-500"></i>
+                        <% } else { %>
+                            <i class="fa-regular fa-star text-gray-300"></i>
+                            <% } %>
+                                <% } %>
+            </p>
+            <p>
+                <%= review.comment %>
+            </p>
+        </div>
+        <% }); %>
+</div>
+
+<!-- Add Review Form -->
+<% if (session.userId) { %>
+    <h3 class="text-xl font-semibold mt-6 mb-4">Add a Review</h3>
+    <form action="/books/<%= book._id %>/review" method="POST" class="space-y-4">
+        <!-- Star Rating Selection -->
+        <div class="flex space-x-2">
+            <input type="hidden" name="rating" id="ratingValue">
+            <% for (let i=1; i <=5; i++) { %>
+                <button type="button" class="rating-star text-gray-400 hover:text-yellow-500"
+                    onclick="setRating(<%= i %>)">★</button>
+                <% } %>
+        </div>
+
+        <textarea name="comment" placeholder="Write your review here..." required
+            class="w-full p-2 border rounded focus:outline-blue-500"></textarea>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Submit Review</button>
+    </form>
+    <% } else { %>
+        <p class="text-gray-700">You must be logged in to add a review.</p>
+        <% } %>
+            <script>
+                function setRating(value) {
+                    document.getElementById('ratingValue').value = value;
+                    let stars = document.querySelectorAll('.rating-star');
+                    stars.forEach((star, index) => {
+                        star.classList.toggle('text-yellow-500', index < value);
+                    });
+                }
+            </script>

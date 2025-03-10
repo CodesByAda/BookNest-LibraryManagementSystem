@@ -11,10 +11,11 @@ const Bookreq = require("./models/bookreq");
 const MongoStore = require("connect-mongo");
 
 const app = express();
-const port = 8080;
+const port = 3000;
 
 async function main() {
-    await mongoose.connect(process.env.MONGO_URL);
+    await mongoose.connect("mongodb://localhost:27017/LMS-MGMCET");
+    // await mongoose.connect(process.env.MONGO_URL);
     console.log("✅Connected to MongoDB");
 }
 
@@ -36,7 +37,8 @@ app.use(
         resave: false,
         saveUninitialized: false,
         store: MongoStore.create({
-            mongoUrl: process.env.MONGO_URL, // MongoDB connection string
+            mongoUrl: "mongodb://localhost:27017/LMS-MGMCET",
+            //mongoUrl: process.env.MONGO_URL, // MongoDB connection string
             collectionName: "sessions" // Name of the collection in MongoDB
         }),
         cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 } // 1-week session
@@ -394,16 +396,18 @@ app.get("/books", isLoggedIn, async (req, res, next) => {
         let user = await User.findById(req.session.userId);
         let admin = await Admin.findById(req.session.userId);
         res.render("pages/booklist", { books, session: req.session, user, admin });
-        //console.log("Session Data:", req.session);
+        console.log("Session Data:", req.session);
+        console.log("Session User ID:", req.session.userId);
     } catch (err) {
         next(err);
     }
 });
 
-// 📖 View Single Book
 app.get("/books/:id", isLoggedIn, async (req, res, next) => {
     try {
-        let book = await Book.findById(req.params.id);
+        let book = await Book.findById(req.params.id).populate("reviews.userId", "username");
+        let isAdminId = await Admin.exists({ _id: req.session.userId });
+
         if (!book) {
             return res.status(404).render("pages/error", {
                 errorCode: 404,
@@ -411,7 +415,49 @@ app.get("/books/:id", isLoggedIn, async (req, res, next) => {
                 errorMessage: "The requested book was not found."
             });
         }
-        res.render("pages/book", { book });
+
+        res.render("pages/book", { book, session: req.session, isAdminId });
+    } catch (err) {
+        next(err);
+    }
+});
+
+
+app.post("/books/:id/review", isLoggedIn, async (req, res, next) => {
+    try {
+        let { rating, comment } = req.body;
+        let book = await Book.findById(req.params.id);
+        let userId = req.session.userId;
+
+        if (!book) {
+            return res.status(404).render("pages/error", {
+                errorCode: 404,
+                errorTitle: "Book Not Found",
+                errorMessage: "The requested book was not found."
+            });
+        }
+
+        // Check if the user has already reviewed this book
+        let existingReview = book.reviews.find(review => review.userId.toString() === userId);
+        if (existingReview) {
+            return res.status(400).render("pages/error", {
+                errorCode: 400,
+                errorTitle: "Review Already Submitted",
+                errorMessage: "You can only review once per book."
+            });
+        }
+
+        let newReview = {
+            userId,
+            username: req.session.username, // Store username from session
+            rating: parseInt(rating),
+            comment
+        };
+
+        book.reviews.push(newReview);
+        await book.save();
+
+        res.redirect(`/books/${req.params.id}`);
     } catch (err) {
         next(err);
     }

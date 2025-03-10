@@ -1,112 +1,71 @@
 <%- include("../components/header") %>
 
-<!-- Floating Back Button -->
-<div class="fixed bottom-10 right-10 h-[50px] w-[50px] bg-[#316de5] rounded-lg font-semibold flex items-center justify-center">
-    <a href="/books" class="text-white h-full w-full text-center flex items-center justify-center">
-        ←
-    </a>
-</div>
+    <!-- Floating Back Button -->
+    <div
+        class="fixed bottom-10 right-10 h-[50px] w-[50px] bg-[#316de5] rounded-lg font-semibold flex items-center justify-center">
+        <a href="/books" class="text-white h-full w-full text-center flex items-center justify-center">
+            ←
+        </a>
+    </div>
 
-<!-- Book Details -->
-<div class="mt-4">
-    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-        <!-- Left Section (Book Info) -->
-        <div class="md:col-span-1">
-            <img src="<%= book.coverImage %>" alt="Book Cover" class="w-full h-auto rounded-lg shadow-lg p-4">
-            <p class="mt-4 text-gray-700"><strong>Availability:</strong>
-                <span id="availability" class="text-green-600">
-                    <%= book.availability %>
-                </span>
-            </p>
-        </div>
+    <!-- Book Details -->
+    <div class="mt-4">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Left Section (Book Info) -->
+            <div class="md:col-span-1">
+                <img src="<%= book.coverImage %>" alt="Book Cover" class="w-full h-auto rounded-lg shadow-lg p-4">
+                <p class="mt-4 text-gray-700"><strong>Availability:</strong>
+                    <span id="availability" class="text-green-600">
+                        <%= book.availability %>
+                    </span>
+                </p>
+            </div>
 
-        <!-- Right Section (Details & Actions) -->
-        <div class="md:col-span-2 bg-white p-6 rounded-lg shadow-lg">
-            <h1 class="text-3xl font-bold mb-2">
-                <%= book.bookname %>
-            </h1>
-            <p class="text-gray-600 mb-4">by <span class="font-semibold">
-                    <%= book.authorname %>
-                </span></p>
+            <!-- Right Section (Details & Actions) -->
+            <div class="md:col-span-2 bg-white p-6 rounded-lg shadow-lg">
+                <h1 class="text-3xl font-bold mb-2">
+                    <%= book.bookname %>
+                </h1>
+                <p class="text-gray-600 mb-4">by <span class="font-semibold">
+                        <%= book.authorname %>
+                    </span></p>
 
-            <p class="mb-4"><strong>Category:</strong> <%= book.category %></p>
-            <p class="mb-4"><strong>Rack Location:</strong> <%= book.rack_location %></p>
-            <p class="mb-4"><strong>Description:</strong> <%= book.description %></p>
+                <p class="mb-4"><strong>Category:</strong>
+                    <%= book.category %>
+                </p>
+                <p class="mb-4"><strong>Rack Location:</strong>
+                    <%= book.rack_location %>
+                </p>
+                <p class="underline-offset-4"><strong><u>Description</u></strong></p>
+                <p class="mb-4">
+                    <%= book.description %>
+                </p>
 
-            <!-- User Actions -->
-            <div class="space-y-4 mb-6">
+                <!-- User Actions -->
+                <!-- <div class="space-y-4 mb-6">
                 <button id="borrowBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Request to Borrow</button>
                 <button id="wishlistBtn" class="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded">Add to Wishlist</button>
                 <button id="newCopyBtn" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded hidden">Request New Copy</button>
+            </div> -->
+
+
+                <%- include("../components/rating.ejs") %>
             </div>
-
-            <!-- Admin Actions -->
-            <div class="space-x-4 mb-8">
-                <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">Edit Book</button>
-                <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">Delete Book</button>
-            </div>
-
-            <!-- Reviews & Ratings -->
-            <h2 class="text-2xl font-semibold mt-8 mb-4">Reviews & Ratings</h2>
-
-            <!-- Average Rating Display -->
-            <div class="flex items-center space-x-2 mb-4">
-                <div class="flex text-yellow-500">
-                    <svg class="w-6 h-6 fill-current" viewBox="0 0 20 20"><polygon points="10,1 13,7 19,7 14,11 16,17 10,13 4,17 6,11 1,7 7,7"/></svg>
-                    <svg class="w-6 h-6 fill-current" viewBox="0 0 20 20"><polygon points="10,1 13,7 19,7 14,11 16,17 10,13 4,17 6,11 1,7 7,7"/></svg>
-                    <svg class="w-6 h-6 fill-current" viewBox="0 0 20 20"><polygon points="10,1 13,7 19,7 14,11 16,17 10,13 4,17 6,11 1,7 7,7"/></svg>
-                    <svg class="w-6 h-6 fill-current" viewBox="0 0 20 20"><polygon points="10,1 13,7 19,7 14,11 16,17 10,13 4,17 6,11 1,7 7,7"/></svg>
-                    <svg class="w-6 h-6 text-gray-300" viewBox="0 0 20 20"><polygon points="10,1 13,7 19,7 14,11 16,17 10,13 4,17 6,11 1,7 7,7"/></svg>
-                </div>
-                <p class="text-gray-700">4.2 out of 5 (120 ratings)</p>
-            </div>
-
-            <!-- Reviews -->
-            <div id="reviews" class="space-y-4">
-                <div class="p-4 bg-gray-100 rounded">
-                    <p class="text-lg font-medium">John Doe</p>
-                    <p class="text-yellow-500">★★★★☆</p>
-                    <p>Great book, loved the storyline!</p>
-                </div>
-                <div class="p-4 bg-gray-100 rounded">
-                    <p class="text-lg font-medium">Jane Smith</p>
-                    <p class="text-yellow-500">★★★★★</p>
-                    <p>Very informative and well-written.</p>
-                </div>
-            </div>
-
-            <!-- Add Review Form -->
-            <h3 class="text-xl font-semibold mt-6 mb-4">Add a Review</h3>
-            <form id="reviewForm" class="space-y-4">
-                <!-- Star Rating Selection -->
-                <div class="flex space-x-2">
-                    <button type="button" class="rating-star text-gray-400 hover:text-yellow-500">★</button>
-                    <button type="button" class="rating-star text-gray-400 hover:text-yellow-500">★</button>
-                    <button type="button" class="rating-star text-gray-400 hover:text-yellow-500">★</button>
-                    <button type="button" class="rating-star text-gray-400 hover:text-yellow-500">★</button>
-                    <button type="button" class="rating-star text-gray-400 hover:text-yellow-500">★</button>
-                    <input type="hidden" name="rating" id="ratingValue">
-                </div>
-
-                <textarea placeholder="Write your review here..." required class="w-full p-2 border rounded focus:outline-blue-500"></textarea>
-                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Submit Review</button>
-            </form>
         </div>
     </div>
-</div>
 
-<!-- Star Rating Click Script -->
-<script>
-    const stars = document.querySelectorAll('.rating-star');
-    const ratingInput = document.getElementById('ratingValue');
+    <!-- Star Rating Click Script -->
+    <script>
+        const stars = document.querySelectorAll('.rating-star');
+        const ratingInput = document.getElementById('ratingValue');
 
-    stars.forEach((star, index) => {
-        star.addEventListener('click', () => {
-            ratingInput.value = index + 1;
-            stars.forEach((s, i) => {
-                s.classList.toggle('text-yellow-500', i <= index);
-                s.classList.toggle('text-gray-400', i > index);
+        stars.forEach((star, index) => {
+            star.addEventListener('click', () => {
+                ratingInput.value = index + 1;
+                stars.forEach((s, i) => {
+                    s.classList.toggle('text-yellow-500', i <= index);
+                    s.classList.toggle('text-gray-400', i > index);
+                });
             });
         });
-    });
-</script>
+    </script>
