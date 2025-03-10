@@ -1,6 +1,5 @@
 require('dotenv').config();
 const express = require("express");
-const multer = require('multer');
 const path = require("path");
 const methodOverride = require("method-override");
 const mongoose = require("mongoose");
@@ -22,17 +21,6 @@ async function main() {
 }
 
 main().catch(err => console.error("❌ MongoDB Connection Error:", err));
-
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'public/uploads');
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
-});
-
-const upload = multer({ storage: storage });
 
 app.set("views", path.join(__dirname, "/views"));
 app.set("view engine", "ejs");
