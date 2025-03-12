@@ -1,0 +1,41 @@
+<div id="addBooksModal" tabindex="-1" aria-hidden="true"
+    class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full bg-gray-900 bg-opacity-50 flex justify-center items-center">
+    <div class="relative bg-white rounded-lg shadow-md w-full max-w-md p-6">
+        <h2 class="text-xl font-semibold mb-4">Add Book to <%= profile.name %>
+        </h2>
+
+        <!-- Form to Submit Book -->
+        <form action="/profile/<%= profile._id %>/addBook" method="POST">
+
+            <!-- Student Name (Read-Only) -->
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-medium">Student Name</label>
+                <input type="text" class="w-full px-4 py-2 border rounded-md bg-gray-100" value="<%= profile.name %>"
+                    readonly>
+            </div>
+
+            <!-- Book ID Input -->
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-medium">Book ID</label>
+                <input type="text" name="bookId" id="bookIdInput" required
+                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+                    placeholder="Enter Book ID">
+            </div>
+
+            <!-- Due Date Input -->
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-medium">Due Date</label>
+                <input type="date" name="dueDate" required
+                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300">
+            </div>
+
+            <!-- Submit and Close Buttons -->
+            <div class="mt-4 flex justify-between">
+                <button type="submit"
+                    class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">Save</button>
+                <button type="button" onclick="closeModal()"
+                    class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">Close</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -14,8 +14,8 @@ const app = express();
 const port = 3000;
 
 async function main() {
-    //await mongoose.connect("mongodb://localhost:27017/LMS-MGMCET");
-    await mongoose.connect(process.env.MONGO_URL);
+    await mongoose.connect("mongodb://localhost:27017/LMS-MGMCET");
+    //await mongoose.connect(process.env.MONGO_URL);
     console.log("✅Connected to MongoDB");
 }
 
@@ -37,8 +37,8 @@ app.use(
         resave: false,
         saveUninitialized: false,
         store: MongoStore.create({
-            //mongoUrl: "mongodb://localhost:27017/LMS-MGMCET",
-            mongoUrl: process.env.MONGO_URL, // MongoDB connection string
+            mongoUrl: "mongodb://localhost:27017/LMS-MGMCET",
+            //mongoUrl: process.env.MONGO_URL, // MongoDB connection string
             collectionName: "sessions" // Name of the collection in MongoDB
         }),
         cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 } // 1-week session
@@ -223,16 +223,8 @@ app.get("/profile/:id", isLoggedIn, async (req, res, next) => {
                 errorMessage: "You need to log in to access this page."
             });
         }
+
         let profile = await Admin.findById(id) || await User.findById(id);
-
-        if (profile instanceof User) {
-            await profile.populate({
-                path: "borrowedBooks.bookId",
-                select: "bookname authorname coverImage"
-            });
-
-        }
-
 
         if (!profile) {
             return res.status(404).render("pages/error", {
@@ -242,11 +234,93 @@ app.get("/profile/:id", isLoggedIn, async (req, res, next) => {
             });
         }
 
+        // If user, populate borrowedBooks
+        if (profile instanceof User) {
+            await profile.populate({
+                path: "borrowedBooks.bookId",
+                select: "bookname authorname coverImage"
+            });
+
+            // Filter out any books that have missing bookId
+            profile.borrowedBooks = profile.borrowedBooks.filter(book => book.bookId);
+        }
+
         let isOwner = loggedInUser._id.toString() === id;
         let isAdmin = await Admin.findById(req.session.userId) ? true : false;
 
         res.render("pages/profile", { profile, isOwner, isAdmin });
     } catch (err) {
+        next(err);
+    }
+});
+
+app.post("/profile/upload-pfp", async (req, res, next) => {
+    try {
+        console.log("📥 Request received at /profile/upload-pfp");
+        console.log("📌 Received Body:", req.body);
+
+        const { profilePic } = req.body;
+        const userId = req.session.userId;
+
+        if (!userId) {
+            console.log("❌ No user ID found in session.");
+            return res.status(401).render("pages/error", {
+                errorCode: 401,
+                errorTitle: "Unauthorized",
+                errorMessage: "You need to log in to update your profile picture."
+            });
+        }
+
+        if (!profilePic || typeof profilePic !== "string" || !profilePic.startsWith("data:image")) {
+            console.log("❌ Invalid profilePic format:", profilePic);
+            return res.status(400).render("pages/error", {
+                errorCode: 400,
+                errorTitle: "Invalid Image",
+                errorMessage: "The uploaded file is not a valid image format."
+            });
+        }
+
+        // 🔹 Check if user exists
+        const user = await User.findById(userId);
+        if (!user) {
+            console.log("❌ User not found in database.");
+            return res.status(404).render("pages/error", {
+                errorCode: 404,
+                errorTitle: "User Not Found",
+                errorMessage: "The user does not exist."
+            });
+        }
+
+        console.log("🔍 Before Update - Profile Pic in DB:", user.profilePic);
+
+        // 🔹 Force update using findOneAndUpdate
+        const updatedUser = await User.findOneAndUpdate(
+            { _id: userId }, 
+            { $set: { profilePic } },
+            { new: true, upsert: false, useFindAndModify: false }
+        );
+
+        if (!updatedUser) {
+            console.log("❌ User update failed (user is still undefined).");
+            return res.status(500).render("pages/error", {
+                errorCode: 500,
+                errorTitle: "Update Failed",
+                errorMessage: "Something went wrong while updating your profile picture."
+            });
+        }
+
+        console.log("✅ After Update - Profile Pic in DB:", updatedUser.profilePic);
+
+        if (updatedUser.profilePic !== profilePic) {
+            console.log("⚠️ Profile picture update failed!");
+        } else {
+            console.log("✅ Profile Picture Updated Successfully!");
+        }
+
+        res.redirect(`/profile/${userId}`);
+
+    } catch (err) {
+        console.error("❌ Error updating profile picture:", err);
         next(err);
     }
 });
@@ -271,8 +345,6 @@ app.post("/profile/:id/addBook", isLoggedIn, async (req, res) => {
         }
 
         const { bookId, dueDate } = req.body;
-        console.log(req.body);
-
 
         if (!bookId) {
             return res.status(400).render("pages/error", {
@@ -320,6 +392,51 @@ app.post("/profile/:id/addBook", isLoggedIn, async (req, res) => {
     }
 });
 
+app.post("/profile/:id/removeBook/:bookId", isLoggedIn, async (req, res) => {
+    try {
+        if (!req.session.userId) {
+            return res.status(401).render("pages/error", {
+                errorCode: 401,
+                errorTitle: "Unauthorized",
+                errorMessage: "You need to log in to access this page."
+            });
+        }
+
+        const admin = await Admin.findById(req.session.userId);
+        if (!admin || admin.role !== "admin") {
+            return res.status(403).render("pages/error", {
+                errorCode: 403,
+                errorTitle: "Forbidden",
+                errorMessage: "Only admins can remove books from a user."
+            });
+        }
+
+        const { id, bookId } = req.params;
+        const user = await User.findById(id);
+
+        if (!user) {
+            return res.status(404).render("pages/error", {
+                errorCode: 404,
+                errorTitle: "User Not Found",
+                errorMessage: "The requested user does not exist."
+            });
+        }
+
+        // Remove the book from the borrowedBooks array
+        user.borrowedBooks = user.borrowedBooks.filter(book => book.bookId.toString() !== bookId);
+
+        await user.save();
+        res.redirect(`/profile/${id}`); // Redirect back to the profile page
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).render("pages/error", {
+            errorCode: 500,
+            errorTitle: "Internal Server Error",
+            errorMessage: "Something went wrong. Please try again later."
+        });
+    }
+});
 
 
 app.post("/profile/edit/:id", isLoggedIn, async (req, res, next) => {
@@ -395,9 +512,8 @@ app.get("/books", isLoggedIn, async (req, res, next) => {
         let books = await Book.find({});
         let user = await User.findById(req.session.userId);
         let admin = await Admin.findById(req.session.userId);
-        res.render("pages/booklist", { books, session: req.session, user, admin });
-        console.log("Session Data:", req.session);
-        console.log("Session User ID:", req.session.userId);
+        let isAdminId = await Admin.exists({ _id: req.session.userId });
+        res.render("pages/booklist", { books, session: req.session, user, admin, isAdminId });
     } catch (err) {
         next(err);
     }
@@ -405,8 +521,10 @@ app.get("/books", isLoggedIn, async (req, res, next) => {
 
 app.get("/books/:id", isLoggedIn, async (req, res, next) => {
     try {
-        let book = await Book.findById(req.params.id).populate("reviews.userId", "username");
+        let book = await Book.findById(req.params.id);
         let isAdminId = await Admin.exists({ _id: req.session.userId });
+        let user = await User.findById(req.session.userId);
+        let admin = await Admin.findById(req.session.userId);
 
         if (!book) {
             return res.status(404).render("pages/error", {
@@ -416,18 +534,31 @@ app.get("/books/:id", isLoggedIn, async (req, res, next) => {
             });
         }
 
-        res.render("pages/book", { book, session: req.session, isAdminId });
+        let reviewsWithPermissions = book.reviews.map(review => {
+            let reviewObject = review.toObject();
+            reviewObject.canDelete = review.userId && review.userId.toString() === req.session.userId.toString();
+            return reviewObject;
+        });
+
+        res.render("pages/book", {
+            book: { ...book.toObject(), reviews: reviewsWithPermissions },
+            session: req.session,
+            isAdminId,
+            user,
+            admin
+        });
     } catch (err) {
         next(err);
     }
 });
 
 
+
 app.post("/books/:id/review", isLoggedIn, async (req, res, next) => {
     try {
         let { rating, comment } = req.body;
         let book = await Book.findById(req.params.id);
-        let userId = req.session.userId;
+        let userId = req.session.userId.toString(); // Ensure it's a string
 
         if (!book) {
             return res.status(404).render("pages/error", {
@@ -438,7 +569,7 @@ app.post("/books/:id/review", isLoggedIn, async (req, res, next) => {
         }
 
         // Check if the user has already reviewed this book
-        let existingReview = book.reviews.find(review => review.userId.toString() === userId);
+        let existingReview = book.reviews.find(review => review.userId === userId);
         if (existingReview) {
             return res.status(400).render("pages/error", {
                 errorCode: 400,
@@ -448,8 +579,8 @@ app.post("/books/:id/review", isLoggedIn, async (req, res, next) => {
         }
 
         let newReview = {
-            userId,
-            username: req.session.username, // Store username from session
+            userId, // Store as string
+            username: req.session.username,
             rating: parseInt(rating),
             comment
         };
@@ -462,6 +593,100 @@ app.post("/books/:id/review", isLoggedIn, async (req, res, next) => {
         next(err);
     }
 });
+
+app.post("/books/:bookId/reviews/:reviewId/like", isLoggedIn, async (req, res, next) => {
+    try {
+        let book = await Book.findById(req.params.bookId);
+        if (!book) return res.status(404).send("Book not found");
+
+        let review = book.reviews.id(req.params.reviewId);
+        if (!review) return res.status(404).send("Review not found");
+
+        let userId = req.session.userId.toString(); // Convert to string for proper comparison
+
+        if (!review.likedBy) review.likedBy = [];
+        if (!review.dislikedBy) review.dislikedBy = [];
+
+        if (review.likedBy.includes(userId)) {
+            // Remove like
+            review.likedBy = review.likedBy.filter(id => id.toString() !== userId);
+            if (review.likes > 0) review.likes -= 1; // Prevent negative likes
+        } else {
+            // Add like and remove dislike if present
+            review.likedBy.push(userId);
+            review.likes += 1;
+
+            if (review.dislikedBy.includes(userId)) {
+                review.dislikedBy = review.dislikedBy.filter(id => id.toString() !== userId);
+                if (review.dislikes > 0) review.dislikes -= 1; // Prevent negative dislikes
+            }
+        }
+
+        await book.save();
+        res.redirect(`/books/${req.params.bookId}`);
+    } catch (err) {
+        next(err);
+    }
+});
+
+app.post("/books/:bookId/reviews/:reviewId/dislike", isLoggedIn, async (req, res, next) => {
+    try {
+        let book = await Book.findById(req.params.bookId);
+        if (!book) return res.status(404).send("Book not found");
+
+        let review = book.reviews.id(req.params.reviewId);
+        if (!review) return res.status(404).send("Review not found");
+
+        let userId = req.session.userId.toString(); // Convert to string for proper comparison
+
+        if (!review.likedBy) review.likedBy = [];
+        if (!review.dislikedBy) review.dislikedBy = [];
+
+        if (review.dislikedBy.includes(userId)) {
+            // Remove dislike
+            review.dislikedBy = review.dislikedBy.filter(id => id.toString() !== userId);
+            if (review.dislikes > 0) review.dislikes -= 1; // Prevent negative dislikes
+        } else {
+            // Add dislike and remove like if present
+            review.dislikedBy.push(userId);
+            review.dislikes += 1;
+
+            if (review.likedBy.includes(userId)) {
+                review.likedBy = review.likedBy.filter(id => id.toString() !== userId);
+                if (review.likes > 0) review.likes -= 1; // Prevent negative likes
+            }
+        }
+
+        await book.save();
+        res.redirect(`/books/${req.params.bookId}`);
+    } catch (err) {
+        next(err);
+    }
+});
+
+app.post("/books/:bookId/reviews/:reviewId/delete", isLoggedIn, async (req, res, next) => {
+    try {
+        let book = await Book.findById(req.params.bookId);
+        if (!book) return res.status(404).send("Book not found");
+
+        let review = book.reviews.id(req.params.reviewId);
+        if (!review) return res.status(404).send("Review not found");
+
+        // Check if the logged-in user is the owner of the review
+        if (review.userId.toString() !== req.session.userId.toString()) {
+            return res.status(403).send("You are not allowed to delete this review");
+        }
+
+        // Remove the review
+        review.deleteOne();
+        await book.save();
+
+        res.redirect(`/books/${req.params.bookId}`);
+    } catch (err) {
+        next(err);
+    }
+});
+
 
 app.get("/books/editbook/:id", isAdmin, async (req, res, next) => {
     try {

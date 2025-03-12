@@ -1,266 +1,185 @@
 <%- include("../components/header") %>
-    <nav class="flex justify-center my-6" aria-label="Breadcrumb">
-        <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-            <li class="inline-flex items-center">
-                <a href="/" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
-                    <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                        fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                            d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z" />
-                    </svg>
-                    Home
-                </a>
-            </li>
-            <li>
-                <div class="flex items-center">
-                    <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="m1 9 4-4-4-4" />
-                    </svg>
-                    <a href="/books"
-                        class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2">BookList</a>
-                </div>
-            </li>
-            <li aria-current="page">
-                <div class="flex items-center">
-                    <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="m1 9 4-4-4-4" />
-                    </svg>
-                    <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2">Profile</span>
-                </div>
-            </li>
-        </ol>
-    </nav>
+    <%- include("../components/profile/breadcrumbs") %>
 
-    <!-- Profile Header -->
-    <div class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md">
-        <div class="flex items-center space-x-4">
-            <img src="https://ui-avatars.com/api/?name=<%= profile.name %>&background=316de5&color=fff"
-                alt="Profile Picture" class="w-20 h-20 rounded-full">
-            <div>
-                <h2 class="text-2xl font-semibold">
-                    <%= profile.name %>
-                </h2>
-                <p class="text-gray-500">Role: <span class="font-medium">
-                        <%= profile.role %>
-                    </span></p>
-                <p class="text-gray-500">Email: <%= profile.email %>
-                </p>
-            </div>
-        </div>
-
-        <% if (profile.role==="student" ) { %>
-            <div class="mt-6">
-                <h3 class="text-lg font-medium mb-2">Account Details</h3>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <p class="text-gray-600">Course</p>
-                        <p class="text-gray-900 font-medium">
-                            <%= profile.course %>
-                        </p>
-                    </div>
-                    <div>
-                        <p class="text-gray-600">Semester</p>
-                        <p class="text-gray-900 font-medium">
-                            <%= profile.semester %> Semester
-                        </p>
-                    </div>
-                    <div>
-                        <p class="text-gray-600">Address</p>
-                        <p class="text-gray-900 font-medium">
-                            <%= profile.address %>
-                        </p>
-                    </div>
-                    <div>
-                        <p class="text-gray-600">Roll Number</p>
-                        <p class="text-gray-900 font-medium">
-                            <%= profile.rollno %>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <% } %>
-
-                <% if (profile.borrowedBooks && profile.borrowedBooks.length> 0) { %>
-                    <h3 class="text-lg font-medium my-2">Borrowed Books</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 bg-gray-100 p-4">
-                        <% profile.borrowedBooks.forEach(book=> { %>
-                            <div class="bg-white shadow-md rounded-md p-3 flex items-center border border-gray-300">
-                                <!-- Static Book Image -->
-                                <img src="<%= book.bookId.coverImage || '/images/book.jpg' %>" alt="Book Image" class="w-16 h-20 rounded-md mr-4">
-
-                                <!-- Book Info -->
-                                <div>
-                                    <p class="text-sm font-semibold text-gray-800">
-                                        <%= book.bookId ? book.bookId.bookname : "Unknown Book" %>
-                                    </p>
-                                    <p class="text-xs text-gray-600 font-medium mt-1">
-                                        Due Date: <%= book.dueDate ? book.dueDate.toDateString() : "Not Set" %>
-                                    </p>
-                                </div>
-                            </div>
-                            <% }); %>
-                    </div>
-                    <% } else { %>
-                        <% if (!isAdmin) { %>
-                            <p class="text-gray-500">No borrowed books.</p>
+        <!-- Profile Header -->
+        <div class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md">
+            <div class="flex items-center space-x-4 relative">
+                <!-- Profile Picture -->
+                <label for="uploadPfp" class="cursor-pointer relative">
+                    <% if (profile.profilePic) { %>
+                        <img src="<%= profile.profilePic %>" alt="Profile Picture"
+                            class="w-20 h-20 rounded-full object-cover">
+                        <% } else { %>
+                            <img src="https://ui-avatars.com/api/?name=<%= profile.name %>&background=316de5&color=fff"
+                                alt="Default Profile Picture" class="w-20 h-20 rounded-full">
                             <% } %>
-                                <% } %>
 
-                                    <!-- Action Buttons (Always Visible) -->
-                                    <div class="mt-6 flex space-x-4">
-                                        <% if (isOwner) { %>
-                                            <button data-modal-target="editProfileModal"
-                                                data-modal-toggle="editProfileModal"
-                                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                                                Edit Profile
-                                            </button>
-                                            <button data-modal-target="changePasswordModal"
-                                                data-modal-toggle="changePasswordModal"
-                                                class="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600">
-                                                Change Password
-                                            </button>
-                                            <a href="/logout"
-                                                class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
-                                                Logout
-                                            </a>
-                                            <% } %>
-
-                                                <% if (isAdmin && profile.role==="student" ) { %>
-                                                    <button data-modal-target="addBooksModal"
-                                                        data-modal-toggle="addBooksModal"
-                                                        class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
-                                                        Add Books
-                                                    </button>
-                                                    <% } %>
+                                <% if (isOwner) { %>
+                                    <div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 
+                            transition bg-black rounded-full">
+                                        <i class="fa-solid fa-camera text-white"></i>
                                     </div>
+                                    <% } %>
+                </label>
+
+                <!-- Hidden File Input -->
+                <% if (isOwner) { %>
+                    <form action="/profile/upload-pfp" method="POST">
+                        <input type="file" id="uploadPfp" name="fileInput" accept="image/*" class="hidden"
+                            onchange="convertToBase64(this)">
+                        <input type="hidden" name="profilePic" id="base64Pfp"> <!-- Only this gets sent -->
+                        <button type="submit" id="submitPfp" class="hidden"></button>
+                    </form>
+
+                    <script>
+                        function convertToBase64(input) {
+                            const file = input.files[0]; // Get the selected file
+                            if (!file) return; // No file selected
+
+                            const reader = new FileReader();
+                            reader.onload = function () {
+                                document.getElementById("base64Pfp").value = reader.result; // Store Base64 string
+                                document.getElementById("submitPfp").click(); // Auto-submit form
+                            };
+
+                            reader.readAsDataURL(file); // Convert to Base64
+                        }
+                    </script>
 
 
-    </div>
-
-
-    <!-- Edit Profile Modal -->
-    <div id="editProfileModal" tabindex="-1"
-        class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-100">
-        <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
-            <h3 class="text-xl font-semibold text-gray-700 mb-4">Edit Profile</h3>
-            <form action="/profile/edit/<%= profile._id %>" method="POST">
-                <!-- Name Field (Visible for Everyone) -->
-                <div class="mb-4">
-                    <label class="block text-gray-600">Name</label>
-                    <input type="text" name="name" value="<%= profile.name %>" class="w-full border rounded p-2">
-                </div>
-
-                <% if (profile.role !=="admin" ) { %>
-                    <!-- Only Students Can See & Edit These Fields -->
-                    <div class="mb-4">
-                        <label class="block text-gray-600">Address</label>
-                        <input type="text" name="address" value="<%= profile.address %>"
-                            class="w-full border rounded p-2">
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-600">Course</label>
-                        <input type="text" name="course" value="<%= profile.course %>"
-                            class="w-full border rounded p-2">
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-600">Semester</label>
-                        <input type="number" name="semester" value="<%= profile.semester %>"
-                            class="w-full border rounded p-2">
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-600">Roll Number</label>
-                        <input type="number" name="rollno" value="<%= profile.rollno %>"
-                            class="w-full border rounded p-2">
-                    </div>
                     <% } %>
 
-                        <div class="flex justify-end space-x-2">
-                            <button type="button" data-modal-hide="editProfileModal"
-                                class="px-4 py-2 bg-gray-400 text-white rounded-md">Cancel</button>
-                            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md">Save</button>
+                        <div>
+                            <h2 class="text-2xl font-semibold">
+                                <%= profile.name %>
+                            </h2>
+                            <p class="text-gray-500">Role: <span class="font-medium">
+                                    <%= profile.role %>
+                                </span></p>
+                            <p class="text-gray-500">Email: <%= profile.email %>
+                            </p>
                         </div>
-            </form>
+            </div>
+
+
+            <% if (profile.role==="student" ) { %>
+                <div class="mt-6">
+                    <h3 class="text-lg font-medium mb-2">Account Details</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-gray-600">Course</p>
+                            <p class="text-gray-900 font-medium">
+                                <%= profile.course %>
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">Semester</p>
+                            <p class="text-gray-900 font-medium">
+                                <%= profile.semester %> Semester
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">Address</p>
+                            <p class="text-gray-900 font-medium">
+                                <%= profile.address %>
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600">Roll Number</p>
+                            <p class="text-gray-900 font-medium">
+                                <%= profile.rollno %>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+
+                    <% if (profile.borrowedBooks && profile.borrowedBooks.length> 0) { %>
+                        <h3 class="text-lg font-medium my-2">Borrowed Books</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 bg-gray-100 p-4">
+                            <% profile.borrowedBooks.forEach(book=> { %>
+                                <div class="bg-white shadow-md rounded-md p-3 border border-gray-300 flex items-start">
+                                    <!-- Book Image on the Left -->
+                                    <img src="<%= book.bookId && book.bookId.coverImage ? book.bookId.coverImage : '/images/book.jpg' %>"
+                                        alt="Book Image" class="w-16 h-20 rounded-md mr-4">
+
+                                    <!-- Book Details on the Right -->
+                                    <div class="flex-1">
+                                        <p class="text-sm font-semibold text-gray-800">
+                                            <%= book.bookId ? book.bookId.bookname : "Unknown Book" %>
+                                        </p>
+                                        <p class="text-xs text-gray-600 font-medium mt-1">
+                                            Due Date: <%= book.dueDate ? book.dueDate.toDateString() : "Not Set" %>
+                                        </p>
+
+                                        <!-- Remove Button Below Both -->
+                                        <% if (isAdmin) { %>
+                                            <form action="/profile/<%= profile._id %>/removeBook/<%= book.bookId._id %>"
+                                                method="POST" class="mt-2">
+                                                <button type="submit"
+                                                    class="w-full px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 text-sm">
+                                                    Remove
+                                                </button>
+                                            </form>
+                                            <% } %>
+                                    </div>
+                                </div>
+                                <% }); %>
+                        </div>
+
+                        <% } else { %>
+                            <% if (!isAdmin) { %>
+                                <p class="text-gray-500">No borrowed books.</p>
+                                <% } %>
+                                    <% } %>
+
+
+                                        <!-- Action Buttons (Always Visible) -->
+                                        <div class="mt-6 flex space-x-4">
+                                            <% if (isOwner) { %>
+                                                <button data-modal-target="editProfileModal"
+                                                    data-modal-toggle="editProfileModal"
+                                                    class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 hover:cursor-pointer">
+                                                    <i class="fa-solid fa-user-pen"></i> Profile
+                                                </button>
+                                                <button data-modal-target="changePasswordModal"
+                                                    data-modal-toggle="changePasswordModal"
+                                                    class="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 hover:cursor-pointer">
+                                                    <i class="fa-solid fa-pen-to-square"></i> Password
+                                                </button>
+                                                <a href="/usercard/<%= profile._id %>"
+                                                    class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
+                                                    <i class="fa-solid fa-download"></i> Download Card
+                                                </a>
+                                                <a href="/logout"
+                                                    class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
+                                                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                                                </a>
+                                                <% } %>
+
+                                                    <% if (isAdmin && profile.role==="student" ) { %>
+                                                        <button data-modal-target="addBooksModal"
+                                                            data-modal-toggle="addBooksModal"
+                                                            class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                                                            Add Books
+                                                        </button>
+                                                        <% } %>
+                                        </div>
+
+
         </div>
-    </div>
 
+        <!-- Edit Profile Modal -->
+        <%- include("../components/profile/editmodal") %>
+            <!-- Change Password Modal -->
+            <%- include("../components/profile/changePassModal") %>
+                <!-- Add Book Modal (Only for Admins) -->
+                <%- include("../components/profile/addBorrowsModal") %>
 
-    <!-- Change Password Modal -->
-    <div id="changePasswordModal" tabindex="-1"
-        class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-100">
-        <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
-            <h3 class="text-xl font-semibold text-gray-700 mb-4">Change Password</h3>
-            <form action="/profile/change-password/<%= profile._id %>" method="POST">
-                <div class="mb-4">
-                    <label class="block text-gray-600">Current Password</label>
-                    <input type="password" name="currentPassword" required class="w-full border rounded p-2">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-600">New Password</label>
-                    <input type="password" name="newPassword" required class="w-full border rounded p-2">
-                </div>
-                <div class="flex justify-end space-x-2">
-                    <button type="button" data-modal-hide="changePasswordModal"
-                        class="px-4 py-2 bg-gray-400 text-white rounded-md">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded-md">Update</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Add Book Modal (Only for Admins) -->
-    <div id="addBooksModal" tabindex="-1" aria-hidden="true"
-        class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full bg-gray-900 bg-opacity-50 flex justify-center items-center">
-        <div class="relative bg-white rounded-lg shadow-md w-full max-w-md p-6">
-            <h2 class="text-xl font-semibold mb-4">Add Book to <%= profile.name %>
-            </h2>
-
-            <!-- Form to Submit Book -->
-            <form action="/profile/<%= profile._id %>/addBook" method="POST">
-
-                <!-- Student Name (Read-Only) -->
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-medium">Student Name</label>
-                    <input type="text" class="w-full px-4 py-2 border rounded-md bg-gray-100"
-                        value="<%= profile.name %>" readonly>
-                </div>
-
-                <!-- Book ID Input -->
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-medium">Book ID</label>
-                    <input type="text" name="bookId" id="bookIdInput" required
-                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
-                        placeholder="Enter Book ID">
-                </div>
-
-                <!-- Due Date Input -->
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-medium">Due Date</label>
-                    <input type="date" name="dueDate" required
-                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300">
-                </div>
-
-                <!-- Submit and Close Buttons -->
-                <div class="mt-4 flex justify-between">
-                    <button type="submit"
-                        class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">Save</button>
-                    <button type="button" onclick="closeModal()"
-                        class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600">Close</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- JavaScript to Close Modal -->
-    <script>
-        function closeModal() {
-            document.getElementById("addBooksModal").classList.add("hidden");
-        }
-    </script>
-
-
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+                    <!-- JavaScript to Close Modal -->
+                    <script>
+                        function closeModal() {
+                            document.getElementById("addBooksModal").classList.add("hidden");
+                        }
+                    </script>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>

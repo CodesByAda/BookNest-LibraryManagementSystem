@@ -11,10 +11,11 @@ const userSchema = new mongoose.Schema({
     approved: { type: Boolean, default: false },
     role: { type: String, default: "student" },
 
-    // New field: Array of borrowed books
+    profilePic: String,
+
     borrowedBooks: [{
-        bookId: { type: mongoose.Schema.Types.ObjectId, ref: "Book" }, // Reference to Book model
-        dueDate: { type: Date, required: true } // Due date for returning the book
+        bookId: { type: mongoose.Schema.Types.ObjectId, ref: "Book" },
+        dueDate: { type: Date, required: true }
     }]
 });
 

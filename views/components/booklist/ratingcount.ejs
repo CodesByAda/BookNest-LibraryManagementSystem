@@ -1,0 +1,31 @@
+<!-- ⭐ Ratings Section -->
+<div class="mt-4">
+    <div class="flex items-center mb-2">
+        <% let totalRating = 0; %>
+        <% if (book.reviews.length > 0) { %>
+            <% book.reviews.forEach(review => { totalRating += review.rating; }); %>
+            <% let avgRating = totalRating / book.reviews.length; %>
+
+            <!-- Display Numeric Average Rating -->
+            <span class="text-lg font-semibold text-gray-700"><%= avgRating.toFixed(1) %></span>
+
+            <!-- Display Star Ratings -->
+            <div class="flex ml-2 text-yellow-500">
+                <% for (let i = 1; i <= 5; i++) { %>
+                    <% if (i <= avgRating) { %>
+                        <i class="fa-solid fa-star"></i> <!-- Filled Star -->
+                    <% } else if (i - avgRating < 1) { %>
+                        <i class="fa-solid fa-star-half-stroke"></i> <!-- Half Star -->
+                    <% } else { %>
+                        <i class="fa-regular fa-star text-gray-300"></i> <!-- Empty Star -->
+                    <% } %>
+                <% } %>
+            </div>
+
+            <!-- Total Ratings Count -->
+            <p class="ml-2 text-gray-700">(<%= book.reviews.length %> ratings)</p>
+        <% } else { %>
+            <p class="text-gray-700">No ratings yet.</p>
+        <% } %>
+    </div>
+</div>

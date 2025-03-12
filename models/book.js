@@ -21,8 +21,12 @@ const bookSchema = new mongoose.Schema({
         {
             userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
             username: String,
-            rating: Number,
+            rating: { type: Number, required: true, min: 1, max: 5 },
             comment: String,
+            likes: { type: Number, default: 0 },
+            dislikes: { type: Number, default: 0 },
+            likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // Users who liked
+            dislikedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // Users who disliked
             createdAt: { type: Date, default: Date.now }
         }
     ]

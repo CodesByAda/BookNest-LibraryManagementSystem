@@ -1,0 +1,44 @@
+<nav class="bg-white shadow-md p-4 sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+        <!-- Site Name -->
+        <a href="#" class="text-2xl font-bold text-[#316df8]">BookNest</a>
+
+        <!-- Navigation Links -->
+        <div class="space-x-6 hidden md:flex">
+            <a href="/" class="hover:text-[#316df8] transition">Home</a>
+            <a href="/bookreq" class="hover:text-[#316df8] transition">Request Book</a>
+        </div>
+
+        <!-- User Profile Dropdown -->
+        <div class="relative">
+            <button id="profileBtn" class="flex items-center space-x-2 hover:text-[#316df8] transition">
+                <% if (user && user.profilePic) { %>
+                    <img src="<%= user.profilePic %>" alt="Profile Picture" class="w-10 h-10 rounded-full object-cover">
+                <% } else { %>
+                    <img src="https://ui-avatars.com/api/?name=<%= user ? user.name : 'User' %>&background=316de5&color=fff"
+                        alt="Default Profile Picture" class="w-10 h-10 rounded-full">
+                <% } %>                
+                <span class="hidden md:inline">
+                    <%= session.username %>
+                </span>
+            </button>
+            <div id="profileDropdown" class="hidden absolute right-0 mt-2 bg-white shadow-md rounded-lg p-2 w-40">
+                <% if (admin) { %>
+                    <a href="/profile/<%= session.userId%>" class="block px-4 py-2 hover:bg-gray-100">Profile</a>
+                    <a href="/admin" class="block px-4 py-2 hover:bg-gray-100">Dashboard</a>
+                    <a href="/admin/addbook" class="block px-4 py-2 hover:bg-gray-100">Addbook</a>
+                    <% } else { %>
+                        <a href="/profile/<%= session.userId%>" class="block px-4 py-2 hover:bg-gray-100">Profile</a>
+                        <% } %>
+                            <a href="/logout" class="block px-4 py-2 hover:bg-gray-100">Logout</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+
+<script>
+    document.getElementById("profileBtn").addEventListener("click", () => {
+        document.getElementById("profileDropdown").classList.toggle("hidden");
+    });
+</script>

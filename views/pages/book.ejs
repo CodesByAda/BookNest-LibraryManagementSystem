@@ -1,71 +1,83 @@
 <%- include("../components/header") %>
+    <%- include("../components/booklist/navbar") %>
 
-    <!-- Floating Back Button -->
-    <div
-        class="fixed bottom-10 right-10 h-[50px] w-[50px] bg-[#316de5] rounded-lg font-semibold flex items-center justify-center">
-        <a href="/books" class="text-white h-full w-full text-center flex items-center justify-center">
-            ←
-        </a>
-    </div>
+        <!-- Book Details -->
+        <div class="max-w-6xl mx-auto p-6 mt-6 bg-white shadow-lg rounded-xl">
+            <!-- Book Info -->
+            <div class="flex gap-8">
+                <!-- Book Image -->
+                <img src="<%= book.coverImage %>" alt="Book Cover" class="w-52 h-72 object-cover rounded-lg shadow-md">
+                <!-- Book Details -->
+                <div class="flex-1">
+                    <h2 class="text-3xl font-bold text-gray-800">
+                        <%= book.bookname %>
+                    </h2>
+                    <p class="text-gray-600 text-lg">by <span class="text-[#316df8]" <%=book.authorname %></span></p>
+                    <p class="mt-2 text-gray-700"><strong>Rack Location:</strong>
+                        <%= book.rack_location %>
+                    </p>
+                    <p class="mt-2 text-gray-700"><strong>Category:</strong>
+                        <%= book.category %>
+                    </p>
+                    <p class="mt-2"><strong>Status:</strong> <span
+                            class="<%= book.availability === 'Available' ? 'text-green-600' : 'text-red-600' %> font-semibold">
+                            <%= book.availability %>
+                        </span>
+                    </p>
 
-    <!-- Book Details -->
-    <div class="mt-4">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Left Section (Book Info) -->
-            <div class="md:col-span-1">
-                <img src="<%= book.coverImage %>" alt="Book Cover" class="w-full h-auto rounded-lg shadow-lg p-4">
-                <p class="mt-4 text-gray-700"><strong>Availability:</strong>
-                    <span id="availability" class="text-green-600">
-                        <%= book.availability %>
-                    </span>
-                </p>
+                    <!-- ⭐ Ratings -->
+                    <%- include("../components/booklist/ratingcount") %>
+                        <p class="mt-2"><strong>Description:</strong>
+                            <%= book.description %>
+                        </p>
+                </div>
             </div>
+            <!-- 📝 Reviews Section -->
+            <div class="mt-8">
+                <h3 class="text-2xl font-semibold text-gray-800 mb-4">User Reviews</h3>
+                <%- include("../components/booklist/review.ejs") %>
 
-            <!-- Right Section (Details & Actions) -->
-            <div class="md:col-span-2 bg-white p-6 rounded-lg shadow-lg">
-                <h1 class="text-3xl font-bold mb-2">
-                    <%= book.bookname %>
-                </h1>
-                <p class="text-gray-600 mb-4">by <span class="font-semibold">
-                        <%= book.authorname %>
-                    </span></p>
+                <!-- Review Form -->
+                <form action="/books/<%= book._id %>/review" method="POST"
+                    class="mt-6 p-4 bg-gray-50 rounded-lg shadow">
+                    <h3 class="text-xl font-semibold text-gray-800">Write a Review</h3>
 
-                <p class="mb-4"><strong>Category:</strong>
-                    <%= book.category %>
-                </p>
-                <p class="mb-4"><strong>Rack Location:</strong>
-                    <%= book.rack_location %>
-                </p>
-                <p class="underline-offset-4"><strong><u>Description</u></strong></p>
-                <p class="mb-4">
-                    <%= book.description %>
-                </p>
+                    <!-- Star Rating -->
+                    <div class="flex items-center mt-2">
+                        <input type="hidden" name="rating" id="ratingInput" value="1">
+                        <div class="flex space-x-1 cursor-pointer">
+                            <% for(let i=1; i <=5; i++) { %>
+                                <i class="fa-solid fa-star text-gray-300 hover:text-yellow-500 star-icon"
+                                    data-value="<%= i %>"></i>
+                                <% } %>
+                        </div>
+                    </div>
 
-                <!-- User Actions -->
-                <!-- <div class="space-y-4 mb-6">
-                <button id="borrowBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Request to Borrow</button>
-                <button id="wishlistBtn" class="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded">Add to Wishlist</button>
-                <button id="newCopyBtn" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded hidden">Request New Copy</button>
-            </div> -->
+                    <!-- Review Comment -->
+                    <textarea name="comment" class="w-full mt-2 p-2 border rounded-lg"
+                        placeholder="Write your review..."></textarea>
 
+                    <!-- Submit Button -->
+                    <button type="submit" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg">Submit</button>
+                </form>
 
-                <%- include("../components/rating.ejs") %>
+                <!-- JavaScript for Star Rating -->
+                <script>
+                    document.querySelectorAll('.star-icon').forEach(star => {
+                        star.addEventListener('click', function () {
+                            let rating = this.getAttribute('data-value');
+                            document.getElementById('ratingInput').value = rating;
+
+                            document.querySelectorAll('.star-icon').forEach(s => s.classList.remove('text-yellow-500'));
+                            for (let i = 0; i < rating; i++) {
+                                document.querySelectorAll('.star-icon')[i].classList.add('text-yellow-500');
+                            }
+                        });
+                    });
+                </script>
+
             </div>
         </div>
-    </div>
+        </body>
 
-    <!-- Star Rating Click Script -->
-    <script>
-        const stars = document.querySelectorAll('.rating-star');
-        const ratingInput = document.getElementById('ratingValue');
-
-        stars.forEach((star, index) => {
-            star.addEventListener('click', () => {
-                ratingInput.value = index + 1;
-                stars.forEach((s, i) => {
-                    s.classList.toggle('text-yellow-500', i <= index);
-                    s.classList.toggle('text-gray-400', i > index);
-                });
-            });
-        });
-    </script>
+        </html>
