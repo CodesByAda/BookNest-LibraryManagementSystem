@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookNest | Next-Gen Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            background: radial-gradient(circle at center, #0a0a0a, #1e1e2a);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .login-container {
+            position: relative;
+            width: 400px;
+            padding: 2rem;
+            text-align: center;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 30px rgba(49, 109, 229, 0.3);
+        }
+
+        .title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .input-group {
+            position: relative;
+            margin: 1.5rem 0;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+            transition: 0.3s;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .input-field:focus {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 15px rgba(49, 109, 229, 0.5);
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #316de5;
+            font-size: 1.2rem;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #316de5, #1a50c7);
+            color: white;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(49, 109, 229, 0.4);
+        }
+
+        .btn-login:hover {
+            box-shadow: 0 0 25px rgba(49, 109, 229, 0.7);
+            transform: scale(1.05);
+        }
+
+        .role-switch {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            margin: 0 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            color: white;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .role-btn.active {
+            background: #316de5;
+            color: white;
+            box-shadow: 0 0 15px rgba(49, 109, 229, 0.7);
+        }
+
+        .forgot-password {
+            color: gray;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .forgot-password:hover {
+            color: #316de5;
+        }
+
+        /* Floating Particles */
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.2);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: floatParticles 10s infinite ease-in-out;
+        }
+
+        @keyframes floatParticles {
+            0% {
+                transform: translateY(0px) translateX(0px);
+            }
+
+            50% {
+                transform: translateY(-50px) translateX(20px);
+            }
+
+            100% {
+                transform: translateY(0px) translateX(0px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Floating Particles -->
+    <div class="particle" style="top: 10%; left: 20%;"></div>
+    <div class="particle" style="top: 50%; left: 10%;"></div>
+    <div class="particle" style="top: 80%; left: 70%;"></div>
+    <div class="particle" style="top: 30%; left: 90%;"></div>
+
+    <!-- Login Card -->
+    <div class="login-container">
+        <h2 class="title"><i class="fas fa-user-shield"></i> Login</h2>
+
+        <!-- Role Selection -->
+        <div class="role-switch">
+            <div class="role-btn active" onclick="selectRole('student')">Student</div>
+            <div class="role-btn" onclick="selectRole('admin')">Admin</div>
+        </div>
+
+        <!-- Email Input -->
+        <div class="input-group">
+            <i class="fas fa-envelope"></i>
+            <input type="email" class="input-field" placeholder="Enter Email">
+        </div>
+
+        <!-- Password Input -->
+        <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" class="input-field" placeholder="Enter Password">
+        </div>
+
+        <!-- Login Button -->
+        <button class="btn-login"><i class="fas fa-sign-in-alt"></i> Login</button>
+
+        <!-- Forgot Password -->
+        <p class="forgot-password">Forgot Password?</p>
+    </div>
+
+    <script>
+        function selectRole(role) {
+            document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
+            if (role === 'student') {
+                document.querySelectorAll('.role-btn')[0].classList.add('active');
+            } else {
+                document.querySelectorAll('.role-btn')[1].classList.add('active');
+            }
+        }
+    </script>
+
+</body>
+
+</html>

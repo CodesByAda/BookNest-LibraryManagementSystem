@@ -1,185 +1,139 @@
 <%- include("../components/header") %>
-    <%- include("../components/profile/breadcrumbs") %>
-
-        <!-- Profile Header -->
-        <div class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md">
-            <div class="flex items-center space-x-4 relative">
-                <!-- Profile Picture -->
-                <label for="uploadPfp" class="cursor-pointer relative">
-                    <% if (profile.profilePic) { %>
-                        <img src="<%= profile.profilePic %>" alt="Profile Picture"
-                            class="w-20 h-20 rounded-full object-cover">
-                        <% } else { %>
-                            <img src="https://ui-avatars.com/api/?name=<%= profile.name %>&background=316de5&color=fff"
-                                alt="Default Profile Picture" class="w-20 h-20 rounded-full">
-                            <% } %>
-
-                                <% if (isOwner) { %>
-                                    <div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 
-                            transition bg-black rounded-full">
-                                        <i class="fa-solid fa-camera text-white"></i>
-                                    </div>
-                                    <% } %>
-                </label>
-
-                <!-- Hidden File Input -->
-                <% if (isOwner) { %>
-                    <form action="/profile/upload-pfp" method="POST">
-                        <input type="file" id="uploadPfp" name="fileInput" accept="image/*" class="hidden"
-                            onchange="convertToBase64(this)">
-                        <input type="hidden" name="profilePic" id="base64Pfp"> <!-- Only this gets sent -->
-                        <button type="submit" id="submitPfp" class="hidden"></button>
-                    </form>
-
-                    <script>
-                        function convertToBase64(input) {
-                            const file = input.files[0]; // Get the selected file
-                            if (!file) return; // No file selected
-
-                            const reader = new FileReader();
-                            reader.onload = function () {
-                                document.getElementById("base64Pfp").value = reader.result; // Store Base64 string
-                                document.getElementById("submitPfp").click(); // Auto-submit form
-                            };
-
-                            reader.readAsDataURL(file); // Convert to Base64
-                        }
-                    </script>
-
-
-                    <% } %>
-
-                        <div>
-                            <h2 class="text-2xl font-semibold">
-                                <%= profile.name %>
-                            </h2>
-                            <p class="text-gray-500">Role: <span class="font-medium">
-                                    <%= profile.role %>
-                                </span></p>
-                            <p class="text-gray-500">Email: <%= profile.email %>
-                            </p>
-                        </div>
+<%- include("../components/alert") %>
+<%- include("../components/profile/breadcrumbs") %>
+<!-- Profile Header -->
+<div class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md">
+    <div class="flex items-center space-x-4 relative">
+        <!-- Profile Picture -->
+        <label for="uploadPfp" class="cursor-pointer relative">
+            <% if (profile.profilePic) { %>
+                <img src="<%= profile.profilePic %>" alt="Profile Picture" class="w-20 h-20 rounded-full object-cover">
+            <% } else { %>
+                <img src="https://ui-avatars.com/api/?name=<%= profile.name %>&background=316de5&color=fff" alt="Default Profile Picture" class="w-20 h-20 rounded-full">
+            <% } %>
+            
+            <% if (isOwner) { %>
+                <div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition bg-black rounded-full">
+                    <i class="fa-solid fa-camera text-white"></i>
+                </div>
+            <% } %>
+        </label>
+        <!-- Hidden File Input -->
+        <% if (isOwner) { %>
+            <form action="/profile/upload-pfp" method="POST">
+                <input type="file" id="uploadPfp" name="fileInput" accept="image/*" class="hidden" onchange="convertToBase64(this)">
+                <input type="hidden" name="profilePic" id="base64Pfp"> <!-- Only this gets sent -->
+                <button type="submit" id="submitPfp" class="hidden"></button>
+            </form>
+        <% } %>
+            <div>
+                <h2 class="text-2xl font-semibold"><%= profile.name %></h2>
+                <p class="text-gray-500">Role: <span class="font-medium"><%= profile.role %></span></p>
+                <p class="text-gray-500">Email: <%= profile.email %></p>
             </div>
-
-
-            <% if (profile.role==="student" ) { %>
-                <div class="mt-6">
-                    <h3 class="text-lg font-medium mb-2">Account Details</h3>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <p class="text-gray-600">Course</p>
-                            <p class="text-gray-900 font-medium">
-                                <%= profile.course %>
-                            </p>
-                        </div>
-                        <div>
-                            <p class="text-gray-600">Semester</p>
-                            <p class="text-gray-900 font-medium">
-                                <%= profile.semester %> Semester
-                            </p>
-                        </div>
-                        <div>
-                            <p class="text-gray-600">Address</p>
-                            <p class="text-gray-900 font-medium">
-                                <%= profile.address %>
-                            </p>
-                        </div>
-                        <div>
-                            <p class="text-gray-600">Roll Number</p>
-                            <p class="text-gray-900 font-medium">
-                                <%= profile.rollno %>
-                            </p>
-                        </div>
+    </div>
+    <% if (profile.role==="student" ) { %>
+        <div class="mt-6">
+            <h3 class="text-lg font-medium mb-2">Account Details</h3>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <p class="text-gray-600">Course</p>
+                    <p class="text-gray-900 font-medium"><%= profile.course %></p>
+                </div>
+                <div>
+                    <p class="text-gray-600">Semester</p>
+                    <p class="text-gray-900 font-medium"><%= profile.semester %> Semester</p>
+                </div>
+                <div>
+                    <p class="text-gray-600">Address</p>
+                    <p class="text-gray-900 font-medium"><%= profile.address %></p>
+                </div>
+                <div>
+                    <p class="text-gray-600">Roll Number</p>
+                    <p class="text-gray-900 font-medium"><%= profile.rollno %></p>
+                </div>
+            </div>
+        </div>
+    <% } %>
+    <% if (profile.borrowedBooks && profile.borrowedBooks.length> 0) { %>
+        <h3 class="text-lg font-medium my-2">Borrowed Books</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 bg-gray-100 p-4">
+            <% profile.borrowedBooks.forEach(book=> { %>
+                <div class="bg-white shadow-md rounded-md p-3 border border-gray-300 flex items-start">
+                    <!-- Book Image on the Left -->
+                    <img src="<%= book.bookId && book.bookId.coverImage ? book.bookId.coverImage : '/images/book.jpg' %>" alt="Book Image" class="w-16 h-20 rounded-md mr-4">
+                    <!-- Book Details on the Right -->
+                    <div class="flex-1">
+                        <p class="text-sm font-semibold text-gray-800">
+                            <%= book.bookId ? book.bookId.bookname : "Unknown Book" %>
+                        </p>
+                        <p class="text-xs text-gray-600 font-medium mt-1">
+                            Due Date: <%= book.dueDate ? book.dueDate.toDateString() : "Not Set" %>
+                        </p>
+                        <!-- Remove Button Below Both -->
+                        <% if (isAdmin) { %>
+                            <form action="/profile/<%= profile._id %>/removeBook/<%= book.bookId._id %>" method="POST" class="mt-2">
+                                <button type="submit" class="w-full px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 text-sm">
+                                    Remove
+                                </button>
+                            </form>
+                        <% } %>
                     </div>
                 </div>
-                <% } %>
-
-                    <% if (profile.borrowedBooks && profile.borrowedBooks.length> 0) { %>
-                        <h3 class="text-lg font-medium my-2">Borrowed Books</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 bg-gray-100 p-4">
-                            <% profile.borrowedBooks.forEach(book=> { %>
-                                <div class="bg-white shadow-md rounded-md p-3 border border-gray-300 flex items-start">
-                                    <!-- Book Image on the Left -->
-                                    <img src="<%= book.bookId && book.bookId.coverImage ? book.bookId.coverImage : '/images/book.jpg' %>"
-                                        alt="Book Image" class="w-16 h-20 rounded-md mr-4">
-
-                                    <!-- Book Details on the Right -->
-                                    <div class="flex-1">
-                                        <p class="text-sm font-semibold text-gray-800">
-                                            <%= book.bookId ? book.bookId.bookname : "Unknown Book" %>
-                                        </p>
-                                        <p class="text-xs text-gray-600 font-medium mt-1">
-                                            Due Date: <%= book.dueDate ? book.dueDate.toDateString() : "Not Set" %>
-                                        </p>
-
-                                        <!-- Remove Button Below Both -->
-                                        <% if (isAdmin) { %>
-                                            <form action="/profile/<%= profile._id %>/removeBook/<%= book.bookId._id %>"
-                                                method="POST" class="mt-2">
-                                                <button type="submit"
-                                                    class="w-full px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 text-sm">
-                                                    Remove
-                                                </button>
-                                            </form>
-                                            <% } %>
-                                    </div>
-                                </div>
-                                <% }); %>
-                        </div>
-
-                        <% } else { %>
-                            <% if (!isAdmin) { %>
-                                <p class="text-gray-500">No borrowed books.</p>
-                                <% } %>
-                                    <% } %>
-
-
-                                        <!-- Action Buttons (Always Visible) -->
-                                        <div class="mt-6 flex space-x-4">
-                                            <% if (isOwner) { %>
-                                                <button data-modal-target="editProfileModal"
-                                                    data-modal-toggle="editProfileModal"
-                                                    class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 hover:cursor-pointer">
-                                                    <i class="fa-solid fa-user-pen"></i> Profile
-                                                </button>
-                                                <button data-modal-target="changePasswordModal"
-                                                    data-modal-toggle="changePasswordModal"
-                                                    class="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 hover:cursor-pointer">
-                                                    <i class="fa-solid fa-pen-to-square"></i> Password
-                                                </button>
-                                                <a href="/usercard/<%= profile._id %>"
-                                                    class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
-                                                    <i class="fa-solid fa-download"></i> Download Card
-                                                </a>
-                                                <a href="/logout"
-                                                    class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
-                                                    <i class="fa-solid fa-right-from-bracket"></i> Logout
-                                                </a>
-                                                <% } %>
-
-                                                    <% if (isAdmin && profile.role==="student" ) { %>
-                                                        <button data-modal-target="addBooksModal"
-                                                            data-modal-toggle="addBooksModal"
-                                                            class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
-                                                            Add Books
-                                                        </button>
-                                                        <% } %>
-                                        </div>
-
-
+            <% }); %>
         </div>
 
-        <!-- Edit Profile Modal -->
-        <%- include("../components/profile/editmodal") %>
+    <% } else { %>
+        <% if (!isAdmin) { %>
+            <p class="text-gray-500">No borrowed books.</p>
+        <% } %>
+    <% } %>
+    <!-- Action Buttons (Always Visible) -->
+    <div class="mt-6 flex space-x-4">
+        <% if (isOwner) { %>
+            <button data-modal-target="editProfileModal-<%= profile._id %>" data-modal-toggle="editProfileModal-<%= profile._id %>" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 hover:cursor-pointer">
+                <i class="fa-solid fa-user-pen"></i> Profile
+            </button>
+            <!-- Edit Profile Modal -->
+            <%- include("../components/profile/editmodal") %>
+
+            <button data-modal-target="changePasswordModal-<%= profile._id %>" data-modal-toggle="changePasswordModal-<%= profile._id %>" class="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 hover:cursor-pointer">
+                <i class="fa-solid fa-pen-to-square"></i> Password
+            </button>
             <!-- Change Password Modal -->
             <%- include("../components/profile/changePassModal") %>
-                <!-- Add Book Modal (Only for Admins) -->
-                <%- include("../components/profile/addBorrowsModal") %>
 
-                    <!-- JavaScript to Close Modal -->
-                    <script>
-                        function closeModal() {
-                            document.getElementById("addBooksModal").classList.add("hidden");
-                        }
-                    </script>
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+            <% if (profile.role === "student") { %>
+                <a href="/profile/idcard" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
+                    <i class="fa-solid fa-qrcode"></i> ScanTag
+                </a>
+            <% } %>
+            <a href="/logout" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+        <% } %>
+        <% if (isAdmin && profile.role === "student" ) { %>
+            <button data-modal-target="add-book-modal-<%= profile._id %>" data-modal-toggle="add-book-modal-<%= profile._id %>" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                Add Books
+            </button>
+            <%- include("../components/profile/addBorrowsModal") %>
+        <% } %>
+    </div>
+</div>
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+<script>
+    function convertToBase64(input) {
+        const file = input.files[0]; // Get the selected file
+        if (!file) return; // No file selected
+        const reader = new FileReader();
+        reader.onload = function () {
+            document.getElementById("base64Pfp").value = reader.result; // Store Base64 string
+            document.getElementById("submitPfp").click(); // Auto-submit form
+        };
+        reader.readAsDataURL(file); // Convert to Base64
+    }
+</script>

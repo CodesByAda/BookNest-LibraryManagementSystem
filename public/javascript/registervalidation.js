@@ -3,11 +3,16 @@ document.getElementById("studentForm").addEventListener("submit", function (even
 
     let valid = true;
 
-    function validateField(selector, errorSelector) {
-        let field = document.querySelector(selector);
-        let errorMessage = document.querySelector(errorSelector);
+    // ✅ Helper function for required field validation
+    function validateRequiredField(selector, errorSelector) {
+        const field = document.querySelector(selector);
+        const errorMessage = document.querySelector(errorSelector);
 
-        if (field.value.trim() === "") {
+        // ⚠️ Handle autofill issues with direct value access
+        const value = field.value || field.getAttribute('value') || ""; 
+
+        if (value.trim() === "") {
+            errorMessage.textContent = "This field is required";
             errorMessage.classList.remove("hidden");
             valid = false;
         } else {
@@ -15,54 +20,60 @@ document.getElementById("studentForm").addEventListener("submit", function (even
         }
     }
 
-    // Validate required fields
-    validateField("input[name='name']", "#nameError");
-    validateField("input[name='address']", "#addressError");
-    validateField("input[name='course']", "#courseError");
-    validateField("input[name='semester']", "#semesterError");
-    validateField("input[name='rollno']", "#rollnoError");
-    validateField("input[name='password']", "#passwordError");
+    // ✅ Helper function for regex validation
+    function validateWithRegex(selector, errorSelector, regex, errorMsg) {
+        const field = document.querySelector(selector);
+        const errorMessage = document.querySelector(errorSelector);
 
-    // Phone Number Validation
-    let phone = document.querySelector("input[name='phone']");
-    let phoneError = document.querySelector("#phoneError");
-    let phoneRegex = /^[6-9]\d{9}$/;
-
-    if (!phone || !phoneRegex.test(phone.value.trim())) {
-        phoneError.classList.remove("hidden");
-        valid = false;
-    } else {
-        phoneError.classList.add("hidden");
+        if (field.value.trim() !== "" && !regex.test(field.value.trim())) {
+            errorMessage.textContent = errorMsg;
+            errorMessage.classList.remove("hidden");
+            valid = false;
+        } else if (field.value.trim() !== "") {
+            errorMessage.classList.add("hidden");
+        }
     }
 
-    // Email Validation
-    let email = document.querySelector("input[name='email']");
-    let emailError = document.querySelector("#emailError");
-    let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // ✅ Validate Required Fields
+    validateRequiredField("input[name='name']", "#nameError");
+    validateRequiredField("input[name='address']", "#addressError");
+    validateRequiredField("input[name='course']", "#courseError");
+    validateRequiredField("input[name='semester']", "#semesterError");
+    validateRequiredField("input[name='rollno']", "#rollnoError");
 
-    if (!email || !emailRegex.test(email.value.trim())) {
-        emailError.classList.remove("hidden");
+    // ✅ Explicitly validate password separately
+    const passwordField = document.getElementById("user-password");  // ✅ Updated ID
+    const passwordError = document.getElementById("passwordError");
+
+    const passwordValue = passwordField.value || passwordField.getAttribute('value') || "";
+
+    if (passwordValue.trim() === "") {
+        passwordError.textContent = "Password is required";
+        passwordError.classList.remove("hidden");
         valid = false;
     } else {
-        emailError.classList.add("hidden");
+        passwordError.classList.add("hidden");
     }
 
-    // If form is valid, show loader and submit the form
+    // ✅ Validate Phone with Regex (updated ID)
+    const phoneRegex = /^[6-9]\d{9}$/;
+    validateWithRegex("#user-phone", "#phoneError", phoneRegex, "Enter a valid phone number");
+
+    // ✅ Validate Email with Regex (updated ID)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    validateWithRegex("#user-email", "#emailError", emailRegex, "Enter a valid email");
+
+    // ✅ Show loader and submit form if valid
+    const loaderdiv = document.getElementById("loader");
+
     if (valid) {
-        let loaderdiv = document.getElementById("loader");
+        loaderdiv.classList.remove("hidden");
+        loaderdiv.classList.add("flex");
 
-        setTimeout(() => {
-            loaderdiv.classList.remove("hidden");
-            loaderdiv.classList.add("flex");
-        }, 1000);
-
-        setTimeout(() => {
-            document.getElementById("studentForm").submit();
-        }, 5000);
-
-        setTimeout(() => {
-            loaderdiv.classList.add("hidden");
-            loaderdiv.classList.remove("flex");
-        }, 7000);
+        // ✅ Submit form immediately
+        this.submit();
+    } else {
+        loaderdiv.classList.add("hidden");
+        loaderdiv.classList.remove("flex");
     }
 });

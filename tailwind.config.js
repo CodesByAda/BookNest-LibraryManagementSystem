@@ -1,4 +1,5 @@
 module.exports = {
+  mode: 'jit',
   content: [
       "./views/**/*.ejs", 
       "./node_modules/flowbite/**/*.js"

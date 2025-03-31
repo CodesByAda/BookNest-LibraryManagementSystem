@@ -1,13 +1,7 @@
-<nav class="bg-white shadow-md p-4 sticky top-0 z-50">
+<nav class="bg-white shadow-md p-4 sticky top-0 z-40">
     <div class="max-w-6xl mx-auto flex justify-between items-center">
         <!-- Site Name -->
-        <a href="#" class="text-2xl font-bold text-[#316df8]">BookNest</a>
-
-        <!-- Navigation Links -->
-        <div class="space-x-6 hidden md:flex">
-            <a href="/" class="hover:text-[#316df8] transition">Home</a>
-            <a href="/bookreq" class="hover:text-[#316df8] transition">Request Book</a>
-        </div>
+        <a href="/" class="text-2xl font-bold text-[#316df8]">BookNest</a>
 
         <!-- User Profile Dropdown -->
         <div class="relative">
@@ -26,9 +20,9 @@
                 <% if (admin) { %>
                     <a href="/profile/<%= session.userId%>" class="block px-4 py-2 hover:bg-gray-100">Profile</a>
                     <a href="/admin" class="block px-4 py-2 hover:bg-gray-100">Dashboard</a>
-                    <a href="/admin/addbook" class="block px-4 py-2 hover:bg-gray-100">Addbook</a>
                     <% } else { %>
                         <a href="/profile/<%= session.userId%>" class="block px-4 py-2 hover:bg-gray-100">Profile</a>
+                        <a data-modal-target="book-request-modal" data-modal-toggle="book-request-modal" class="block px-4 py-2 hover:bg-gray-100">Book Requests</a>
                         <% } %>
                             <a href="/logout" class="block px-4 py-2 hover:bg-gray-100">Logout</a>
             </div>

@@ -8,34 +8,44 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
+    // On Enter key, reload page with search query
+    searchInput.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+            const query = searchInput.value.trim();
+            if (query) {
+                window.location.href = `/books?search=${encodeURIComponent(query)}`;
+            }
+        }
+    });
+
+    // Search suggestions based on currently loaded books
     const bookData = Array.from(books)
         .map(book => {
             const titleElement = book.querySelector(".book-title");
             if (!titleElement) {
                 console.error("Book title not found in:", book);
-                return null; // Skip this book
+                return null;
             }
             return { element: book, title: titleElement.textContent.trim().toLowerCase() };
         })
-        .filter(book => book !== null); // Remove null values
+        .filter(book => book !== null);
 
     searchInput.addEventListener("input", function () {
         let filter = searchInput.value.toLowerCase().trim();
         let suggestionList = [];
 
-        suggestions.innerHTML = ""; // Clear previous suggestions
+        suggestions.innerHTML = "";
         bookData.forEach(book => {
             if (book.title.includes(filter)) {
-                book.element.style.display = "block"; // Show book
+                book.element.style.display = "block";
                 if (!suggestionList.includes(book.title)) {
                     suggestionList.push(book.title);
                 }
             } else {
-                book.element.style.display = "none"; // Hide book
+                book.element.style.display = "none";
             }
         });
 
-        // Display suggestions
         if (filter.length > 0 && suggestionList.length > 0) {
             suggestions.classList.remove("hidden");
             suggestionList.forEach(title => {
@@ -45,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 suggestionItem.addEventListener("click", function () {
                     searchInput.value = title;
                     suggestions.classList.add("hidden");
-                    filterBooks(title);
+                    window.location.href = `/books?search=${encodeURIComponent(title)}`;
                 });
                 suggestions.appendChild(suggestionItem);
             });
@@ -54,14 +64,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Function to filter books when selecting a suggestion
-    function filterBooks(query) {
-        bookData.forEach(book => {
-            book.element.style.display = book.title.includes(query.toLowerCase()) ? "block" : "none";
-        });
-    }
-
-    // Hide suggestions when clicking outside
     document.addEventListener("click", function (e) {
         if (!searchInput.contains(e.target) && !suggestions.contains(e.target)) {
             suggestions.classList.add("hidden");

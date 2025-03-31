@@ -8,7 +8,7 @@ const bookSchema = new mongoose.Schema({
         required: true,
         enum: ["Fiction", "Non-Fiction", "Science", "History", "Technology"]
     },
-    isbn: { type: String, required: true },
+    stock: { type: Number, required: true },
     description: { type: String },
     availability: {
         type: String,

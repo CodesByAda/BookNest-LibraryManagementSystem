@@ -1,88 +1,181 @@
 <%- include("../components/header") %>
-<div class="flex h-screen overflow-hidden">
-    <!-- Sidebar -->
-    <aside class="w-64 bg-[#316de5] text-white p-5 space-y-6">
-        <a href="/" class="flex items-center space-x-0 rtl:space-x-reverse">
-            <img src="/images/logo.png" class="h-8" alt="BookNest Logo">
-            <span class="self-center text-2xl font-bold whitespace-nowrap">BookNest</span>
-        </a>
-        <nav>
-            <ul class="space-y-4">
-                <li><button onclick="showSection('dashboard')"
-                        class="block w-full text-left hover:bg-white hover:text-[#316de5] p-2 rounded">Dashboard</button>
-                </li>
-                <li><button onclick="showSection('manage-books')"
-                        class="block w-full text-left hover:bg-white hover:text-[#316de5] p-2 rounded">Manage
-                        Books</button></li>
-                <li><button onclick="showSection('user-management')"
-                        class="block w-full text-left hover:bg-white hover:text-[#316de5] p-2 rounded">User
-                        Management</button></li>
-                <li><button onclick="showSection('library-stats')"
-                        class="block w-full text-left hover:bg-white hover:text-[#316de5] p-2 rounded">Library
-                        Stats</button></li>
-                <li><button onclick="showSection('requests')"
-                        class="block w-full text-left hover:bg-white hover:text-[#316de5] p-2 rounded">Requests &
-                        Notifications</button></li>
-                <li><button onclick="showSection('settings')"
-                        class="block w-full text-left hover:bg-white hover:text-[#316de5] p-2 rounded">Settings</button>
-                </li>
-            </ul>
-        </nav>
-    </aside>
+<%- include("../components/alert")  %>
 
-    <!-- Main Content -->
-    <main class="flex-1 p-6 overflow-auto   ">
-        <!-- Navbar -->
-        <div class="flex justify-between items-center bg-white p-4 rounded-lg shadow-md mb-6">
-            <h2 class="text-xl font-semibold">Admin Dashboard</h2>
-            <div class="flex space-x-4">
-                <input type="text" placeholder="Search books/users" class="border rounded p-2">
-                <button class="bg-red-500 text-white px-4 py-2 rounded-lg">Logout</button>
-            </div>
+
+<style>
+    .glass {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(15px);
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .floating {
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .floating:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .sidebar {
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .sidebar.hidden {
+        transform: translateX(-100%);
+    }
+</style>
+
+<main class="p-6 md:p-10">
+    <!-- Navbar -->
+    <%- include("../components/admin/mainbar") %>
+
+    <!-- Tab Content -->
+    <div id="dashboard-tab-content">
+        <!-- Analytics Section -->
+        <div class="tab-content hidden p-6 bg-white rounded-lg" id="analytics" role="tabpanel">
+            <%- include("../components/admin/analytics") %>
         </div>
 
-        <!-- Dashboard Overview -->
-        <%- include("../components/admin/dashboard") %>
-        <%- include("../components/admin/manageBooks") %>
-        <%- include("../components/admin/users") %>
-    </main>
-</div>
+        <!-- User Management Section -->
+        <div class="tab-content hidden p-6 bg-white rounded-lg" id="user-management" role="tabpanel">
+            <%- include("../components/admin/user-management") %>
+        </div>
+
+        <!-- Book Management Section -->
+        <div class="tab-content hidden p-6 bg-white rounded-lg" id="book-management" role="tabpanel">
+            <%- include("../components/admin/book-management") %>
+        </div>
+
+        <!-- BookReq Section -->
+        <div class="tab-content hidden p-6 bg-white rounded-lg" id="book-req" role="tabpanel">
+            <%- include("../components/admin/book-req") %>
+        </div>
+
+        <!-- Announcements Section -->
+        <div class="tab-content hidden p-6 bg-white rounded-lg" id="announcements" role="tabpanel">
+            <%- include("../components/admin/announcements") %>
+        </div>
+    </div>
+</main>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-    // Check if a section is provided in the URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const sectionFromUrl = urlParams.get("section");
-
-    // Get last section from localStorage OR use section from URL OR default to "dashboard"
-    const lastSection = sectionFromUrl || localStorage.getItem("activeSection") || "dashboard";
-
-    showSection(lastSection);
-});
-
-function showSection(sectionId) {
-    // Store the active section in localStorage
-    localStorage.setItem("activeSection", sectionId);
-
-    // Hide all sections
-    document.querySelectorAll(".section").forEach(section => {
-        section.classList.add("hidden");
-    });
-
-    // Show the selected section
-    const activeSection = document.getElementById(sectionId);
-    if (activeSection) {
-        activeSection.classList.remove("hidden");
+    function getActiveTab() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get("section") || "analytics"; // Default to 'analytics' only if no section exists
     }
 
-    // Update URL without reloading
-    const newUrl = new URL(window.location);
-    newUrl.searchParams.set("section", sectionId);
-    window.history.replaceState({}, "", newUrl);
-}
+    function setActiveTab(sectionId, updateURL = true) {
+        // Hide all tab contents
+        document.querySelectorAll(".tab-content").forEach(content => {
+            content.classList.add("hidden");
+        });
+
+        // Show the selected tab content
+        const activeContent = document.getElementById(sectionId);
+        if (activeContent) {
+            activeContent.classList.remove("hidden");
+        }
+
+        // Remove active styles from all tabs
+        document.querySelectorAll(".tab-btn").forEach(tab => {
+            tab.classList.remove("text-[#316de5]", "border-[#316de5]", "border-b-2", "font-bold");
+            tab.classList.add("text-gray-500", "hover:text-gray-600", "border-transparent");
+            tab.setAttribute("aria-selected", "false");
+        });
+
+        // Apply active styles to the clicked/current tab
+        const activeTab = document.querySelector(`button[data-tabs-target="#${sectionId}"]`);
+        if (activeTab) {
+            activeTab.classList.add("text-[#316de5]", "border-[#316de5]", "border-b-2", "font-bold");
+            activeTab.classList.remove("text-gray-500", "hover:text-gray-600", "border-transparent");
+            activeTab.setAttribute("aria-selected", "true");
+
+            // 🔥 **Force Tailwind border update** (fix for reload issue)
+            setTimeout(() => {
+                activeTab.classList.add("border-b-2");
+            }, 50);
+        }
+
+        // **Update URL without reloading**
+        if (updateURL) {
+            const newURL = `/admin/?section=${sectionId}`;
+            window.history.replaceState(null, "", newURL);
+        }
+    }
+
+    function init() {
+        // ✅ **FIX: Strictly use URL query params**
+        const activeTab = getActiveTab();
+        setActiveTab(activeTab, false); 
+
+        // Add event listeners to all tab buttons
+        document.querySelectorAll(".tab-btn").forEach(tab => {
+            tab.addEventListener("click", function () {
+                const sectionId = this.getAttribute("data-tabs-target").substring(1);
+                setActiveTab(sectionId);
+            });
+        });
+
+        // Handle browser back/forward navigation
+        window.addEventListener("popstate", () => {
+            const section = getActiveTab();
+            setActiveTab(section, false);
+        });
+    }
+
+    // Run the function after the DOM is fully loaded
+    setTimeout(init, 50);
+});
+
+</script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+
+<script>
+    const socket = io();
+
+    // Tell the server this user is an admin
+    socket.emit("adminConnected");
+
+    // Listen for new student registrations
+    socket.on("newRegistration", (data) => {
+        // Create the notification element
+        const notification = document.createElement("div");
+        notification.id = "toast-interactive";
+        notification.className = "fixed top-5 right-5 w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow-lg border-l-4 border-blue-500 animate-slide-in";
+
+        notification.innerHTML = `
+    <div class="flex">
+        <div class="inline-flex items-center justify-center shrink-0 w-8 h-8 text-blue-500 bg-blue-100 rounded-lg">
+            <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M10 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8Zm-6 14a6 6 0 0 1 12 0H4Z"/>
+            </svg>
+            <span class="sr-only">User Icon</span>
+        </div>
+        <div class="ms-3 text-sm font-normal">
+            <span class="mb-1 text-sm font-semibold text-gray-900">New Registration</span>
+            <div class="mb-2 text-sm font-normal">${data.message}</div> 
+            <div class="text-xs text-gray-400">${new Date(data.timestamp).toLocaleTimeString()}</div>
+        </div>
+    </div>
+    `;
+
+        // Append notification to body
+        document.body.appendChild(notification);
+
+        // Remove after 5 seconds
+        setTimeout(() => {
+            notification.remove();
+        }, 5000);
+    });
+
 
 </script>
 
 </body>
-
 </html>

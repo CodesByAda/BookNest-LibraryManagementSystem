@@ -1,51 +1,90 @@
 <%- include("../components/header") %>
-    <%- include("../components/booklist/navbar") %>
+<%- include("../components/alert")  %>
+<%- include("../components/booklist/navbar") %>
+<div class="max-w-4xl mx-auto mt-8 px-4 relative">
+    <input type="text" id="searchInput" placeholder="Search books..." 
+        value="<%= searchQuery || '' %>" 
+        class="w-full p-3 rounded-lg bg-white shadow-md focus:ring-[#316df8] focus:border-[#316df8]" 
+        autocomplete="off">
+    <div id="suggestions" class="absolute w-full bg-white border rounded shadow-md hidden mt-1 z-50"></div>
+</div>
 
-        <div class="max-w-4xl mx-auto mt-8 px-4 relative">
-            <input type="text" id="searchInput" placeholder="Search books..."
-                class="w-full p-3 rounded-lg bg-white shadow-md focus:ring-[#316df8] focus:border-[#316df8]"
-                autocomplete="off">
-            <div id="suggestions" class="absolute w-full bg-white border rounded shadow-md hidden mt-1 z-50"></div>
-            <!-- Added z-index -->
+<!-- 📚 Book Grid -->
+<div id="bookList" class="max-w-6xl mx-auto mt-8 px-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <% for (let book of books) { %>
+        <div class="book-card bg-white p-4 rounded-lg shadow-md flex flex-col">
+            <%- include("../components/booklist/bookcard", { bookname: book.bookname, authorname: book.authorname, availability: book.availability, bookid: book._id, coverImage: book.coverImage }) %>
         </div>
+    <% } %>
 
-        <!-- 📚 Book Grid -->
-        <div id="bookList" class="max-w-6xl mx-auto mt-8 px-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <% for(let book of books) { %>
-                <div class="book-card bg-white p-4 rounded-lg shadow-md flex flex-col">
-                    <%- include("../components/booklist/bookcard", { bookname: book.bookname, authorname:
-                        book.authorname, availability: book.availability, bookid: book._id, coverImage: book.coverImage
-                        }) %>
-                </div>
-                <% } %>
+    <!-- "+ Add Book" Card (Always Visible) -->
+    <% if (isAdminId) { %>
+        <a href="javascript:void(0);" data-modal-toggle="add-book-modal" data-modal-target="add-book-modal" class="book-card bg-white p-4 rounded-lg shadow-md flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100">
+            <span class="text-4xl text-[#316df8]">+</span>
+            <p class="text-sm text-gray-500">Add New Book</p>
+        </a>
+        <%- include("../components/modals/books/addbook-modal")  %>
+    <% } %>
+</div>
+<!-- 📖 Pagination Controls -->
+<div class="flex flex-col items-center mt-8">
+    <span class="text-sm text-gray-700">
+        Showing 
+        <span class="font-semibold text-gray-900"><%= Math.min((currentPage - 1) * 11 + 1, totalBooks) %></span> 
+        to 
+        <span class="font-semibold text-gray-900"><%= Math.min(currentPage * 11, totalBooks) %></span> 
+        of 
+        <span class="font-semibold text-gray-900"><%= totalBooks %></span> Entries
+    </span>
+    
+    <div class="inline-flex mt-2 space-x-3">
+        <!-- Previous Button -->
+        <% if (currentPage > 1) { %>
+            <a href="/books?page=<%= currentPage - 1 %>&search=<%= encodeURIComponent(searchQuery) %>" 
+               class="flex items-center px-4 h-8 text-sm font-medium text-white bg-[#316de5] rounded-l-lg hover:bg-blue-700 transition">
+                <svg class="w-3.5 h-3.5 me-2 rtl:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0 4 4M1 5l4-4"/>
+                </svg>
+                Prev
+            </a>
+        <% } %>
 
-                    <% if (isAdminId) { %>
-                        <a href="/admin/addbook" class="book-card bg-white p-4 rounded-lg shadow-md flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100">
-                            <span class="text-4xl text-[#316df8]">+</span>
-                            <p class="text-sm text-gray-500">Add New Book</p>
-                        </a>
-                        <% } %>
+        <!-- Next Button -->
+        <% if (currentPage < totalPages) { %>
+            <a href="/books?page=<%= currentPage + 1 %>&search=<%= encodeURIComponent(searchQuery) %>" 
+               class="flex items-center px-4 h-8 text-sm font-medium text-white bg-[#316de5] rounded-r-lg hover:bg-blue-700 transition">
+                Next
+                <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                </svg>
+            </a>
+        <% } %>
+    </div>
+</div>
 
-        </div>
 
+<%- include("../components/modals/books/bookreq-modal")  %>
 
-        <!-- 📢 **Announcements (Bottom Timeline)** -->
-        <section class="bg-white shadow-md p-8 mt-12">
-            <h2 class="text-2xl font-semibold text-center mb-6">📢 Announcements</h2>
-            <ol class="relative border-s border-gray-200">
-                <li class="mb-12 ms-4">
-                    <div class="absolute w-4 h-4 bg-gray-200 rounded-full mt-1.5 -start-2 border border-white"></div>
-                    <time class="mb-2 text-md font-normal leading-none text-gray-400">March 10, 2025</time>
-                    <h3 class="text-xl font-semibold text-gray-900">Library Maintenance</h3>
-                    <p class="mb-4 text-lg text-gray-500">The library will be closed on March 15th for maintenance.</p>
+<!-- 📢 Announcements Timeline -->
+<section class="bg-white shadow-md p-8 mt-12">
+    <h2 class="text-2xl font-semibold text-center mb-6">📢 Announcements</h2>
 
-                </li>
-                <li class="mb-12 ms-4">
-                    <div class="absolute w-4 h-4 bg-gray-200 rounded-full mt-1.5 -start-2 border border-white"></div>
-                    <time class="mb-2 text-md font-normal leading-none text-gray-400">March 5, 2025</time>
-                    <h3 class="text-xl font-semibold text-gray-900">New Arrivals</h3>
-                    <p class="text-lg text-gray-500">A fresh batch of books is now available in the library.</p>
-                </li>
-            </ol>
-        </section>
-        <script src="/javascript/booklist-search.js"></script>
+    <% if (announcements.length > 0) { %>
+    <ol class="relative border-s border-gray-200">
+        <% announcements.forEach(announcement => { %>
+        <li class="mb-12 ms-4">
+            <div class="absolute w-4 h-4 bg-gray-200 rounded-full mt-1.5 -start-2 border border-white"></div>
+            <time class="mb-2 text-md font-normal leading-none text-gray-400"><%= announcement.formattedDate %></time>
+            <h3 class="text-xl font-semibold text-gray-900"><%= announcement.title %></h3>
+            <p class="text-lg text-gray-500"><%= announcement.message %></p>
+        </li>
+        <% }); %>
+    </ol>
+    <% } else { %>
+    <p class="text-center text-gray-500">No announcements available at the moment.</p>
+    <% } %>
+</section>
+
+<script src="/javascript/booklist-search.js"></script>
+</body>
+</html>

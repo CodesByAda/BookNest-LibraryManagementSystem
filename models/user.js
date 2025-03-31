@@ -2,11 +2,12 @@ const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    address: { type: String, required: false },
-    course: { type: String, required: false },
-    semester: { type: Number, required: false },
-    rollno: { type: Number, required: false },
+    address: { type: String, required: true },   // Made required for consistent validation
+    course: { type: String, required: true },
+    semester: { type: Number, required: true },
+    rollno: { type: String, required: true },   // Changed to String
     email: { type: String, required: true, unique: true },
+    phone: { type: String, required: true },    // Changed to String
     password: { type: String, required: true },
     approved: { type: Boolean, default: false },
     role: { type: String, default: "student" },
