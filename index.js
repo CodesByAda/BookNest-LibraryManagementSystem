@@ -22,8 +22,8 @@ const server = http.createServer(app);
 initializeSocket(server);
 
 async function main() {
-    await mongoose.connect("mongodb://localhost:27017/LMS-MGMCET");
-    //await mongoose.connect(process.env.MONGO_URL);
+    //await mongoose.connect("mongodb://localhost:27017/LMS-MGMCET");
+    await mongoose.connect(process.env.MONGO_URL);
     console.log("✅Connected to MongoDB");
 }
 
@@ -48,9 +48,9 @@ app.use(
         resave: false,
         saveUninitialized: false,
         store: MongoStore.create({
-            mongoUrl: "mongodb://localhost:27017/LMS-MGMCET",
-            //mongoUrl: process.env.MONGO_URL, // MongoDB connection string
-            collectionName: "sessions" // Name of the collection in MongoDB
+            //mongoUrl: "mongodb://localhost:27017/LMS-MGMCET",
+            mongoUrl: process.env.MONGO_URL,
+            collectionName: "sessions"
         }),
         cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 } // 1-week session
     })
