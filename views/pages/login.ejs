@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BookNest - Login</title>
+    <style>
+        .bg-beige {
+            background: linear-gradient(to bottom right, #F8F6E9, #F5F3DA);
+        }
+
+        .bg-booknest {
+            background-image: url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .bg-overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+    </style>
+    <link rel="stylesheet" href="./output.css">
+</head>
+
+<body class="min-h-screen flex">
+    <%- include("../components/alert")  %>
+    <!-- Left Panel -->
+    <div class="w-full lg:w-[35%] bg-beige flex flex-col justify-center items-center px-16 py-12">
+        <div class="text-center">
+            <div class="text-3xl mb-6 text-[#8B4513] flex justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-book-open h-8 w-8 text-booknest-brown"
+                    data-lov-id="src/components/Header.tsx:18:10" data-lov-name="BookOpen"
+                    data-component-path="src/components/Header.tsx" data-component-line="18"
+                    data-component-file="Header.tsx" data-component-name="BookOpen"
+                    data-component-content="%7B%22className%22%3A%22h-8%20w-8%20text-booknest-brown%22%7D">
+                    <path d="M12 7v14"></path>
+                    <path
+                        d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z">
+                    </path>
+                </svg>
+            </div>
+            <h2 class="text-3xl font-extrabold text-[#3B2E2E] mb-2">Sign in to BookNest</h2>
+            <p class="text-gray-600 mb-8">Access your library management dashboard</p>
+        </div>
+
+        <form class="w-full max-w-sm space-y-6" action="/login" method="POST">
+            <!-- Email -->
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
+                <input id="email" name="email" type="email"
+                    class="bg-white mt-1 pl-3 block w-full rounded-md border-gray-300 shadow-sm h-10 focus:border-yellow-500 focus:ring-yellow-500"
+                    required>
+            </div>
+
+            <!-- Password -->
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                <input id="password" name="password" type="password"
+                    class="bg-white mt-1 pl-3 block w-full rounded-md border-gray-300 shadow-sm h-10 focus:border-yellow-500 focus:ring-yellow-500"
+                    required>
+            </div>
+
+            <!-- User Type Toggle -->
+            <input type="hidden" id="userType" name="userType" value="student">
+
+            <div class="flex space-x-4">
+                <button type="button" id="studentBtn"
+                    class="w-full bg-yellow-600 text-white font-medium py-1 rounded focus:outline-none focus:ring-2 focus:ring-yellow-500">Student</button>
+                <button type="button" id="librarianBtn"
+                    class="w-full bg-gray-100 text-gray-700 font-medium py-1 rounded hover:bg-yellow-600">Librarian</button>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit"
+                class="w-full bg-[#8B4513] text-white font-medium py-2 rounded hover:bg-[#7A3E12] flex items-center justify-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+                Sign in
+            </button>
+        </form>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="hidden lg:block lg:w-[65%] relative bg-booknest">
+        <div class="absolute inset-0 bg-overlay flex flex-col items-center justify-center text-white px-8 text-center">
+            <h2 class="text-3xl font-bold mb-4">Welcome to BookNest</h2>
+            <p class="text-lg max-w-xl mb-10">
+                Your complete library management solution with powerful tools for both librarians and students.
+            </p>
+
+            <div class="flex space-x-6">
+                <!-- Librarian Features -->
+                <div class="bg-opacity-10 backdrop-blur-sm px-6 py-4 rounded-md text-left">
+                    <h3 class="text-yellow-300 font-semibold mb-2">For Librarians</h3>
+                    <ul class="text-sm list-disc list-inside space-y-1 text-white">
+                        <li>Manage book collections</li>
+                        <li>Track loans and returns</li>
+                        <li>Generate reports</li>
+                        <li>Manage user accounts</li>
+                    </ul>
+                </div>
+
+                <!-- Student Features -->
+                <div class="bg-opacity-10 backdrop-blur-sm px-6 py-4 rounded-md text-left">
+                    <h3 class="text-yellow-300 font-semibold mb-2">For Students</h3>
+                    <ul class="text-sm list-disc list-inside space-y-1 text-white">
+                        <li>Search for books</li>
+                        <li>Track borrowed books</li>
+                        <li>View reading history</li>
+                        <li>Request new books</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    const studentBtn = document.getElementById("studentBtn");
+    const librarianBtn = document.getElementById("librarianBtn");
+    const userTypeInput = document.getElementById("userType");
+
+    studentBtn.addEventListener("click", () => {
+        userTypeInput.value = "student";
+        studentBtn.classList.add("bg-yellow-600", "text-white");
+        librarianBtn.classList.remove("bg-yellow-600", "text-white");
+        librarianBtn.classList.add("bg-gray-100", "text-gray-700");
+    });
+
+    librarianBtn.addEventListener("click", () => {
+        userTypeInput.value = "librarian";
+        librarianBtn.classList.add("bg-yellow-600", "text-white");
+        studentBtn.classList.remove("bg-yellow-600", "text-white");
+        studentBtn.classList.add("bg-gray-100", "text-gray-700");
+    });
+</script>
+
+</html>

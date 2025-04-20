@@ -1,0 +1,63 @@
+<mjml>
+  <mj-head>
+    <mj-font name="Inter" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" />
+    <mj-attributes>
+      <mj-all font-family="Inter, Helvetica, Arial, sans-serif" />
+      <mj-text font-size="16px" line-height="1.6" color="#333" />
+      <mj-section padding="20px 0" />
+      <mj-column padding="0" />
+    </mj-attributes>
+  </mj-head>
+
+  <mj-body background-color="#f8f8f8">
+    <mj-section background-color="#ffffff" padding="40px" border-radius="8px" css-class="card" text-align="left">
+      <mj-column>
+        <!-- Header -->
+        <mj-text font-size="24px" font-weight="700" color="#8B4513" align="center">
+          📖 You Just Borrowed a Book!
+        </mj-text>
+
+        <mj-divider border-color="#8B4513" border-width="2px" />
+
+        <!-- Greeting -->
+        <mj-text>
+          Hi <strong>{{username}}</strong>,
+          <br/><br/>
+          Awesome! You've just borrowed the book <strong style="color:#8B4513;">"{{bookTitle}}"</strong> from the library.
+          <br/><br/>
+          Here are the details of your borrow:
+        </mj-text>
+
+        <!-- Borrow Info -->
+        <mj-text padding="0">
+          <ul style="padding-left:20px; margin:0;">
+            <li><strong>Borrowed on:</strong> {{BorrowDate}}</li>
+            <li><strong>Due by:</strong> {{DueDate}}</li>
+            <li><strong>Book ID:</strong> {{bookId}}</li>
+          </ul>
+        </mj-text>
+
+        <mj-text>
+          Remember to return the book on time to avoid late fees and to help your fellow readers!
+        </mj-text>
+
+        <!-- Optional Tip -->
+        <mj-text font-style="italic" color="#666666">
+          Tip: You can check your dashboard anytime to track your borrowed books, due dates, and history.
+        </mj-text>
+
+        <!-- Encouragement Footer -->
+        <mj-divider border-color="#dddddd" />
+        <mj-text font-size="14px" color="#666" align="center">
+          Wishing you a great read! Until then — keep exploring, stay curious, and let BookNest guide your journey. 📚✨
+        </mj-text>
+
+        <!-- Footer Note -->
+        <mj-text font-size="13px" color="#888888" align="center">
+          BookNest – Your College, Your Library, Your Choice.<br/>
+          Open Source | Modern | Student-Friendly
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

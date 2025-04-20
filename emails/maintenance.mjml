@@ -1,0 +1,62 @@
+<mjml>
+  <mj-head>
+    <mj-font name="Inter" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" />
+    <mj-attributes>
+      <mj-all font-family="Inter, Helvetica, Arial, sans-serif" />
+      <mj-text font-size="16px" line-height="1.6" color="#333" />
+      <mj-section padding="20px 0" />
+      <mj-column padding="0" />
+    </mj-attributes>
+  </mj-head>
+
+  <mj-body background-color="#f9f9f9">
+    <mj-section background-color="#ffffff" padding="40px" border-radius="8px" css-class="card" text-align="left" border="1px solid #FFC107">
+      <mj-column>
+        <!-- Header -->
+        <mj-text font-size="24px" font-weight="700" color="#FFA000" align="center">
+          🛠 Scheduled Maintenance Notification
+        </mj-text>
+
+        <mj-divider border-color="#FFA000" border-width="2px" />
+
+        <!-- Greeting -->
+        <mj-text>
+          Hello <strong>{{username}}</strong>,
+          <br/><br/>
+          We want to inform you that <strong>your library platform</strong> will undergo scheduled maintenance.
+        </mj-text>
+
+        <!-- Maintenance Info -->
+        <mj-text font-size="16px" color="#555">
+          <strong>Date:</strong> {{maintenanceDate}}<br/>
+          <strong>Time:</strong> {{maintenanceTime}}<br/>
+          <strong>Expected Downtime:</strong> {{downtimeEstimate}}
+        </mj-text>
+
+        <mj-text>
+          During this time, access to the library site and services may be temporarily unavailable. We appreciate your patience and understanding as we work to improve performance and reliability.
+        </mj-text>
+
+        <!-- Optional CTA (if needed) -->
+        <!--
+        <mj-button href="{{statusPageLink}}" background-color="#FFA000" color="#fff" font-weight="bold" padding-top="20px">
+          Check Status Updates
+        </mj-button>
+        -->
+
+        <!-- Closing -->
+        <mj-divider border-color="#eeeeee" />
+        <mj-text font-size="14px" color="#666" align="center">
+          Thank you for being part of our library community. <br/>
+          We’ll be back soon — better and faster.
+        </mj-text>
+
+        <!-- Footer -->
+        <mj-text font-size="13px" color="#999999" align="center">
+          {{libraryName}} Library<br/>
+          Powered by BookNest – Open Source · Student-First
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

@@ -1,155 +1,244 @@
-<%- include("../components/header") %>
-<%- include("../components/alert")  %>
+<!DOCTYPE html>
+<html lang="en">
 
-    <%- include("../components/booklist/navbar") %>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= book.bookname %> - BookNest</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="/output.css">
+    <style>
+        .bookDetails {
+            -ms-overflow-style: none;
+            scrollbar-width: none;  
+        }
+        .bookDetails::-webkit-scrollbar {
+            display: none;
+        }
 
-        <!-- Book Details -->
-        <div class="max-w-6xl mx-auto p-6 mt-6 bg-white shadow-lg rounded-xl">
+    </style>
+</head>
+
+
+<body class="bg-gray-50 text-gray-900 px-4 pt-4 pb-10 sm:px-6 sm:pt-6">
+    <%- include("../components/alert")  %>
+    <div class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8">
+        <!-- Sidebar -->
+        <div class="w-full lg:w-1/3 bg-[#faf7f5] border rounded-lg border-gray-300 p-4">
+            <!-- Book Image (Responsive) -->
+            <div class="mb-4 aspect-[3/4] border rounded-md overflow-hidden w-full">
+                <% if (book.coverImage && book.coverImage.startsWith('data:image')) { %>
+                    <img src="<%= book.coverImage %>" alt="Book Cover" class="object-cover w-full h-full shadow-md" />
+                <% } else { %>
+                    <img src="/images/book.jpg" alt="Book Cover" class="object-cover w-full h-full shadow-md" />
+                <% } %>
+            </div>
+
             <!-- Book Info -->
-            <div class="flex flex-col md:flex-row gap-8">
-                <!-- Book Info (on top for small screens) -->
-                <div class="md:hidden flex flex-col items-center text-center">
-                    <h2 class="text-3xl font-bold text-gray-800">
-                        <%= book.bookname %>
-                    </h2>
-                    <p class="text-gray-600 text-lg">by 
-                        <span class="text-[#316df8]">
-                            <%= book.authorname %>
-                        </span>
-                    </p>
+            <div class="mt-6 space-y-3 text-sm">
+                <!-- Availability -->
+                <div class="flex items-center gap-2 <%= book.availability === 'Available' ? 'text-green-600' : 'text-red-600' %>">
+                    <% if (book.availability === 'Available') { %>
+                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2l4-4" />
+                        </svg>
+                    <% } else {%>
+                        <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 9L9 15M9 9l6 6" />
+                        </svg>                          
+                    <% } %>
+                    <span><%= book.availability %></span>
                 </div>
-            
-                <!-- Book Image with fixed size -->
-                <img src="<%= book.coverImage %>" alt="Book Cover" 
-                    class="w-52 h-72 object-cover rounded-lg shadow-md mx-auto md:mx-0">
-            
-                <!-- Book Details -->
-                <div class="flex-1">
-                    <!-- Book Info (only for larger screens) -->
-                    <div class="hidden md:block">
-                        <h2 class="text-3xl font-bold text-gray-800">
-                            <%= book.bookname %>
-                        </h2>
-                        <p class="text-gray-600 text-lg">by 
-                            <span class="text-[#316df8]">
-                                <%= book.authorname %>
-                            </span>
-                        </p>
-                    </div>
-            
-                    <p class="mt-2 text-gray-700"><strong>Rack Location:</strong>
-                        <%= book.rack_location %>
-                    </p>
-                    <p class="mt-2 text-gray-700"><strong>Books in Stock:</strong>
-                        <%= book.stock %>
-                    </p>
-                    <p class="mt-2 text-gray-700"><strong>Category:</strong>
-                        <%= book.category %>
-                    </p>
-                    <p class="mt-2"><strong>Status:</strong> 
-                        <span class="<%= book.availability === 'Available' ? 'text-green-600' : 'text-red-600' %> font-semibold">
-                            <%= book.availability %>
-                        </span>
-                    </p>
-            
-                    <!-- ⭐ Ratings -->
-                    <%- include("../components/booklist/ratingcount") %>
-            
-                    <p class="mt-2"><strong>Description:</strong>
-                        <%= book.description %>
-                    </p>
+
+                <!-- Stock -->
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M3 12h18M3 17h18" />
+                    </svg>
+                    <span>Stock: <%= book.stock %> copies</span>
+                </div>
+
+                <!-- Rack Location -->
+                <div class="flex items-center gap-2">
+                    <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-3-3h-1v-3a3 3 0 00-3-3H9a3 3 0 00-3 3v3H5a3 3 0 00-3 3v2h5" />
+                    </svg>
+                    <span>Rack Location: <%= book.rack_location %></span>
                 </div>
             </div>
-            
-            
-            <!-- 📝 Reviews Section -->
-            <div class="mt-8">
-                <h3 class="text-2xl font-semibold text-gray-800 mb-4">User Reviews</h3>
-                <%- include("../components/booklist/review.ejs") %>
 
-                <!--Review Form-->
-                <form action="/books/<%= book._id %>/review" method="POST" class="mt-6 p-4 bg-gray-50 rounded-lg shadow" onsubmit="return validateReviewForm(event)">
-                    <h3 class="text-xl font-semibold text-gray-800">Write a Review</h3>
-                
-                    <!-- Star Rating -->
-                    <div class="flex items-center mt-2">
-                        <input type="hidden" name="rating" id="ratingInput" value="">
-                        <div class="flex space-x-1 cursor-pointer" id="starContainer">
-                            <% for(let i=1; i <= 5; i++) { %>
-                                <i class="fa-solid fa-star text-gray-300 hover:text-yellow-500 star-icon" data-value="<%= i %>"></i>
-                            <% } %>
-                        </div>
-                    </div>
-                
-                    <!-- Error Message for Rating -->
-                    <p id="ratingError" class="text-red-500 text-sm hidden">Please select a rating.</p>
-                
-                    <!-- Review Comment -->
-                    <textarea name="comment" id="commentInput" class="w-full mt-2 p-2 border rounded-lg" placeholder="Write your review..."></textarea>
-                
-                    <!-- Error Message for Comment -->
-                    <p id="commentError" class="text-red-500 text-sm hidden">Please write a review comment.</p>
-                
-                    <!-- Submit Button -->
-                    <button type="submit" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg">Submit</button>
-                </form>
-                
-                <script>
-                    document.addEventListener("DOMContentLoaded", function () {
-                        const stars = document.querySelectorAll(".star-icon");
-                        const ratingInput = document.getElementById("ratingInput");
-                
-                        stars.forEach(star => {
-                            star.addEventListener("click", function () {
-                                let rating = this.getAttribute("data-value");
-                                ratingInput.value = rating;
-                
-                                // Reset all stars
-                                stars.forEach(s => s.classList.remove("text-yellow-500"));
-                                stars.forEach(s => s.classList.add("text-gray-300"));
-                
-                                // Highlight selected stars
-                                for (let i = 0; i < rating; i++) {
-                                    stars[i].classList.remove("text-gray-300");
-                                    stars[i].classList.add("text-yellow-500");
-                                }
-                            });
-                        });
-                    });
-                
-                    function validateReviewForm(event) {
-                        let rating = document.getElementById("ratingInput").value;
-                        let comment = document.getElementById("commentInput").value.trim();
-                        let ratingError = document.getElementById("ratingError");
-                        let commentError = document.getElementById("commentError");
-                
-                        let isValid = true;
-                
-                        if (!rating) {
-                            ratingError.classList.remove("hidden");
-                            isValid = false;
-                        } else {
-                            ratingError.classList.add("hidden");
-                        }
-                
-                        if (!comment) {
-                            commentError.classList.remove("hidden");
-                            isValid = false;
-                        } else {
-                            commentError.classList.add("hidden");
-                        }
-                
-                        if (!isValid) {
-                            event.preventDefault(); // Stop form submission if validation fails
-                        }
-                        return isValid;
-                    }
-                </script>
-                
-
-            </div>
-            <%- include("../components/modals/books/bookreq-modal") %>
+            <!-- Borrow Button -->
+            <button class="mt-4 w-full bg-[#3c1e0d] text-white py-2 rounded-md hover:cursor-pointer">
+                Borrow Book
+            </button>
         </div>
-        </body>
 
-        </html>
+        <!-- Main Content -->
+        <div class="flex-1 rounded-lg bg-[#faf7f5] border border-gray-300 p-4 h-[670px] overflow-y-scroll bookDetails">
+            <h1 class="text-2xl font-bold"><%= book.bookname %></h1>
+            <div class="flex items-center gap-2 mt-2 text-sm text-gray-600 flex-wrap">
+                <span><%= book.authorname %></span>
+                <span>·</span>
+                <span class="flex items-center gap-1">
+                    <i class="fa-solid fa-tags"></i>
+                    <%= book.category %>
+                </span>
+            </div>
+
+            <%- include("../components/booklist/ratingcount") %>
+
+            <h2 class="font-semibold mt-4">Description</h2>
+            <p class="text-sm text-gray-700 mt-1">
+                <%= book.description %>
+            </p>
+
+            <!-- Tabs -->
+            <div class="flex items-center mt-6 border border-gray-300 rounded overflow-hidden text-sm bg-white">
+                <button id="ratingsTab" class="flex-1 py-2 text-center bg-[#3c1e0d] text-white font-medium hover:cursor-pointer">
+                    Ratings & Reviews
+                </button>
+                <button id="addReviewTab" class="flex-1 py-2 text-center font-medium text-gray-700 hover:cursor-pointer">
+                    Add a Review
+                </button>
+            </div>
+
+            <!--Review Breakdown-->
+            <%- include("../components/booklist/reviewBreakDown.ejs") %>
+
+            <!-- Reviews -->
+            <%- include("../components/booklist/review.ejs") %>
+
+            <!-- Add Review Form -->
+            <form id="reviewForm" action="/books/<%= book._id %>/review" method="POST" class="mt-10 pt-6 p-4 rounded-lg border border-gray-200 bg-white" onsubmit="return validateReviewForm(event)">
+                <h2 class="text-lg font-semibold mb-2">Write a Review</h2>
+
+                <!-- Star Rating -->
+                <div class="mb-3">
+                    <label class="block text-sm mb-1">Your Rating</label>
+                    <input type="hidden" name="rating" id="ratingInput" value="">
+                    <div class="flex gap-1 text-yellow-400 cursor-pointer" id="starContainer">
+                        <% for (let i = 1; i <= 5; i++) { %>
+                            <svg class="w-6 h-6 star-icon text-gray-300 hover:text-yellow-400 transition-colors duration-200" data-value="<%= i %>" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.18c.969 0 1.371 1.24.588 1.81l-3.385 2.46a1 1 0 00-.364 1.118l1.286 3.966c.3.921-.755 1.688-1.54 1.118L10 13.347l-3.385 2.46c-.784.57-1.838-.197-1.539-1.118l1.285-3.966a1 1 0 00-.364-1.118L2.612 9.394c-.783-.57-.38-1.81.588-1.81h4.18a1 1 0 00.95-.69l1.286-3.967z"/>
+                            </svg>
+                        <% } %>
+                    </div>
+                    <p id="ratingError" class="text-red-500 text-sm hidden mt-1">Please select a rating.</p>
+                </div>
+
+                <!-- Comment -->
+                <textarea name="comment" id="commentInput" placeholder="Write your review here..." rows="4" maxlength="500" class="w-full border rounded p-2 text-sm focus:outline-none focus:ring"></textarea>
+                <div class="flex justify-between text-xs text-gray-400 mt-1 ">
+                    <span></span>
+                    <span id="charCount">0/500</span>
+                </div>
+                <p id="commentError" class="text-red-500 text-sm hidden mt-1">Please write a review comment.</p>
+
+                <!-- Submit -->
+                <button type="submit" class="mt-4 w-full bg-[#3c1e0d] text-white py-2 rounded-md hover:cursor-pointer">
+                    Submit Review
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Floating Back Button -->
+    <a href="/dashboard?section=catalogue" class="fixed bottom-6 right-6 bg-[#3c1e0d] text-white p-4 rounded-full shadow-lg transition duration-200 z-50" title="Back to books">
+        <i class="fa-solid fa-book text-xl"></i>
+    </a>
+</body>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const stars = document.querySelectorAll(".star-icon");
+        const ratingInput = document.getElementById("ratingInput");
+        const commentInput = document.getElementById("commentInput");
+        const charCount = document.getElementById("charCount");
+
+        const ratingsTab = document.getElementById("ratingsTab");
+        const addReviewTab = document.getElementById("addReviewTab");
+        const ratingsSection = document.getElementById("ratingsSection");
+        const reviewForm = document.getElementById("reviewForm");
+
+        // Default: show ratings section, hide review form
+        ratingsSection?.classList.remove("hidden");
+        reviewForm?.classList.add("hidden");
+        ratingsTab?.classList.add("bg-[#3c1e0d]");
+        addReviewTab?.classList.remove("bg-[#3c1e0d]");
+
+        ratingsTab?.addEventListener("click", () => {
+        ratingsSection?.classList.remove("hidden");
+        reviewForm?.classList.add("hidden");
+
+        ratingsTab.classList.add("bg-[#3c1e0d]", "text-white");
+        ratingsTab.classList.remove("text-gray-700");
+
+        addReviewTab.classList.remove("bg-[#3c1e0d]", "text-white");
+        addReviewTab.classList.add("text-gray-700");
+    });
+
+    addReviewTab?.addEventListener("click", () => {
+        reviewForm?.classList.remove("hidden");
+        ratingsSection?.classList.add("hidden");
+
+        addReviewTab.classList.add("bg-[#3c1e0d]", "text-white");
+        addReviewTab.classList.remove("text-gray-700");
+
+        ratingsTab.classList.remove("bg-[#3c1e0d]", "text-white");
+        ratingsTab.classList.add("text-gray-700");
+    });
+
+        // Star rating logic
+        stars.forEach(star => {
+            star.addEventListener("click", function () {
+                const selectedRating = parseInt(this.getAttribute("data-value"));
+                const currentRating = parseInt(ratingInput.value);
+                const newRating = (selectedRating === currentRating) ? 0 : selectedRating;
+                ratingInput.value = newRating;
+
+                stars.forEach(s => s.classList.remove("text-yellow-500", "text-gray-300"));
+                stars.forEach(s => s.classList.add("text-gray-300"));
+
+                for (let i = 0; i < newRating; i++) {
+                    stars[i].classList.remove("text-gray-300");
+                    stars[i].classList.add("text-yellow-500");
+                }
+            });
+        });
+
+        // Character counter
+        commentInput?.addEventListener("input", function () {
+            charCount.textContent = `${this.value.length}/500`;
+        });
+    });
+
+    function validateReviewForm(event) {
+        let rating = document.getElementById("ratingInput").value;
+        let comment = document.getElementById("commentInput").value.trim();
+        let ratingError = document.getElementById("ratingError");
+        let commentError = document.getElementById("commentError");
+
+        let isValid = true;
+
+        if (!rating) {
+            ratingError.classList.remove("hidden");
+            isValid = false;
+        } else {
+            ratingError.classList.add("hidden");
+        }
+
+        if (!comment) {
+            commentError.classList.remove("hidden");
+            isValid = false;
+        } else {
+            commentError.classList.add("hidden");
+        }
+
+        if (!isValid) {
+            event.preventDefault();
+        }
+        return isValid;
+    }
+</script>

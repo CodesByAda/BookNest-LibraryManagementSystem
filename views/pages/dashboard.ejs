@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-[#f4f4f6]">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BookNest - Dashboard</title>
+    <link rel="stylesheet" href="./output.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+</head>
+
+<body class="flex flex-col lg:flex-row h-screen font-sans text-gray-800">
+    <%- include("../components/alert") %>
+    <!-- Sidebar -->
+    <aside id="sidebar"
+        class="bg-[#3c1e0d] text-white h-full flex flex-col justify-between fixed z-20 transition-all duration-300 w-64">
+        <div>
+            <!-- Logo -->
+            <div class="flex items-center justify-center md:justify-start px-4 py-6 text-2xl font-bold text-yellow-400">
+                <i class="fas fa-book mr-0 md:mr-2"></i>
+                <span class="sidebar-label">BookNest</span>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="space-y-1 mt-4">
+                <a href="?section=dashboard" data-section="dashboard"
+                    class="sidebar-link flex items-center px-4 py-3 hover:bg-[#553524] rounded-r-full">
+                    <i class="fa-solid fa-layer-group mr-3 text-lg"></i>
+                    <span class="sidebar-label">Dashboard</span>
+                </a>
+                <a href="?section=catalogue" data-section="catalogue"
+                    class="sidebar-link flex items-center px-4 py-3 hover:bg-[#553524] rounded-r-full">
+                    <i class="fa-solid fa-book-open mr-3 text-lg""></i>
+                    <span class="sidebar-label">Book Catalogue</span>
+                </a>
+
+                <% if (isAdmin) { %>
+                    <a href="?section=manage-books" data-section="manage-books"
+                    class="sidebar-link flex items-center px-4 py-3 hover:bg-[#553524] rounded-r-full">
+                    <i class="fa-solid fa-bars-progress mr-3 text-lg"></i>
+                    <span class="sidebar-label">Manage Books</span>
+                </a>
+                <a href="?section=user-management" data-section="user-management"
+                    class="sidebar-link flex items-center px-4 py-3 hover:bg-[#553524] rounded-r-full">
+                    <i class="fa-solid fa-users-gear mr-3 text-lg"></i>
+                    <span class="sidebar-label">Manage Students</span>
+                </a>
+                <% } %>
+                
+                <a href="?section=track-borrows" data-section="track-borrows"
+                    class="sidebar-link flex items-center px-4 py-3 hover:bg-[#553524] rounded-r-full">
+                    <i class="fas fa-handshake mr-3 text-lg"></i>
+                    <span class="sidebar-label">Track Borrows</span>
+                </a>
+                <a href="?section=announcements" data-section="announcements"
+                    class="sidebar-link flex items-center px-4 py-3 hover:bg-[#553524] rounded-r-full">
+                    <i class="fas fa-bullhorn mr-3 text-lg"></i>
+                    <span class="sidebar-label">Announcements</span>
+                </a>
+                <a href="?section=profile" data-section="profile"
+                    class="sidebar-link flex items-center px-4 py-3 hover:bg-[#553524] rounded-r-full">
+                    <i class="fa-solid fa-user mr-3 text-lg"></i>
+                    <span class="sidebar-label">Profile</span>
+                </a>
+                <% if (isStudent) { %>
+                    <a href="?section=scan-tag" data-section="scan-tag"
+                        class="sidebar-link flex items-center px-4 py-3 hover:bg-[#553524] rounded-r-full">
+                        <i class="fa-solid fa-qrcode mr-3 text-lg"></i>
+                        <span class="sidebar-label">Scan Tag</span>
+                    </a>
+                <% } %>
+            </nav>
+        </div>
+
+        <!-- Collapse Button -->
+        <div class="px-4 py-4 border-t border-[#553524]">
+            <button onclick="toggleSidebar()"
+                class="flex items-center justify-center w-full text-yellow-400 hover:text-yellow-500">
+                <i id="toggleIcon" class="fas fa-angle-left text-xl"></i>
+                <span class="hidden sidebar-label ml-2">Collapse</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main id="main" class="ml-64 transition-all duration-300 flex-1 overflow-y-auto">
+        <!-- Topbar -->
+        <div class="flex items-center justify-between gap-4 bg-white px-6 py-3 border-b border-gray-200">
+            <!-- Search Bar -->
+            <input 
+                type="text" 
+                placeholder="Search books, users..."
+                class="w-full sm:w-1/3 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none"
+            />
+        
+            <!-- Icon + Profile section -->
+            <div class="flex items-center space-x-4 flex-shrink-0">
+                <a href="/logout" class="text-red-500 hover:text-red-600">
+                    <i class="fa-solid fa-right-from-bracket text-base cursor-pointer"></i>
+                </a>
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-full bg-yellow-400 flex items-center justify-center text-white overflow-hidden">
+                        <% if (profile.profilePic) { %>
+                            <img 
+                                src="<%= profile.profilePic %>" 
+                                class="rounded-full w-8 h-8 object-cover" 
+                                alt="User"
+                            >
+                        <% } else { %>
+                            <img 
+                                src="https://ui-avatars.com/api/?name=<%= profile.name %>&background=316de5&color=fff" 
+                                class="rounded-full w-8 h-8 object-cover" 
+                                alt="User"
+                            >
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>               
+
+        <!-- Dynamic Section Includes -->
+        <div id="dashboard-sections">
+            <div id="dashboard" class="dashboard-section hidden">
+                <% if (isAdmin) { %>
+                    <%- include("../components/dashboard/adminpanel") %>
+                <% } else { %>
+                    <%- include("../components/dashboard/studentpanel") %>
+                <% } %>
+                
+            </div>
+            <div id="catalogue" class="dashboard-section hidden">
+                <%- include("../components/dashboard/catalogue") %>
+            </div>
+            <div id="manage-books" class="dashboard-section hidden">
+                <%- include("../components/dashboard/bookpanel") %>
+            </div>
+            <div id="user-management" class="dashboard-section hidden">
+                <%- include("../components/dashboard/user-management-panel") %>
+            </div>
+            <div id="track-borrows" class="dashboard-section hidden">
+                <% if (isAdmin) { %>
+                    <%- include("../components/dashboard/borrows-panel") %>
+                <% } else { %>
+                    <%- include("../components/dashboard/borrows-panel-student", { expired, dueSoon }) %>
+                <% } %>
+            </div>
+            <div id="announcements" class="dashboard-section hidden">
+                <%- include("../components/dashboard/announcement-panel") %>
+            </div>
+            <div id="profile" class="dashboard-section hidden">
+                <%- include("../components/dashboard/profile-section") %>
+            </div>
+            <div id="scan-tag" class="dashboard-section hidden">
+                <%- include("../components/dashboard/scan-tag") %>
+            </div>
+        </div>
+    </main>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const isAdmin = <%= isAdmin %>;
+    
+        if (isAdmin) {
+            const socket = io();
+    
+            socket.emit("adminConnected");
+    
+            socket.on("newRegistration", (data) => {
+                const notification = document.createElement("div");
+                notification.id = "toast-interactive";
+                notification.className = "fixed top-5 right-5 w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow-lg border-l-4 border-blue-500 animate-slide-in";
+    
+                notification.innerHTML = `
+                    <div class="flex">
+                        <div class="inline-flex items-center justify-center shrink-0 w-8 h-8 text-blue-500 bg-blue-100 rounded-lg">
+                            <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                    d="M10 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8Zm-6 14a6 6 0 0 1 12 0H4Z"/>
+                            </svg>
+                            <span class="sr-only">User Icon</span>
+                        </div>
+                        <div class="ms-3 text-sm font-normal">
+                            <span class="mb-1 text-sm font-semibold text-gray-900">New Registration</span>
+                            <div class="mb-2 text-sm font-normal">${data.message}</div> 
+                            <div class="text-xs text-gray-400">${new Date(data.timestamp).toLocaleTimeString()}</div>
+                        </div>
+                    </div>
+                `;
+    
+                const container = document.getElementById("main") || document.body;
+                container.appendChild(notification);
+    
+                setTimeout(() => {
+                    notification.remove();
+                }, 5000);
+            });
+        }
+    </script>    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+    <script>
+        // Load section from ?section=
+        document.addEventListener("DOMContentLoaded", () => {
+            const params = new URLSearchParams(window.location.search);
+            const section = params.get("section") || "dashboard";
+
+            document.querySelectorAll(".dashboard-section").forEach(div => {
+                div.classList.toggle("hidden", div.id !== section);
+            });
+
+            document.querySelectorAll(".sidebar-link").forEach(link => {
+                const isActive = link.getAttribute("data-section") === section;
+                link.classList.toggle("bg-[#a15423]", isActive);
+                link.classList.toggle("text-white", isActive);
+                link.classList.toggle("rounded-r-full", isActive);
+            });
+        });
+    </script>
+    <script>
+        function toggleSidebar() {
+            if (window.innerWidth < 768) return;
+    
+            const sidebar = document.getElementById('sidebar');
+            const main = document.getElementById('main');
+            const labels = document.querySelectorAll('.sidebar-label');
+            const icon = document.getElementById('toggleIcon');
+    
+            const isCollapsed = sidebar.classList.contains('w-16');
+    
+            if (isCollapsed) {
+                sidebar.classList.remove('w-16');
+                sidebar.classList.add('w-64');
+                main.classList.remove('ml-16');
+                main.classList.add('ml-64');
+                labels.forEach(label => label.classList.remove('hidden'));
+                icon.classList.remove('fa-angle-right');
+                icon.classList.add('fa-angle-left');
+                localStorage.setItem('sidebarCollapsed', 'false');
+            } else {
+                sidebar.classList.remove('w-64');
+                sidebar.classList.add('w-16');
+                main.classList.remove('ml-64');
+                main.classList.add('ml-16');
+                labels.forEach(label => label.classList.add('hidden'));
+                icon.classList.remove('fa-angle-left');
+                icon.classList.add('fa-angle-right');
+                localStorage.setItem('sidebarCollapsed', 'true');
+            }
+        }
+    
+        function applySidebarState() {
+            const sidebar = document.getElementById('sidebar');
+            const main = document.getElementById('main');
+            const labels = document.querySelectorAll('.sidebar-label');
+            const icon = document.getElementById('toggleIcon');
+            const isMobile = window.innerWidth < 768;
+    
+            if (isMobile) {
+                sidebar.classList.remove('w-64');
+                sidebar.classList.add('w-16');
+                main.classList.remove('ml-64');
+                main.classList.add('ml-16');
+                labels.forEach(label => label.classList.add('hidden'));
+                icon.classList.remove('fa-angle-left');
+                icon.classList.add('fa-angle-right');
+            } else {
+                const collapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+                if (collapsed) {
+                    sidebar.classList.remove('w-64');
+                    sidebar.classList.add('w-16');
+                    main.classList.remove('ml-64');
+                    main.classList.add('ml-16');
+                    labels.forEach(label => label.classList.add('hidden'));
+                    icon.classList.remove('fa-angle-left');
+                    icon.classList.add('fa-angle-right');
+                } else {
+                    sidebar.classList.remove('w-16');
+                    sidebar.classList.add('w-64');
+                    main.classList.remove('ml-16');
+                    main.classList.add('ml-64');
+                    labels.forEach(label => label.classList.remove('hidden'));
+                    icon.classList.remove('fa-angle-right');
+                    icon.classList.add('fa-angle-left');
+                }
+            }
+        }
+    
+        window.addEventListener('load', applySidebarState);
+        window.addEventListener('resize', applySidebarState);
+    </script>    
+</body>
+
+
+
+</html>

@@ -1,0 +1,41 @@
+<!-- Current Announcements -->
+<div class="bg-[#faf7f5] p-6 rounded-xl shadow border border-gray-100 h-[500px] overflow-y-auto">
+    <h3 class="text-lg font-semibold text-yellow-600 flex items-center mb-1">
+        <i class="fas fa-bullhorn mr-2"></i> Current Announcements
+    </h3>
+    <p class="text-sm text-gray-600 mb-4">Manage existing announcements that are visible to users.</p>
+
+    <!-- Scrollable Content Below -->
+    <div class="space-y-4">
+        <% announcements.forEach(a => { %>
+            <div class="border border-gray-300 rounded-lg p-4">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h4 class="font-semibold text-gray-800"><%= a.title %></h4>
+                        <p class="text-sm text-gray-600 mt-1"><%= a.message %></p>
+                        <div class="text-xs text-gray-500 mt-2 flex items-center gap-3">
+                            <% if (a.importance === 'High') { %>
+                                <span class="px-2 py-0.5 rounded-full text-white text-xs font-medium bg-red-500">High</span>
+                            <% } else if (a.importance === 'Medium') { %>
+                                <span class="px-2 py-0.5 rounded-full text-black text-xs font-medium bg-yellow-300">Medium</span>
+                            <% } else { %>
+                                <span class="px-2 py-0.5 rounded-full text-black text-xs font-medium bg-green-300">Low</span>
+                            <% } %>
+                            <span><i class="far fa-calendar-alt mr-1"></i> <%= a.formattedDateTime %></span>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <% if (isAdmin) { %>
+                            <form action="/admin/removeannouncement/<%= a._id %>" method="POST">
+                                <button type="button" class="text-red-600 hover:text-red-800" title="Delete" data-modal-target="delete-modal-<%= a._id %>" data-modal-toggle="delete-modal-<%= a._id %>">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                                <%- include('../modals/admin/del-annoucement.ejs', { a: a }) %>
+                            </form>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        <% }) %>                    
+    </div>
+</div>

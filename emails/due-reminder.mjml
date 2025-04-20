@@ -1,0 +1,60 @@
+<mjml>
+  <mj-head>
+    <mj-font name="Inter" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" />
+    <mj-attributes>
+      <mj-all font-family="Inter, Helvetica, Arial, sans-serif" />
+      <mj-text font-size="16px" line-height="1.6" color="#333" />
+      <mj-section padding="20px 0" />
+      <mj-column padding="0" />
+    </mj-attributes>
+  </mj-head>
+
+  <mj-body background-color="#f8f8f8">
+    <mj-section background-color="#ffffff" padding="40px" border-radius="8px" css-class="card" text-align="left">
+      <mj-column>
+        <!-- Header -->
+        <mj-text font-size="24px" font-weight="700" color="#8B4513" align="center">
+          ⏰ Your Book is Due Today!
+        </mj-text>
+
+        <mj-divider border-color="#8B4513" border-width="2px" />
+
+        <!-- Greeting -->
+        <mj-text>
+          Hi <strong>{{username}}</strong>,
+          <br/><br/>
+          Just a friendly reminder that your borrowed book <strong style="color:#8B4513;">"{{bookTitle}}"</strong> is due today.
+        </mj-text>
+
+        <!-- Due Info -->
+        <mj-text padding="0">
+          <ul style="padding-left:20px; margin:0;">
+            <li><strong>Due Date:</strong> {{dueDate}}</li>
+            <li><strong>Book ID:</strong> {{bookId}}</li>
+          </ul>
+        </mj-text>
+
+        <mj-text>
+          Please return the book today to avoid late fees and ensure availability for other students.
+        </mj-text>
+
+        <!-- Optional Tip -->
+        <mj-text font-style="italic" color="#666666">
+          Tip: You can visit your dashboard anytime to check your borrow history and upcoming returns.
+        </mj-text>
+
+        <!-- Encouragement Footer -->
+        <mj-divider border-color="#dddddd" />
+        <mj-text font-size="14px" color="#666" align="center">
+          Thanks for being a responsible reader. Keep reading, stay informed, and let BookNest be your learning partner. 📘💡
+        </mj-text>
+
+        <!-- Footer Note -->
+        <mj-text font-size="13px" color="#888888" align="center">
+          BookNest – Your College, Your Library, Your Choice.<br/>
+          Open Source | Modern | Student-Friendly
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

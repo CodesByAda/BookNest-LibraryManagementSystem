@@ -10,47 +10,76 @@
     }
 </style>
 
-<div id="edit-book-modal-<%= book._id %>" tabindex="-1" class="hidden fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-screen">
+<div id="edit-book-modal-<%= book._id %>" tabindex="-1"
+    class="hidden fixed inset-0 z-50 flex justify-center items-center w-full h-screen backdrop-blur-sm bg-black/30">
     <div class="relative p-4 w-full max-w-md max-h-screen">
-        <div class="relative bg-white rounded-lg shadow-sm flex flex-col max-h-[90vh]">
-            <!-- Modal Header (Fixed) -->
+        <div class="relative bg-white rounded-lg shadow-lg flex flex-col max-h-[90vh]">
+
+            <!-- Modal Header -->
             <div class="flex items-center justify-between p-4 md:p-5 border-b border-gray-200 rounded-t bg-white sticky top-0 z-10">
                 <h3 class="text-lg font-semibold text-gray-900">Edit Book</h3>
-                <button type="button" class="text-gray-400 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center" data-modal-hide="edit-book-modal-<%= book._id %>">
+                <button type="button"
+                    class="text-gray-400 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center"
+                    data-modal-hide="edit-book-modal-<%= book._id %>">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
 
             <!-- Scrollable Content -->
-            <div class="p-4 md:p-5 overflow-y-auto scrollbar-hidden">
-                <form action="/books/<%= book._id %>?_method=PATCH" method="POST">
-                    <div class="grid gap-4 mb-4 grid-cols-2">
+            <div class="overflow-y-auto px-4 md:px-5 pt-4 pb-10">
+                <form id="edit-book-form-<%= book._id %>" action="/books/<%= book._id %>?_method=PATCH" method="POST" class="space-y-6">
+                    <div class="grid gap-4 grid-cols-2">
                         <!-- Book Name -->
                         <div class="col-span-2">
                             <label for="bookname-<%= book._id %>" class="block mb-2 text-sm font-medium text-gray-900">Book Name</label>
-                            <input type="text" name="bookname" id="bookname-<%= book._id %>" value="<%= book.bookname %>" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                            <input type="text" name="bookname" id="bookname-<%= book._id %>" value="<%= book.bookname %>"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                required>
                         </div>
 
                         <!-- Author Name -->
                         <div class="col-span-2">
                             <label for="authorname-<%= book._id %>" class="block mb-2 text-sm font-medium text-gray-900">Author Name</label>
-                            <input type="text" name="authorname" id="authorname-<%= book._id %>" value="<%= book.authorname %>" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                            <input type="text" name="authorname" id="authorname-<%= book._id %>" value="<%= book.authorname %>"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                required>
                         </div>
-
+                        
                         <!-- Cover Image -->
                         <div class="col-span-2">
                             <label class="block mb-2 text-sm font-medium text-gray-900">Cover Image</label>
-                            <div class="flex justify-center">
-                                <img id="preview-<%= book._id %>" src="<%= book.coverImage %>" class="w-32 h-40 object-cover rounded border border-gray-300" alt="Cover Image">
+                            <div class="flex items-center justify-center w-full">
+                                <label for="coverImage-<%= book._id %>"
+                                    class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-200 ease-in-out">
+                                    <div class="flex flex-col items-center justify-center pt-5 pb-6 <%= book.coverImage ? 'hidden' : '' %>"
+                                        id="dropzone-content-<%= book._id %>">
+                                        <svg class="w-8 h-8 mb-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                            viewBox="0 0 20 16">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 
+                                         5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 
+                                         0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                                        </svg>
+                                        <p class="mb-2 text-sm text-gray-500">
+                                            <span class="font-semibold">Click to upload</span> or drag and drop
+                                        </p>
+                                        <p class="text-xs text-gray-500">PNG, JPG, JPEG (Max 2MB)</p>
+                                    </div>
+                                    <img id="preview-<%= book._id %>" src="<%= book.coverImage %>"
+                                        class="<%= book.coverImage ? '' : 'hidden' %> max-h-64 max-w-full object-cover rounded-lg transition-all duration-300" />
+                                </label>
+                                <input type="hidden" id="base64CoverImage-<%= book._id %>" name="base64CoverImage"
+                                    value="<%= book.coverImage %>">
+                                <input id="coverImage-<%= book._id %>" type="file" accept="image/*" class="hidden">
                             </div>
-                            <input type="file" id="coverImage-<%= book._id %>" name="coverImage" accept="image/*" class="mt-2 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <input type="hidden" id="base64CoverImage-<%= book._id %>" name="base64CoverImage" value="<%= book.coverImage %>">
                         </div>
+  
 
                         <!-- Category -->
                         <div class="col-span-2 sm:col-span-1">
                             <label for="category-<%= book._id %>" class="block mb-2 text-sm font-medium text-gray-900">Category</label>
-                            <select name="category" id="category-<%= book._id %>" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                            <select name="category" id="category-<%= book._id %>"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                required>
                                 <% const categories = ["Fiction", "Non-Fiction", "Science", "History", "Technology"]; %>
                                 <% categories.forEach(cat => { %>
                                     <option value="<%= cat %>" <%= book.category === cat ? 'selected' : '' %>><%= cat %></option>
@@ -58,22 +87,26 @@
                             </select>
                         </div>
 
-                        <!-- stock -->
+                        <!-- Stock -->
                         <div class="col-span-2 sm:col-span-1">
                             <label for="stock-<%= book._id %>" class="block mb-2 text-sm font-medium text-gray-900">Stock</label>
-                            <input type="text" name="stock" id="stock-<%= book._id %>" value="<%= book.stock %>" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                            <input type="text" name="stock" id="stock-<%= book._id %>" value="<%= book.stock %>"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                required>
                         </div>
 
                         <!-- Description -->
                         <div class="col-span-2">
                             <label for="description-<%= book._id %>" class="block mb-2 text-sm font-medium text-gray-900">Description</label>
-                            <textarea name="description" id="description-<%= book._id %>" rows="3" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"><%= book.description %></textarea>
+                            <textarea name="description" id="description-<%= book._id %>" rows="3"
+                                class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"><%= book.description %></textarea>
                         </div>
 
                         <!-- Availability -->
                         <div class="col-span-2 sm:col-span-1">
                             <label for="availability-<%= book._id %>" class="block mb-2 text-sm font-medium text-gray-900">Availability</label>
-                            <select name="availability" id="availability-<%= book._id %>" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <select name="availability" id="availability-<%= book._id %>"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                 <option value="Available" <%= book.availability === "Available" ? "selected" : "" %>>Available</option>
                                 <option value="Unavailable" <%= book.availability === "Unavailable" ? "selected" : "" %>>Unavailable</option>
                             </select>
@@ -82,31 +115,45 @@
                         <!-- Rack Location -->
                         <div class="col-span-2 sm:col-span-1">
                             <label for="rack_location-<%= book._id %>" class="block mb-2 text-sm font-medium text-gray-900">Rack Location</label>
-                            <input type="text" name="rack_location" id="rack_location-<%= book._id %>" value="<%= book.rack_location %>" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                            <input type="text" name="rack_location" id="rack_location-<%= book._id %>" value="<%= book.rack_location %>"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                required>
                         </div>
-                    </div>
-
-                    <!-- Submit Button -->
-                    <div class="bg-white p-4 border-t border-gray-200 flex justify-end">
-                        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5">
-                            Update Book
-                        </button>
                     </div>
                 </form>
             </div>
+
+            <!-- Sticky Submit Button -->
+            <div class="sticky bottom-0 left-0 right-0 bg-white border-t border-gray-200 pt-3 pb-4 px-4 z-10">
+                <button type="submit" form="edit-book-form-<%= book._id %>"
+                    class="w-full text-white bg-[#8B4513] hover:bg-[#723911] focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-lg text-sm px-5 py-2.5 text-center">
+                    Update Book
+                </button>
+            </div>
+
         </div>
     </div>
 </div>
+
 <script>
-    document.getElementById("coverImage-<%= book._id %>").addEventListener("change", function(event) {
-        const file = event.target.files[0];
-        if (file) {
+    document.querySelectorAll('input[type="file"][id^="coverImage-"]').forEach(input => {
+        input.addEventListener('change', function (e) {
+            const id = e.target.id.split("coverImage-")[1];
+            const file = e.target.files[0];
             const reader = new FileReader();
-            reader.onloadend = function() {
-                document.getElementById("preview-<%= book._id %>").src = reader.result;
-                document.getElementById("base64CoverImage-<%= book._id %>").value = reader.result.split(",")[1];
-            };
-            reader.readAsDataURL(file);
-        }
+            const preview = document.getElementById(`preview-${id}`);
+            const dropzone = document.getElementById(`dropzone-content-${id}`);
+            const hiddenInput = document.getElementById(`base64CoverImage-${id}`);
+
+            if (file) {
+                reader.onload = function (event) {
+                    preview.src = event.target.result;
+                    preview.classList.remove('hidden');
+                    dropzone.classList.add('hidden');
+                    hiddenInput.value = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
     });
 </script>

@@ -1,0 +1,186 @@
+<!-- Welcome Header -->
+<div class="mt-6 p-4 px-6">
+    <h2 class="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
+    <p class="text-gray-500">Welcome back! Here's what's happening in your library today.</p>
+</div>
+
+<!-- Stat Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4 px-6">
+    <div class="bg-blue-100 p-4 rounded-xl">
+        <div class="flex justify-between items-center">
+            <div>
+                <h3 class="text-sm text-gray-600">Total Books</h3>
+                <p class="text-2xl font-bold"><%= books.length %></p>
+                <p class="text-green-500 text-sm mt-1">↑ +12% since last month</p>
+            </div>
+            <i class="fas fa-book text-yellow-500 text-2xl"></i>
+        </div>
+    </div>
+    <div class="bg-yellow-100 p-4 rounded-xl">
+        <div class="flex justify-between items-center">
+            <div>
+                <h3 class="text-sm text-gray-600">Registered Users</h3>
+                <p class="text-2xl font-bold"><%= users.length %></p>
+                <p class="text-green-500 text-sm mt-1">↑ +7% since last month</p>
+            </div>
+            <i class="fas fa-user text-yellow-600 text-2xl"></i>
+        </div>
+    </div>
+    <div class="bg-green-100 p-4 rounded-xl">
+        <div class="flex justify-between items-center">
+            <div>
+                <h3 class="text-sm text-gray-600">Books Borrowed</h3>
+                <p class="text-2xl font-bold"><%= totalBorrowedBooksCount %></p>
+                <p class="text-green-500 text-sm mt-1">↑ +18% since last month</p>
+            </div>
+            <i class="fas fa-book-open text-green-600 text-2xl"></i>
+        </div>
+    </div>
+    <div class="bg-purple-100 p-4 rounded-xl">
+        <div class="flex justify-between items-center">
+            <div>
+                <h3 class="text-sm text-gray-600">Library Stock</h3>
+                <p class="text-2xl font-bold"><%= totalStockCount %></p>
+                <p class="text-green-500 text-sm mt-1">↑ +4% since last month</p>
+            </div>
+            <i class="fas fa-calendar-day text-purple-600 text-2xl"></i>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6 px-6 py-3">
+    <!-- Line Chart -->
+    <div class="p-6 bg-white rounded-xl shadow-md">
+        <h2 class="text-xl font-bold mb-4 text-[#4b2e16]">
+            <i class="fas fa-chart-line text-[#b77a3b] mr-2"></i> User Growth
+        </h2>
+        <canvas id="userChart"></canvas>
+    </div>
+
+    <!-- Pie Chart -->
+    <div class="p-6 bg-white rounded-xl shadow-md">
+        <h2 class="text-xl font-bold mb-4 text-[#4b2e16]">
+            <i class="fas fa-chart-pie text-[#b77a3b] mr-2"></i> Book Stats
+        </h2>
+        <canvas id="bookStatsChart"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- JSON Data -->
+<script id="dashboard-data" type="application/json">
+    {
+        "totalUsers": <%= users.length %>,
+        "totalBooks": <%= books.length %>,
+        "booksBorrowed": <%= totalBorrowedBooksCount %>,
+        "pendingRequests": <%= pendingApprovals %>,
+        "bookRequests": <%= pendingApprovals %>
+    }
+</script>
+
+<script id="book-stats-data" type="application/json">
+    {
+        "totalStock": <%= totalStockCount %>,
+        "uniqueBooks": <%= books.length %>,
+        "booksBorrowed": <%= totalBorrowedBooksCount %>,
+        "bookRequests": <%= pendingApprovals %>
+    }
+</script>
+
+<script>
+    // Read the JSON data from the <script> tag
+    const data = JSON.parse(document.getElementById("dashboard-data").textContent);
+    const bookStats = JSON.parse(document.getElementById("book-stats-data").textContent);
+
+    // User Growth Chart Data
+    const userGrowthData = {
+        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+        datasets: [{
+            label: "New Users",
+            data: [
+                Math.max(0, data.totalUsers - 50),
+                Math.max(0, data.totalUsers - 40),
+                Math.max(0, data.totalUsers - 30),
+                Math.max(0, data.totalUsers - 20),
+                Math.max(0, data.totalUsers - 10),
+                data.totalUsers
+            ],
+            borderColor: "#316de5",
+            backgroundColor: "rgba(49, 109, 229, 0.2)",
+            fill: true,
+            tension: 0.4
+        }]
+    };
+
+    // Book Stats Chart Data
+    const bookStatsData = {
+        labels: ["Stocks Available", "Unique Books", "Books Borrowed", "Book Requests"],
+        datasets: [{
+            label: "Book Statistics",
+            data: [
+                bookStats.totalStock,       
+                bookStats.uniqueBooks,      
+                bookStats.booksBorrowed,    
+                bookStats.bookRequests      
+            ],
+            backgroundColor: ["#316de5", "#ff9f40", "#ffcd56", "#4bc0c0"],
+            borderColor: ["#316de5", "#ff9f40", "#ffcd56", "#4bc0c0"],
+            borderWidth: 1
+        }]
+    };
+
+    // Initialize Both Charts After DOM Loads
+    document.addEventListener("DOMContentLoaded", () => {
+        // User Growth Chart
+        const userCanvas = document.getElementById('userChart');
+        if (userCanvas) {
+            const userCtx = userCanvas.getContext('2d');
+            new Chart(userCtx, {
+                type: 'line',
+                data: userGrowthData,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 10
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Book Stats Chart
+        const bookCanvas = document.getElementById('bookStatsChart');
+        if (bookCanvas) {
+            const bookCtx = bookCanvas.getContext('2d');
+            new Chart(bookCtx, {
+                type: 'bar',
+                data: bookStatsData,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    });
+</script>

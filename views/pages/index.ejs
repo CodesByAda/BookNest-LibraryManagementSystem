@@ -1,333 +1,636 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BookNest</title>
-    <link rel="stylesheet" href="/css/mainstyle.css">
-    <link rel="stylesheet" href="/css/extras.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+    <title>BookNest - Home</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
         integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="./output.css">
+    <style>
+        @keyframes scroll {
+            0% {
+                transform: translateY(0%);
+            }
+
+            100% {
+                transform: translateY(-50%);
+            }
+        }
+
+        @keyframes scroll-reverse {
+            0% {
+                transform: translateY(-50%);
+            }
+
+            100% {
+                transform: translateY(0%);
+            }
+        }
+
+        .animate-scroll {
+            display: flex;
+            flex-direction: column;
+            animation: scroll 20s linear infinite;
+        }
+
+        .animate-scroll-reverse {
+            display: flex;
+            flex-direction: column;
+            animation: scroll-reverse 20s linear infinite;
+        }
+    </style>
 </head>
 
-<body>
-    <%- include("../components/alert")  %>
-    <%- include("../components/modals/login/login-modal") %>
-    <main class="w-full m-auto bg-[url(/images/herobg.jpg)] bg-no-repeat bg-cover flex flex-col items-center bg- max-[780px]:bg-center max-[600px]: min-h-screen">
-        <nav id="navbar" class="bg-white shadow-xl fixed w-[95%] z-20 top-4 border-gray-200 rounded-3xl">
-            <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-                <a href="/" class="flex items-center space-x-0 rtl:space-x-reverse">
-                    <img src="/images/logo.png" class="h-8 booknestImg" alt="BookNest Logo">
-                    <span class="self-center text-2xl font-bold whitespace-nowrap booknestTxt">BookNest</span>
+<body class=" text-white font-sans">
+    <main class="bg-gradient-to-r from-[#F5F5DC] to-[rgba(245, 245, 220, 0)] h-[700px] max-sm:h-auto">
+        <%- include("../components/alert")  %>
+        <!-- Navbar -->
+        <header class="relative flex justify-between items-center px-8 py-6 max-w-screen-xl mx-auto max-sm:pb-0">
+            <!-- Logo -->
+            <div class="flex items-center gap-2 text-2xl font-bold text-[#8b4513]">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-book-open h-8 w-8 text-booknest-brown">
+                    <path d="M12 7v14"></path>
+                    <path
+                        d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z">
+                    </path>
+                </svg>
+                <span>BookNest</span>
+            </div>
+        
+            <!-- Desktop Nav Links -->
+            <nav class="hidden lg:flex gap-8 text-black font-medium">
+                <a href="#" class="hover:text-[#8b4513]">Home</a>
+                <a href="#" class="hover:text-[#8b4513]">About</a>
+                <a href="#" class="hover:text-[#8b4513]">Features</a>
+                <a href="#" class="hover:text-[#8b4513]">Solution</a>
+                <a href="#" class="hover:text-[#8b4513]">Company</a>
+                <a href="#" class="hover:text-[#8b4513]">Pricing</a>
+                <a href="#" class="hover:text-[#8b4513]">Contact</a>
+            </nav>
+        
+            <div class="flex items-center gap-4">
+                <a href="/login" class="hidden sm:inline-block">
+                    <button
+                        class="text-[#8b4513] border border-[#8b4513] rounded-md font-medium px-4 py-2 hover:cursor-pointer hover:bg-gradient-to-r from-[#8B4513] to-[#D4AF37] hover:text-white transition duration-300">
+                        Log In
+                    </button>
                 </a>
-                
-                <div class="profileDropdownhome flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-                    <!-- Hidden on smaller screens -->
-                    <div class="hidden md:flex items-center space-x-4">
-                        <!-- Profile Dropdown (for larger screens) -->
-                        <% if (session.userId) { %>
-                        <div class="relative">
-                            <button id="profileBtn" data-dropdown-toggle="profileDropdown" data-dropdown-placement="bottom-end"
-                                class="flex items-center space-x-2 hover:text-[#316df8] transition hover:cursor-pointer">
-                                <% if (user && user.profilePic) { %>
-                                    <img src="<%= user.profilePic %>" alt="Profile Picture" class="w-10 h-10 rounded-full object-cover">
-                                <% } else { %>
-                                    <img src="https://ui-avatars.com/api/?name=<%= user ? user.name : 'User' %>&background=316de5&color=fff"
-                                        alt="Default Profile Picture" class="w-10 h-10 rounded-full">
-                                <% } %>
-                            </button>
-                            <div id="profileDropdown" class="profileDropdownhome z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
-                                <div class="py-2">
-                                    <% if (admin) { %>
-                                        <a href="/profile/<%= session.userId %>" class="block px-4 py-2 text-sm hover:bg-gray-100">Profile</a>
-                                        <a href="/admin" class="block px-4 py-2 text-sm hover:bg-gray-100">Dashboard</a>
-                                        <a href="/books" class="block px-4 py-2 text-sm hover:bg-gray-100">BookList</a>
-                                    <% } else { %>
-                                        <a href="/profile/<%= session.userId %>" class="block px-4 py-2 text-sm hover:bg-gray-100">Profile</a>
-                                        <a href="/books" class="block px-4 py-2 text-sm hover:bg-gray-100">BookList</a>
-                                    <% } %>
-                                    <a href="/logout" class="block px-4 py-2 text-sm hover:bg-red-600 hover:text-white">Logout</a>
+                <a href="/register" class="hidden sm:inline-block">
+                    <button
+                        class="bg-[#d4af37] text-[#0c2c20] px-4 py-2 rounded-md font-medium hover:cursor-pointer hover:bg-amber-300">
+                        Register
+                    </button>
+                </a>
+            
+                <!-- Hamburger Button  -->
+                <button id="menu-toggle"
+                    class="inline-flex items-center justify-center lg:hidden relative w-10 h-10 focus:outline-none">
+                    <div id="bar1" class="absolute top-2 left-1 w-8 h-1 bg-[#8b4513] transition-transform duration-300"></div>
+                    <div id="bar2" class="absolute top-4 left-1 w-8 h-1 bg-[#8b4513] transition-opacity duration-300"></div>
+                    <div id="bar3" class="absolute top-6 left-1 w-8 h-1 bg-[#8b4513] transition-transform duration-300"></div>
+                </button>
+            </div>
+        
+            
+            
+        
+            <!-- Slide-Out Mobile Menu -->
+            <div id="mobile-menu"
+                class="fixed top-0 right-0 h-full w-64 bg-white shadow-md p-6 transform translate-x-full transition-transform duration-300 z-40 flex flex-col gap-6 text-black font-medium lg:hidden">
+                <button id="close-menu" class="self-end text-2xl text-[#8b4513]">&times;</button>
+        
+                <a href="#" class="hover:text-[#8b4513]">Home</a>
+                <a href="#" class="hover:text-[#8b4513]">About</a>
+                <a href="#" class="hover:text-[#8b4513]">Features</a>
+                <a href="#" class="hover:text-[#8b4513]">Solution</a>
+                <a href="#" class="hover:text-[#8b4513]">Company</a>
+                <a href="#" class="hover:text-[#8b4513]">Pricing</a>
+                <a href="#" class="hover:text-[#8b4513]">Contact</a>
+        
+                <!-- Auth buttons in mobile menu -->
+                <div class="flex flex-col gap-4 mt-4 sm:hidden">
+                    <a href="/login">
+                        <button
+                            class="text-[#8b4513] border border-[#8b4513] w-full rounded-md font-medium px-4 py-2 hover:cursor-pointer hover:bg-gradient-to-r from-[#8B4513] to-[#D4AF37] hover:text-white transition duration-300">
+                            Log In
+                        </button>
+                    </a>
+                    <a href="/register">
+                        <button
+                            class="bg-[#d4af37] text-[#0c2c20] w-full px-4 py-2 rounded-md font-medium hover:cursor-pointer hover:bg-amber-300">
+                            Register
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+
+        <!-- Hero Section -->
+        <section class="text-center px-4 pt-10 pb-32 relative max-sm:pb-6">
+            <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-4 text-[#3e2723] max-[352px]:hidden">
+                Open Source Library Management,<br>Your College, <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#8B4513] to-[#D4AF37]">Your Library, Your Choice.</span>
+            </h1>
+            <h1 class="hidden text-4xl md:text-5xl font-bold leading-tight mb-4 text-[#3e2723] max-[352px]:block">
+                Open Source <br> Library Management <br> Your College, <br> <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#8B4513] to-[#D4AF37]">Your Library <br> Your Choice.</span>
+            </h1>
+            <p class="text-gray-500 max-w-2xl mx-auto mb-8">
+                Effortlessly manage your college library with BookNest. Our open-source solution offers easy-to-use
+                tools for organizing books, tracking student activity, and improving overall library efficiency.
+            </p>
+            <div class="flex justify-center gap-4">
+                <button
+                    class="bg-gradient-to-r from-[#8B4513] to-[#D4AF37] text-white px-6 py-3 rounded-md font-semibold">Get
+                    Started</button>
+                <button
+                    class="bg-[#f7f5ed] border-[#8b4513] text-[#8b4513] border px-6 py-3 rounded-md font-semibold">Book
+                    A Demo</button>
+            </div>
+
+            <img src="https://flowbite.s3.amazonaws.com/docs/device-mockups/laptop-screen.png" class="m-auto mt-6 hidden h-52 max-sm:block rounded-xl border-8 border-black" alt="Laptop mockup">
+            <!-- Device Mockups -->
+            <div class="relative max-w-4xl mx-auto mt-10 max-lg:max-w-2xl max-md:max-w-xl max-sm:hidden">
+                <!-- Laptop -->
+                <img src="https://flowbite.s3.amazonaws.com/docs/device-mockups/laptop-screen.png"
+                    class="w-full rounded-xl border-8 border-black relative z-0" alt="Laptop mockup">
+
+                <!-- Phone (positioned left overlapping) -->
+                <div
+                    class="absolute -left-10 -bottom-16 w-40 md:w-44 border-[12px] border-black rounded-[2rem] bg-black z-10">
+                    <img src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/hero/mockup-1-light.png"
+                        class="rounded-[1.8rem] w-full h-full" alt="Phone mockup">
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Stats Section -->
+    <section class="bg-white text-black lg:mt-80 max-lg:mt-64 max-md:mt-40 max-sm:mt-0">
+        <div
+            class="max-w-5xl mx-auto flex flex-wrap justify-between items-center text-center px-4 border-b border-gray-300">
+            <div class="flex-1 py-4">
+                <h2 class="text-3xl font-bold">12K+</h2>
+                <p class="text-gray-500 text-sm">Books Managed</p>
+            </div>
+            <div class="hidden md:block w-[4px] h-10 bg-gray-300"></div>
+
+            <div class="flex-1 py-4">
+                <h2 class="text-3xl font-bold">30K+</h2>
+                <p class="text-gray-500 text-sm">Students Served</p>
+            </div>
+            <div class="hidden md:block w-[4px] h-10 bg-gray-300"></div>
+
+            <div class="flex-1 py-4">
+                <h2 class="text-3xl font-bold">100+</h2>
+                <p class="text-gray-500 text-sm">Features</p>
+            </div>
+            <div class="hidden md:block w-[4px] h-10 bg-gray-300"></div>
+
+            <div class="flex-1 py-4">
+                <h2 class="text-3xl font-bold">50+</h2>
+                <p class="text-gray-500 text-sm">Colleges</p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Features Section -->
+    <section class="bg-white py-24 px-6 md:px-20">
+
+        <!-- Section Heading -->
+        <div class="max-w-6xl mx-auto text-center">
+            <h2 class="text-4xl font-bold mb-4 text-[#3e2723]">
+                Advanced Features To Bring Your <br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#8B4513] to-[#D4AF37]">
+                    Library Management Vision To Life
+                </span>
+            </h2>
+            <p class="text-gray-500 max-w-2xl mx-auto">
+                This is just a glimpse of the advanced features our Library Management System offers. With tools for
+                managing book requests, tracking user activity, handling administrative roles, and streamlining
+                operations, our system meets the needs of modern libraries.
+            </p>
+        </div>
+
+        <!-- Feature Cards -->
+        <div class="mt-16 grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+
+            <!-- Card 1 -->
+            <div class="bg-gray-100 rounded-xl p-6 text-left">
+                <div class="w-12 h-12 bg-lime-300 rounded-md flex items-center justify-center mb-4">
+                    <img src="https://img.icons8.com/ios-filled/50/000000/book.png" class="w-6 h-6"
+                        alt="Book Management Icon" />
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Book Management</h3>
+                <p class="text-gray-600 mb-4">
+                    Streamline your entire book collection, from tracking availability to organizing by category and
+                    rack location, making library management seamless and efficient.
+                </p>
+            </div>
+
+            <!-- QR Code Borrowing Card -->
+            <div class="bg-gray-100 rounded-xl p-6 text-left">
+                <div class="w-12 h-12 bg-yellow-200 rounded-md flex items-center justify-center mb-4">
+                    <img src="https://img.icons8.com/ios-filled/50/000000/qr-code.png" class="w-6 h-6"
+                        alt="QR Code Borrowing Icon" />
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">QR Code Borrowing System</h3>
+                <p class="text-gray-600 mb-4">
+                    Revolutionize borrowing with ScanTag! Students scan their personal QR code to borrow books
+                    instantly, ensuring faster and easier book checkouts.
+                </p>
+            </div>
+
+            <!-- Analytics Card -->
+            <div class="bg-gray-100 rounded-xl p-6 text-left">
+                <div class="w-12 h-12 bg-purple-200 rounded-md flex items-center justify-center mb-4">
+                    <img src="https://img.icons8.com/ios-filled/50/000000/graph.png" class="w-6 h-6"
+                        alt="Analytics Icon" />
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Analytics</h3>
+                <p class="text-gray-600 mb-4">
+                    Gain valuable insights with analytics to track library usage, book loans, and student
+                    engagement, helping you make data-driven decisions for improved operations.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="mt-24 max-w-6xl mx-auto space-y-24">
+
+            <!-- Row 1 -->
+            <div class="flex flex-col md:flex-row items-center justify-center gap-12">
+                <img src="/images/analysis.svg" alt="User Analytics" class="rounded-3xl w-[400px] shadow-xl" />
+                <div class="max-w-xl text-center md:text-left">
+                    <div class="text-sm font-semibold py-1 inline-block mb-4 text-gray-600">Powered By Insights</div>
+                    <h2 class="text-3xl md:text-4xl font-bold leading-tight mb-4 text-[#3e2723]">
+                        <span
+                            class="text-transparent bg-clip-text bg-gradient-to-r from-[#8B4513] to-[#D4AF37]">Visualize
+                            Usage</span> & Improve Services
+                    </h2>
+                    <p class="text-gray-600 mb-6">
+                        Track trends, monitor engagement, and view circulation stats to understand how your library is
+                        being used.
+                    </p>
+                    <button class="bg-[#d4af37] text-black px-6 py-2 rounded-full font-medium transition-all">
+                        Learn More →
+                    </button>
+                </div>
+            </div>
+
+            <!-- Row 2 -->
+            <div class="flex flex-col-reverse md:flex-row items-center justify-center gap-12">
+                <div class="max-w-xl text-center md:text-left">
+                    <div class="text-sm font-semibold py-1 inline-block mb-4 text-gray-600">Automated Communication
+                    </div>
+                    <h2 class="text-3xl md:text-4xl font-bold leading-tight mb-4 text-[#3e2723]">
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#8B4513] to-[#D4AF37]">Smart
+                            Reminders</span> & Announcements
+                    </h2>
+                    <p class="text-gray-600 mb-6">
+                        From overdue notices to holiday schedules — our mailing system keeps every user in the loop
+                        automatically.
+                    </p>
+                    <button class="bg-[#d4af37] text-black px-6 py-2 rounded-full font-medium transition-all">
+                        Learn More →
+                    </button>
+                </div>
+                <img src="/images/reminders.jpg" alt="Email Notifications"
+                    class="rounded-3xl w-[400px] h-[266px] object-cover shadow-xl" />
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--Testimonials-->
+    <section class="bg-gradient-to-r from-[#8B5E3C] to-[#C49A6C] py-10 px-6 overflow-hidden">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-8">
+            <!-- Left Text -->
+            <div class="flex items-center h-full text-white">
+                <div>
+                    <h2 class="text-4xl font-bold mb-4 leading-tight">Our Customers<br />Say About Us</h2>
+                    <p class="text-sm text-gray-300 leading-relaxed">
+                        BookNest is an open-source library management platform built for modern institutions. From
+                        circulation tracking to automated reminders, it simplifies your workflow while remaining free to
+                        use and fully customizable. Here’s what our users have to say.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Right: Dual Scroll Columns -->
+            <div class="grid grid-cols-2 gap-4 h-[400px] overflow-hidden">
+                <!-- Column 1: Scroll Up -->
+                <div class="overflow-hidden">
+                    <div class="animate-scroll space-y-4">
+                        <!-- Testimonials duplicated -->
+                        <div class="space-y-4">
+                            <div class="bg-white text-gray-800 p-4 rounded-lg shadow-md">
+                                <p class="text-sm mb-4">"Lorem ipsum dolor sit amet..."</p>
+                                <h4 class="font-bold text-base">Leonardo Alex</h4>
+                                <p class="text-sm text-gray-500 mb-2">CEO of StivoCorp</p>
+                                <div class="flex items-center gap-1 text-yellow-400">
+                                    <span>⭐</span><span class="text-black text-sm">5.00</span>
+                                </div>
+                            </div>
+                            <div class="bg-white text-black p-4 rounded-lg shadow-md">
+                                <p class="text-sm mb-4">"Sed ut perspiciatis unde omnis..."</p>
+                                <h4 class="font-bold text-base">Sarah Wright</h4>
+                                <p class="text-sm text-gray-400 mb-2">Marketing Lead</p>
+                                <div class="flex items-center gap-1 text-yellow-400">
+                                    <span>⭐</span><span class="text-black text-sm">4.95</span>
                                 </div>
                             </div>
                         </div>
-                        <% } %>
-                
-                        <!-- Login Button (for larger screens) -->
-                        <% if (!session.userId) { %>
-                        <button data-modal-target="login-modal" data-modal-toggle="login-modal"
-                            class="text-white bg-[#316de5] hover:bg-[#316df7] hover:cursor-pointer focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center">
-                            Login
-                        </button>
-                        <% } %>
+
+                        <!-- Duplicate again for loop -->
+                        <div class="space-y-4">
+                            <div class="bg-white text-gray-800 p-4 rounded-lg shadow-md">
+                                <p class="text-sm mb-4">"Lorem ipsum dolor sit amet..."</p>
+                                <h4 class="font-bold text-base">Leonardo Alex</h4>
+                                <p class="text-sm text-gray-500 mb-2">CEO of StivoCorp</p>
+                                <div class="flex items-center gap-1 text-yellow-400">
+                                    <span>⭐</span><span class="text-black text-sm">5.00</span>
+                                </div>
+                            </div>
+                            <div class="bg-white text-black p-4 rounded-lg shadow-md">
+                                <p class="text-sm mb-4">"Sed ut perspiciatis unde omnis..."</p>
+                                <h4 class="font-bold text-base">Sarah Wright</h4>
+                                <p class="text-sm text-gray-400 mb-2">Marketing Lead</p>
+                                <div class="flex items-center gap-1 text-yellow-400">
+                                    <span>⭐</span><span class="text-black text-sm">4.95</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                
-                <!-- Hamburger Menu -->
-                <button data-collapse-toggle="navbar-sticky" type="button"
-                    class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
-                    aria-controls="navbar-sticky" aria-expanded="false">
-                    <span class="sr-only">Open main menu</span>
-                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 17 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M1 1h15M1 7h15M1 13h15" />
+
+                <!-- Column 2: Scroll Down -->
+                <div class="overflow-hidden">
+                    <div class="animate-scroll-reverse space-y-4">
+                        <div class="space-y-4">
+                            <div class="bg-white text-black p-4 rounded-lg shadow-md">
+                                <p class="text-sm mb-4">"Ut enim ad minima veniam..."</p>
+                                <h4 class="font-bold text-base">Jacob Lee</h4>
+                                <p class="text-sm text-gray-400 mb-2">Project Manager</p>
+                                <div class="flex items-center gap-1 text-yellow-400">
+                                    <span>⭐</span><span class="text-black text-sm">4.87</span>
+                                </div>
+                            </div>
+                            <div class="bg-white text-gray-800 p-4 rounded-lg shadow-md">
+                                <p class="text-sm mb-4">"Neque porro quisquam est..."</p>
+                                <h4 class="font-bold text-base">Emma Smith</h4>
+                                <p class="text-sm text-gray-500 mb-2">UX Designer</p>
+                                <div class="flex items-center gap-1 text-yellow-400">
+                                    <span>⭐</span><span class="text-black text-sm">4.90</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Duplicate again -->
+                        <div class="space-y-4">
+                            <div class="bg-white text-black p-4 rounded-lg shadow-md">
+                                <p class="text-sm mb-4">"Ut enim ad minima veniam..."</p>
+                                <h4 class="font-bold text-base">Jacob Lee</h4>
+                                <p class="text-sm text-gray-400 mb-2">Project Manager</p>
+                                <div class="flex items-center gap-1 text-yellow-400">
+                                    <span>⭐</span><span class="text-black text-sm">4.87</span>
+                                </div>
+                            </div>
+                            <div class="bg-white text-gray-800 p-4 rounded-lg shadow-md">
+                                <p class="text-sm mb-4">"Neque porro quisquam est..."</p>
+                                <h4 class="font-bold text-base">Emma Smith</h4>
+                                <p class="text-sm text-gray-500 mb-2">UX Designer</p>
+                                <div class="flex items-center gap-1 text-yellow-400">
+                                    <span>⭐</span><span class="text-black text-sm">4.90</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section class="bg-gray-100 py-16 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto text-center mb-12">
+            <div class="mb-2">
+                <img src="https://img.icons8.com/ios/50/faq.png" alt="FAQ Icon" class="mx-auto h-6" />
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">
+                Learn More About BookNest By User Questions
+            </h1>
+            <p class="mt-4 text-gray-500 max-w-2xl mx-auto text-sm">
+                At BookNest, we’re always here to help. Here are some common questions from our readers and admins.
+            </p>
+        </div>
+
+        <div class="max-w-3xl mx-auto space-y-2">
+            <!-- FAQ Item -->
+            <div class="bg-white rounded-md p-4">
+                <button class="flex justify-between items-center w-full font-semibold text-gray-900 faq-toggle">
+                    <span>What is BookNest?</span>
+                    <svg class="icon w-6 h-6 text-gray-600 transition-transform duration-200" fill="currentColor"
+                        viewBox="0 0 36 36">
+                        <path class="icon-path" d="M17 17V3H19V17H33V19H19V33H17V19H3V17H17Z" />
                     </svg>
                 </button>
-                
-                <!-- Navbar -->
-                <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
-                    <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
-                        <li><a href="/" class="block py-2 px-3 text-white bg-blue-700 rounded-sm md:bg-transparent md:text-blue-700 md:p-0" aria-current="page">Home</a></li>
-                        <li><a href="#" class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">About</a></li>
-                        <li><a href="#" class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">Services</a></li>
-                        <li><a href="#" class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">Contact</a></li>
-                
-                        <!-- Profile & Login inside hamburger menu on smaller screens -->
-                        <li class="md:hidden"> <!-- Shown only on smaller screens -->
-                            <% if (session.userId) { %>
-                            <div class="relative">
-                                <button id="profileBtnMobile" class="flex items-center space-x-2 hover:text-[#316df8] transition hover:cursor-pointer">
-                                    <% if (user && user.profilePic) { %>
-                                        <img src="<%= user.profilePic %>" alt="Profile Picture" class="w-10 h-10 rounded-full object-cover">
-                                    <% } else { %>
-                                        <img src="https://ui-avatars.com/api/?name=<%= user ? user.name : 'User' %>&background=316de5&color=fff"
-                                            alt="Default Profile Picture" class="w-10 h-10 rounded-full">
-                                    <% } %>
-                                </button>
-                                <div class="z-50 bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
-                                    <div class="py-2">
-                                        <% if (admin) { %>
-                                            <a href="/profile/<%= session.userId %>" class="block px-4 py-2 text-sm hover:bg-gray-100">Profile</a>
-                                            <a href="/admin" class="block px-4 py-2 text-sm hover:bg-gray-100">Dashboard</a>
-                                            <a href="/books" class="block px-4 py-2 text-sm hover:bg-gray-100">BookList</a>
-                                        <% } else { %>
-                                            <a href="/profile/<%= session.userId %>" class="block px-4 py-2 text-sm hover:bg-gray-100">Profile</a>
-                                            <a href="/books" class="block px-4 py-2 text-sm hover:bg-gray-100">BookList</a>
-                                        <% } %>
-                                        <a href="/logout" class="block px-4 py-2 text-sm hover:bg-red-600 hover:text-white">Logout</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <% } else { %>
-                            <!-- Login Button (for smaller screens) -->
-                            <button data-modal-target="login-modal" data-modal-toggle="login-modal"
-                                class="text-white bg-[#316de5] hover:bg-[#316df7] hover:cursor-pointer focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center w-full">
-                                Login
-                            </button>
-                            <% } %>
-                        </li>
-                    </ul>
+                <div class="faq-content mt-2 text-sm text-gray-600 hidden">
+                    BookNest is a powerful library management platform offering book circulation, user engagement
+                    insights,
+                    reminders, and more. It’s designed for both librarians and readers.
                 </div>
-                
             </div>
-        </nav>
-        
 
-
-        <div class="herosection m-auto text-center container h-full pt-40 max-[600px]:pt-30 ">
-            <div class="div m-auto bluebanner">
-                <a href="#"
-                    class=" bluebannerBtn inline-flex justify-between items-center py-1 px-1 pe-4 mb-7 text-sm text-black bg-blue-100 rounded-full hover:bg-blue-200">
-                    <span class="text-xs bg-[#316de5] rounded-full text-white px-4 py-1.5 me-3 font-bold ">New</span>
-                    <span class="text-sm font-medium bluebannerTxt">Welcome to BookNest</span>
-                    <svg class="w-2.5 h-2.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 6 10">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="m1 9 4-4-4-4" />
+            <div class="bg-white rounded-md p-4">
+                <button class="flex justify-between items-center w-full font-semibold text-gray-900 faq-toggle">
+                    <span>How much does BookNest cost?</span>
+                    <svg class="icon w-6 h-6 text-gray-600 transition-transform duration-200" fill="currentColor"
+                        viewBox="0 0 36 36">
+                        <path class="icon-path" d="M17 17V3H19V17H33V19H19V33H17V19H3V17H17Z" />
                     </svg>
-                </a>
+                </button>
+                <div class="faq-content mt-2 text-sm text-gray-600 hidden">
+                    BookNest offers flexible pricing for institutions of all sizes. Contact us to get a custom quote
+                    based on your library’s needs.
+                </div>
             </div>
 
-            <div class="textbox m-auto text-center">
-                <h1 class="text-6xl font-black threetitle">Explore, Discover, and Learn</h1>
-                <h2 class="text-3xl font-bold highlight">The world of books at your fingertips</h2>
-                <p class="text-xl highlight2">Your digital gateway to an ocean of knowledge. Browse, borrow, and explore from
-                    <span class="text-blue-500 font-bold">Your College Library.</span>
+            <div class="bg-white rounded-md p-4">
+                <button class="flex justify-between items-center w-full font-semibold text-gray-900 faq-toggle">
+                    <span>Where can I access BookNest?</span>
+                    <svg class="icon w-6 h-6 text-gray-600 transition-transform duration-200" fill="currentColor"
+                        viewBox="0 0 36 36">
+                        <path class="icon-path" d="M17 17V3H19V17H33V19H19V33H17V19H3V17H17Z" />
+                    </svg>
+                </button>
+                <div class="faq-content mt-2 text-sm text-gray-600 hidden">
+                    You can access BookNest from any internet-connected device — including laptops, tablets, and phones
+                    — via our web app.
+                </div>
+            </div>
+
+            <div class="bg-white rounded-md p-4">
+                <button class="flex justify-between items-center w-full font-semibold text-gray-900 faq-toggle">
+                    <span>How do I cancel my subscription?</span>
+                    <svg class="icon w-6 h-6 text-gray-600 transition-transform duration-200" fill="currentColor"
+                        viewBox="0 0 36 36">
+                        <path class="icon-path" d="M17 17V3H19V17H33V19H19V33H17V19H3V17H17Z" />
+                    </svg>
+                </button>
+                <div class="faq-content mt-2 text-sm text-gray-600 hidden">
+                    You can cancel your BookNest plan anytime from your admin dashboard — no contracts or penalties
+                    involved.
+                </div>
+            </div>
+
+            <div class="bg-white rounded-md p-4">
+                <button class="flex justify-between items-center w-full font-semibold text-gray-900 faq-toggle">
+                    <span>What can I manage with BookNest?</span>
+                    <svg class="icon w-6 h-6 text-gray-600 transition-transform duration-200" fill="currentColor"
+                        viewBox="0 0 36 36">
+                        <path class="icon-path" d="M17 17V3H19V17H33V19H19V33H17V19H3V17H17Z" />
+                    </svg>
+                </button>
+                <div class="faq-content mt-2 text-sm text-gray-600 hidden">
+                    BookNest lets you manage user borrowing, announcements, reminders, analytics, and book inventory —
+                    all in one place.
+                </div>
+            </div>
+
+            <div class="bg-white rounded-md p-4">
+                <button class="flex justify-between items-center w-full font-semibold text-gray-900 faq-toggle">
+                    <span>Is BookNest safe for student use?</span>
+                    <svg class="icon w-6 h-6 text-gray-600 transition-transform duration-200" fill="currentColor"
+                        viewBox="0 0 36 36">
+                        <path class="icon-path" d="M17 17V3H19V17H33V19H19V33H17V19H3V17H17Z" />
+                    </svg>
+                </button>
+                <div class="faq-content mt-2 text-sm text-gray-600 hidden">
+                    Yes. BookNest includes parental control options, content filters, and user permissions for safe
+                    access by kids and teens.
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER SECTION -->
+    <footer class="bg-white text-gray-800 pt-12 pb-6 border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-8">
+            <!-- Brand column -->
+            <div>
+                <h2 class="text-2xl font-bold mb-4">BookNest</h2>
+                <p class="text-sm text-gray-600 mb-6">
+                    Proudly open-source, BookNest empowers libraries of all sizes to manage collections, engage readers,
+                    and tailor their systems freely. because great library tools should be accessible to everyone.
                 </p>
-
-                <div
-                    class="herobtn my-4 m-auto bg-[#316de5] hover:bg-[#316df8] w-[150px] h-[50px] flex items-center justify-center rounded-3xl text-white font-bold">
-                    <a href="#">Explore Now</a>
+                <div class="flex gap-4 text-lg text-gray-700">
+                    <a href="#" class="hover:text-black"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="hover:text-black"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="hover:text-black"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="hover:text-black"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
 
-            <!-- Carousel Container -->
-            <div class="hidden container sm:flex justify-center items-center m-auto mt-10 mb-15 hover:cursor-pointer">
-                <div class="w-[50%] relative">
-                    <div class="swiper centered-slide-carousel swiper-container relative">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <div class="bg-[#efefef] rounded-2xl min-h-[150px] flex p-5 flex-col shadow-xl">
-                                    <span class="text-xl font-bold text-black">Computer Science & Technology</span>
-                                    <span class="pt-0.5">Stay ahead with books on programming, AI, cybersecurity, and
-                                        software development. Essential for tech enthusiasts and developers</span>
-                                </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="bg-[#efefef] rounded-2xl min-h-[150px] flex p-5 flex-col shadow-xl">
-                                    <span class="text-xl font-bold text-black">Science & Engineering</span>
-                                    <span class="pt-0.5">Explore physics, electrical, mechanical, and civil engineering
-                                        concepts. Perfect for engineering students and innovators</span>
-                                </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="bg-[#efefef] rounded-2xl min-h-[150px] flex p-5 flex-col shadow-xl">
-                                    <span class="text-xl font-bold text-black">Business & Management</span>
-                                    <span class="pt-0.5">Master finance, leadership, marketing, and startups. Ideal for
-                                        future entrepreneurs and business leaders</span>
-                                </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="bg-[#efefef] rounded-2xl min-h-[150px] flex p-5 flex-col shadow-xl">
-                                    <span class="text-xl font-bold text-black">Literature & Fiction</span>
-                                    <span class="pt-0.5">Dive into classic and modern literature to enhance creativity,
-                                        storytelling, and critical thinking</span>
-                                </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="bg-[#efefef] rounded-2xl min-h-[150px] flex p-5 flex-col shadow-xl">
-                                    <span class="text-xl font-bold text-black">Self-Improvement & Psychology</span>
-                                    <span class="pt-0.5">Improve your habits, mindset, and emotional intelligence with
-                                        psychology and self-growth books</span>
-                                </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="bg-[#efefef] rounded-2xl min-h-[150px] flex p-5 flex-col shadow-md">
-                                    <span class="text-xl font-bold text-black">Exam Preparation & Reference Books</span>
-                                    <span class="pt-0.5">Prepare for competitive exams like GATE, GRE, and UPSC with
-                                        reference materials and guides</span>
-                                </div>
-                            </div>
-                        </div>
+            <!-- Support -->
+            <div>
+                <h3 class="text-lg font-semibold mb-4">Support</h3>
+                <ul class="space-y-2 text-sm text-gray-600">
+                    <li><a href="#" class="hover:text-black">Customer Support</a></li>
+                    <li><a href="#" class="hover:text-black">Accessibility</a></li>
+                    <li><a href="#" class="hover:text-black">Contact Us</a></li>
+                    <li><a href="#" class="hover:text-black">Career</a></li>
+                </ul>
+            </div>
 
-                        <!-- Pagination -->
-                        <div class="swiper-pagination"></div>
-                    </div>
-                </div>
+            <!-- Quick Links -->
+            <div>
+                <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                <ul class="space-y-2 text-sm text-gray-600">
+                    <li><a href="#" class="hover:text-black">About Us</a></li>
+                    <li><a href="#" class="hover:text-black">Resources</a></li>
+                    <li><a href="#" class="hover:text-black">Features</a></li>
+                    <li><a href="#" class="hover:text-black">Request Card</a></li>
+                </ul>
+            </div>
+
+            <!-- Terms & More -->
+            <div>
+                <h3 class="text-lg font-semibold mb-4">Terms & More</h3>
+                <ul class="space-y-2 text-sm text-gray-600">
+                    <li><a href="#" class="hover:text-black">Terms & Conditions</a></li>
+                    <li><a href="#" class="hover:text-black">Privacy Policy</a></li>
+                    <li><a href="#" class="hover:text-black">FAQ/Help</a></li>
+                    <li><a href="#" class="hover:text-black">Resources</a></li>
+                </ul>
             </div>
         </div>
-    </main>
-    <section class="featuredsection h-auto pb-10 bg-[white]">
-        <div class="features container m-auto h-full ">
-            <div class="heading m-auto items-center justify-evenly lg:w-[90%] lg:px-16 py-10 max-[780px]:px-6">
-                <p class="font-bold uppercase text-blue-600 ">Features</p>
-                <h2 class="text-5xl font-black featuretext">🤔What Can You Do</h2>
-            </div>
-            <div
-                class="cards flex m-auto lg:w-[90%] lg:px-16 items-center justify-center flex-wrap mt-5 gap-x-40 gap-y-20">
-                <div
-                    class="card flex flex-col justify-centre item-centre bg-white rounded-xl p-4 pt-8 min-h-[304px] hover:bg-gray-100 hover:cursor-pointer hover: shadow-2xl w-[300px] text-center">
-                    <div class="head">
-                        <div
-                            class="icon bg-blue-600 m-auto h-[100px] w-[100px] rounded-xl flex justify-center items-center">
-                            <i class="fa-regular fa-user text-white text-5xl "></i>
-                        </div>
-                        <div class="title font-bold pt-4 text-lg">User Registration</div>
-                    </div>
-                    <div class="body-text">
-                        Students register with details, and admins approve accounts before granting access.
-                    </div>
-                </div>
 
-                <div
-                    class="card flex flex-col justify-centre item-centre bg-white rounded-xl p-4 pt-8 min-h-[304px] hover:bg-gray-100 hover:cursor-pointer hover: shadow-2xl w-[300px] text-center">
-                    <div class="head">
-                        <div
-                            class="icon bg-blue-600 m-auto h-[100px] w-[100px] rounded-xl flex justify-center items-center">
-                            <i class="fa-solid fa-screwdriver-wrench text-white text-5xl "></i>
-                        </div>
-                        <div class="title font-bold pt-4 text-lg">Book Management System</div>
-                    </div>
-                    <div class="body-text">
-                        Admins can add, edit, and delete books, track availability, and organize books by categories.
-                    </div>
-                </div>
-
-                <div
-                    class="card flex flex-col justify-centre item-centre bg-white rounded-xl p-4 pt-8 min-h-[304px] hover:bg-gray-100 hover:cursor-pointer hover: shadow-2xl w-[300px] text-center">
-                    <div class="head">
-                        <div
-                            class="icon bg-blue-600 m-auto h-[100px] w-[100px] rounded-xl flex justify-center items-center">
-                            <i class="fa-solid fa-gauge-high text-white text-5xl "></i>
-                        </div>
-                        <div class="title font-bold pt-4 text-lg">Book Borrowing & Tracking</div>
-                    </div>
-                    <div class="body-text">
-                        Students can request books, track due dates, and receive return reminders, while admins monitor
-                    </div>
-                </div>
-
-                <div
-                    class="card flex flex-col justify-centre item-centre bg-white rounded-xl p-4 pt-8 min-h-[304px] hover:bg-gray-100 hover:cursor-pointer hover: shadow-2xl w-[300px] text-center">
-                    <div class="head">
-                        <div
-                            class="icon bg-blue-600 m-auto h-[100px] w-[100px] rounded-xl flex justify-center items-center">
-                            <i class="fa-solid fa-chart-simple text-white text-5xl "></i>
-                        </div>
-                        <div class="title font-bold pt-4 text-lg">Real-Time Library Analytics</div>
-                    </div>
-                    <div class="body-text">
-                        Admins can view daily visits, book issue stats, and generate reports for better management.
-                    </div>
-                </div>
-
-                <div
-                    class="card flex flex-col justify-centre item-centre bg-white rounded-xl p-4 pt-8 min-h-[304px] hover:bg-gray-100 hover:cursor-pointer hover: shadow-2xl w-[300px] text-center">
-                    <div class="head">
-                        <div
-                            class="icon bg-blue-600 m-auto h-[100px] w-[100px] rounded-xl flex justify-center items-center">
-                            <i class="fa-solid fa-magnifying-glass text-white text-5xl "></i>
-                        </div>
-                        <div class="title font-bold pt-4 text-lg">Search & Filter System</div>
-                    </div>
-                    <div class="body-text">
-                        Users can quickly find books using title, author, category, or rack location, with advanced
-                        filters for easy discovery.
-                    </div>
-                </div>
-
-                <div
-                    class="card flex flex-col justify-centre item-centre bg-white rounded-xl p-4 pt-8 min-h-[304px] hover:bg-gray-100 hover:cursor-pointer hover: shadow-2xl w-[300px] text-center">
-                    <div class="head">
-                        <div
-                            class="icon bg-blue-600 m-auto h-[100px] w-[100px] rounded-xl flex justify-center items-center">
-                            <i class="fa-solid fa-user-tie text-white text-5xl "></i>
-                        </div>
-                        <div class="title font-bold pt-4 text-lg">Multi-Admin Management</div>
-                    </div>
-                    <div class="body-text">
-                        Admins can assign different roles to other admins, ensuring smooth management of the library
-                        system.
-                    </div>
-                </div>
-            </div>
+        <div class="mt-10 border-t border-gray-200 pt-4 text-center text-sm text-gray-500">
+            © 2024 BookNest — All Rights Reserved
         </div>
-    </section>
-    <section class="contact h-auto pb-8 bg-[#efefef]">
-        <div class="contact-section container m-auto h-full">
-            <div class="heading m-auto items-center justify-evenly lg:w-[90%] lg:px-16 py-10 max-[780px]:px-6">
-                <p class="font-bold uppercase text-blue-600 ">CONTACT US</p>
-                <h2 class="text-5xl font-black contacttext">💬Need Help? Let's Talk</h2>
-            </div>
-            <div
-                class="contact-card flex m-auto lg:w-[90%] lg:px-16 items-center justify-center bg-white rounded-xl p-4">
-                <iframe class="rounded-xl" width="100%" height="600" frameborder="0" scrolling="no" marginheight="0"
-                    marginwidth="0"
-                    src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=MGM%20College%20of%20Engineering%20and%20Technology,%20Pampakuda%20,%20Eranakulam+(College)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
-                    <a href="https://www.gps.ie/collections/drones/">gps drone</a>
-                </iframe>
-            </div>
-        </div>
-    </section>
-    <%- include("../components/footer") %>
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-    <script src="/javascript/carousal.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/pagedone@1.2.2/src/js/pagedone.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+    </footer>
+
+    <script>
+        const toggleBtn = document.getElementById('menu-toggle');
+        const closeBtn = document.getElementById('close-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const bar1 = document.getElementById('bar1');
+        const bar2 = document.getElementById('bar2');
+        const bar3 = document.getElementById('bar3');
+    
+        function openMenu() {
+            mobileMenu.classList.remove('translate-x-full');
+            bar1.classList.add('rotate-45', 'top-4');
+            bar3.classList.add('-rotate-45', 'top-4');
+            bar2.classList.add('opacity-0');
+        }
+    
+        function closeMenu() {
+            mobileMenu.classList.add('translate-x-full');
+            bar1.classList.remove('rotate-45', 'top-4');
+            bar3.classList.remove('-rotate-45', 'top-4');
+            bar2.classList.remove('opacity-0');
+        }
+    
+        toggleBtn.addEventListener('click', () => {
+            if (mobileMenu.classList.contains('translate-x-full')) {
+                openMenu();
+            } else {
+                closeMenu();
+            }
+        });
+    
+        closeBtn.addEventListener('click', closeMenu);
+    </script>
+    <script>
+        document.querySelectorAll('.faq-toggle').forEach(button => {
+            button.addEventListener('click', () => {
+                const content = button.nextElementSibling;
+                const iconPath = button.querySelector('.icon-path');
+                const isVisible = !content.classList.contains('hidden');
+    
+                // Close all
+                document.querySelectorAll('.faq-content').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.icon-path').forEach(path => {
+                    path.setAttribute('d', 'M17 17V3H19V17H33V19H19V33H17V19H3V17H17Z'); // plus
+                });
+    
+                // Toggle clicked one
+                if (!isVisible) {
+                    content.classList.remove('hidden');
+                    iconPath.setAttribute('d', 'M3 17H33V19H3V17Z'); // minus
+                }
+            });
+        });
+    </script>    
 </body>
-
 </html>

@@ -1,0 +1,114 @@
+<div class="p-6 bg-gray-100 min-h-screen">
+    <!-- Header -->
+    <div>
+        <h1 class="text-2xl font-bold text-gray-900">Track Loans</h1>
+        <p class="text-sm text-gray-600">Monitor and manage student book loans</p>
+    </div>
+    <!-- Search Student -->
+    <div class="mt-8 bg-[#faf7f5] p-6 rounded-lg border-2 border-gray-200">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4">Search Student</h2>
+
+        <form action="/trackborrows" method="POST" class="flex items-center gap-3">
+            <input type="text" name="studentId" placeholder="STU001 or MongoID"
+                class="bg-[#f7f5ed] text-gray-800 border border-gray-300 rounded-md px-4 py-2 w-full max-w-sm focus:ring-2 focus:ring-amber-800 focus:outline-none"
+                required />
+            <button type="submit"
+                class="bg-[#814c26] hover:bg-[#5a3018] text-white px-4 py-2 rounded-md flex items-center gap-2 text-sm">
+                <i class="fas fa-search"></i>
+                Search
+            </button>
+        </form>
+
+
+        <% if (borrowData) { %>
+            <!-- Student Info -->
+            <div class="bg-white rounded-lg shadow-sm p-4 mt-6">
+                <p class="text-lg font-semibold text-gray-900"><%= borrowData.name %></p>
+                <p class="text-sm text-gray-600">Email Id: <%= borrowData.email %></p>
+                <p class="text-sm text-gray-600">Course/Sem: <%= borrowData.registration || "N/A" %></p>
+                <p class="text-sm text-gray-600">Register Number: <%= borrowData.registrationNumber %></p>
+                <p class="text-sm text-gray-600">BookNest ID: <%= borrowData.mongoId || "N/A" %></p>
+            </div>
+        
+            <!-- Borrow Table -->
+            <div class="mt-4 overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+                <table class="min-w-full divide-y divide-gray-200 text-sm text-left">
+                    <thead class="bg-gray-100 text-gray-700 text-xs uppercase tracking-wider">
+                        <tr>
+                            <th class="px-6 py-3">Book</th>
+                            <th class="px-6 py-3">Due Date</th>
+                            <th class="px-6 py-3">Status</th>
+                            <th class="px-6 py-3">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-100">
+
+                        <% borrowData.expired.forEach(b => { %>
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                    <%= b.bookId.bookname || "Unknown Book" %>
+                                </td>
+                                <td class="px-6 py-4 text-gray-700 whitespace-nowrap">
+                                    <%= new Date(b.dueDate).toLocaleDateString('en-IN', {
+                                        year: 'numeric', month: 'short', day: 'numeric'
+                                    }) %>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700">
+                                        Overdue
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <button class="text-red-600 hover:text-red-800 transition" title="Return Book" data-modal-target="remove-borrow-modal-<%= b.bookId._id %>" data-modal-toggle="remove-borrow-modal-<%= b.bookId._id %>">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                    <%- include("../modals/admin/del-borrows", { borrowData }) %>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    
+                        <% borrowData.dueSoon.forEach(b => { %>
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                    <%= b.bookId.bookname || "Unknown Book" %>
+                                </td>
+                                <td class="px-6 py-4 text-gray-700 whitespace-nowrap">
+                                    <%= new Date(b.dueDate).toLocaleDateString('en-IN', {
+                                        year: 'numeric', month: 'short', day: 'numeric'
+                                    }) %>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        Due in <%= b.daysLeft %> day<%= b.daysLeft > 1 ? 's' : '' %>
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <button class="text-red-600 hover:text-red-800 transition" title="Return Book" data-modal-target="remove-borrow-modal-<%= b.bookId._id %>" data-modal-toggle="remove-borrow-modal-<%= b.bookId._id %>">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                    
+                                </td>
+                            </tr>
+                            <%- include("../modals/admin/del-borrows", { borrowData }) %>
+                        <% }) %>
+                    
+                        <% if (borrowData.expired.length === 0 && borrowData.dueSoon.length === 0) { %>
+                            <tr>
+                                <td colspan="4" class="text-center text-gray-500 py-6">No active or overdue borrows.</td>
+                            </tr>
+                        <% } %>
+                    
+                        <tr>
+                            <td colspan="4" class="px-6 py-3 text-right bg-white">
+                                <button type="button" data-modal-target="add-book-modal-<%= borrowData.mongoId %>" data-modal-toggle="add-book-modal-<%= borrowData.mongoId %>" class="inline-flex items-center gap-2 text-sm font-medium text-white bg-[#814c26] hover:bg-[#5a3018] hover:cursor-pointer px-4 py-2 rounded-md transition">
+                                    <i class="fas fa-plus"></i> Assign Book
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>                    
+                </table>
+            </div>
+            <%-include("../modals/admin/add-borrows", { borrowData }) %>
+        <% } %>
+    </div>
+</div>

@@ -1,0 +1,176 @@
+<div class="p-6 bg-gray-50 min-h-screen">
+    <div class="mb-10">
+        <h2 class="text-3xl font-bold text-gray-800 mb-1">User Management</h2>
+        <p class="text-gray-600">Approve new users and manage existing ones.</p>
+    </div>
+    
+    <% const pendingUsers=users.filter(u=> !u.approved); %>
+    
+    <div class="mb-10">
+        <h3 class="text-xl font-semibold text-gray-700 mb-4">Pending Approvals</h3>
+    
+        <% if (pendingUsers.length> 0) { %>
+            <div class="bg-white shadow rounded-xl overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-700 rounded-xl overflow-hidden">
+                    <thead class="bg-gray-100 text-gray-500 uppercase text-xs">
+                        <tr>
+                            <th class="px-6 py-3">Name / ID</th>
+                            <th class="px-6 py-3">Email</th>
+                            <th class="px-6 py-3">Course</th>
+                            <th class="px-6 py-3">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <% pendingUsers.forEach(user=> { %>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 font-medium text-gray-900">
+                                    <%= user.name %><br>
+                                        <span class="text-xs text-gray-500">ID: <%= user._id %></span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <%= user.email %>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <%= user.course %><br>
+                                    <span class="text-xs text-gray-500">Semester: <%= user.semester %></span>
+                                </td>
+                                <td class="px-6 py-4 flex gap-2">
+                                    <button data-modal-target="approve-modal-<%= user._id %>"
+                                        data-modal-toggle="approve-modal-<%= user._id %>"
+                                        class="p-2 bg-green-100 text-green-700 rounded-full hover:bg-green-200">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                    <button class="p-2 bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button data-modal-target="delete-modal-<%= user._id %>"
+                                        data-modal-toggle="delete-modal-<%= user._id %>"
+                                        class="p-2 bg-red-100 text-red-700 rounded-full hover:bg-red-200">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    <%- include("../modals/users/approve-modal", { user: user }) %>
+                                    <%- include("../modals/users/delete-modal", { user: user }) %>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        <% } else { %>
+            <p class="text-gray-500 italic">No pending users to approve.</p>
+        <% } %>
+    </div>
+
+    <hr class="mt-14 mb-10 border-gray-300">
+
+    <!-- Approved Users Table -->
+    <div>
+        <h3 class="text-xl font-semibold text-gray-700 mb-4">Approved Users</h3>
+        <div class="bg-white shadow rounded-xl overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-700 rounded-xl overflow-hidden">
+                <thead class="bg-gray-100 text-gray-500 uppercase text-xs">
+                    <tr>
+                        <th class="px-6 py-3">User</th>
+                        <th class="px-6 py-3">Email</th>
+                        <th class="px-6 py-3">Course</th>
+                        <th class="px-6 py-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    <% users.filter(u => u.approved).forEach(user => { %>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 flex items-center gap-3">
+                                <% if (user.profileImage) { %>
+                                    <img src="<%= user.profileImage %>" alt="Profile" class="w-8 h-8 rounded-full object-cover" />
+                                <% } else { %>
+                                    <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-gray-600">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                <% } %>
+                                <div>
+                                    <span class="font-medium text-gray-900"><%= user.name %></span><br>
+                                    <span class="text-xs text-gray-500">ID: <%= user._id %></span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4"><%= user.email %></td>
+                            <td class="px-6 py-4">
+                                <%= user.course %><br>
+                                <span class="text-xs text-gray-500">Semester: <%= user.semester %></span>
+                            </td>
+                            <td class="px-6 py-4 flex gap-2">
+                                <button class="p-2 bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button data-modal-target="delete-modal-<%= user._id %>" data-modal-toggle="delete-modal-<%= user._id %>" class="p-2 bg-red-100 text-red-700 rounded-full hover:bg-red-200">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <!-- Modal placed directly after the row, NOT inside <tr> -->
+                        <tr>
+                            <td colspan="4">
+                                <%- include("../modals/users/delete-modal", { user: user }) %>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>                
+            </table>            
+        </div>
+    </div>
+    <hr class="mt-14 mb-10 border-gray-300">
+    <div>
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-semibold text-gray-700">Admins</h3>
+            <button data-modal-target="add-admin-modal" data-modal-toggle="add-admin-modal"
+                class="text-white hover:cursor-pointer bg-yellow-500 hover:bg-yellow-600 focus:ring-2 focus:ring-yellow-300 font-medium rounded-lg text-sm px-4 py-2">
+                <i class="fas fa-plus mr-2"></i> Add Admin
+            </button>
+
+            <%- include("../modals/admin/add-admin") %>
+        </div>
+
+        <div class="bg-white shadow rounded-xl overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-700 rounded-xl overflow-hidden">
+                <thead class="bg-gray-100 text-gray-500 uppercase text-xs">
+                    <tr>
+                        <th class="px-6 py-3">Name / ID</th>
+                        <th class="px-6 py-3">Email</th>
+                        <th class="px-6 py-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    <% admins.forEach(admin => { %>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 font-medium text-gray-900">
+                                <%= admin.name %> <br>
+                                <span class="text-xs text-gray-500">ID: <%= admin._id %></span>
+                            </td>
+                            <td class="px-6 py-4"><%= admin.email %></td>
+                            <td class="px-6 py-4 flex gap-2">
+                                <button class="p-2 bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button data-modal-target="delete-modal-<%= admin._id %>" 
+                                        data-modal-toggle="delete-modal-<%= admin._id %>" 
+                                        class="p-2 bg-red-100 text-red-700 rounded-full hover:bg-red-200">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <%- include("../modals/admin/remove-admin", { admin }) %>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    
+</div>

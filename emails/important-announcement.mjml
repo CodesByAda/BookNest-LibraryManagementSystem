@@ -1,0 +1,59 @@
+<mjml>
+  <mj-head>
+    <mj-font name="Inter" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" />
+    <mj-attributes>
+      <mj-all font-family="Inter, Helvetica, Arial, sans-serif" />
+      <mj-text font-size="16px" line-height="1.6" color="#333" />
+      <mj-section padding="20px 0" />
+      <mj-column padding="0" />
+    </mj-attributes>
+  </mj-head>
+
+  <mj-body background-color="#fff8f0">
+    <mj-section background-color="#ffffff" padding="40px" border-radius="8px" css-class="card" text-align="left" border="2px solid #ff9800">
+      <mj-column>
+        <!-- Header -->
+        <mj-text font-size="24px" font-weight="700" color="#d32f2f" align="center">
+          ⚠️ Important Library Announcement
+        </mj-text>
+
+        <mj-divider border-color="#d32f2f" border-width="2px" />
+
+        <!-- Greeting -->
+        <mj-text>
+          Hello <strong>{{username}}</strong>,
+          <br/><br/>
+          This is a <strong style="color:#d32f2f;">priority update from your college library</strong>.
+        </mj-text>
+
+        <!-- Announcement Content -->
+        <mj-text font-size="17px" color="#333333">
+          <strong>{{announcementTitle}}</strong>
+        </mj-text>
+
+        <mj-text font-size="15px" color="#555">
+          {{announcementContent}}
+        </mj-text>
+
+        <!-- Call to Action (Optional) -->
+        <mj-button href="{{ctaLink}}" background-color="#d32f2f" color="#ffffff" font-weight="bold" padding-top="20px">
+          View Full Announcement
+        </mj-button>
+
+        <!-- Closing -->
+        <mj-divider border-color="#dddddd" />
+        <mj-text font-size="14px" color="#666" align="center">
+          Please stay informed and take any necessary actions.
+          <br/>
+          Thank you for being an active part of the library community.
+        </mj-text>
+
+        <!-- Footer Note -->
+        <mj-text font-size="13px" color="#888888" align="center">
+          BookNest – Your College, Your Library, Your Choice.<br/>
+          Open Source | Modern | Student-Friendly
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

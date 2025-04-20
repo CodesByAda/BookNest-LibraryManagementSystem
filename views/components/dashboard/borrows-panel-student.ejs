@@ -1,0 +1,173 @@
+<div class="p-6 bg-gray-50 min-h-screen">
+    <h1 class="text-2xl font-bold">Your Borrowed BookList</h1>
+    <p class="text-gray-600 mb-6"> View all the books you've borrowed, sorted into overdue and upcoming returns. Stay on track with return dates and avoid late returns</p>
+   
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+        <div class="bg-blue-100 p-4 rounded-xl">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h3 class="text-sm text-gray-600">Total Borrows</h3>
+                    <p class="text-2xl font-bold"><%= profile.borrowedBooks.length %></p>
+                    <p class="text-green-500 text-sm mt-1">↑ +12% since last month</p>
+                </div>
+                <i class="fas fa-book text-yellow-500 text-2xl"></i>
+            </div>
+        </div>
+        <div class="bg-yellow-100 p-4 rounded-xl">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h3 class="text-sm text-gray-600">Overdue Books</h3>
+                    <p class="text-2xl font-bold"><%= expired.length %></p>
+                    <p class="text-green-500 text-sm mt-1">↑ +7% since last month</p>
+                </div>
+                <i class="fas fa-user text-yellow-600 text-2xl"></i>
+            </div>
+        </div>
+        <div class="bg-green-100 p-4 rounded-xl">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h3 class="text-sm text-gray-600">Upcoming</h3>
+                    <p class="text-2xl font-bold"><%= dueSoon.length %></p>
+                    <p class="text-green-500 text-sm mt-1">↑ +18% since last month</p>
+                </div>
+                <i class="fas fa-book-open text-green-600 text-2xl"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-8 toggle-section">
+        <!-- Section Header -->
+        <div class="flex items-center justify-between">
+            <div class="flex items-center w-full space-x-4">
+                <h1 class="text-xl font-semibold">
+                    Overdue Books
+                </h1>
+                <div class="flex-grow h-px bg-gray-300"></div>
+            </div>
+            <button class="toggle-button text-gray-500 hover:text-gray-700 text-xl transition ml-4">
+                <i class="fas fa-chevron-up toggle-icon"></i>
+            </button>
+        </div>
+    
+        <!-- Overdue Card Grid -->
+        <div class="card-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-3 transition-all duration-300">
+            <% if (expired.length === 0) { %>
+                <p class="text-gray-500 italic">No overdue books.</p>
+            <% } else { %>
+                <% expired.forEach(book => { %>
+                    <div class="bg-white rounded-2xl shadow hover:shadow-lg p-6 transition border border-gray-200 flex flex-col gap-4">
+                        <!-- Top Content: Book Info & Image -->
+                        <div class="flex items-start justify-between gap-4">
+                            <!-- Book Info (Left) -->
+                            <div class="flex flex-col">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-1">
+                                    <%= book.bookId.bookname %>
+                                </h3>
+                                <p class="text-sm text-gray-600 mb-1">
+                                    <i class="fas fa-user text-gray-400 mr-1"></i>
+                                    <span class="font-medium"><%= book.bookId.authorname %></span>
+                                </p>
+                                <p class="text-sm text-gray-500">
+                                    <i class="fas fa-tag text-gray-400 mr-1"></i><%= book.bookId.category %>
+                                </p>
+                                <p class="text-sm text-gray-500">
+                                    <i class="fas fa-box text-gray-400 mr-1"></i> In Stock: <%= book.bookId.stock %>
+                                </p>
+                            </div>
+                
+                            <!-- Book Image (Right) -->
+                            <img src="<%= book.bookId.coverImage %>" alt="Book Cover"
+                                 class="w-24 h-32 object-cover rounded-lg border shadow-sm" />
+                        </div>
+                
+                        <!-- Due Date (Below Both Columns) -->
+                        <div class="pt-2 border-t border-gray-200">
+                            <p class="text-sm text-red-600 font-semibold mt-2">
+                                <i class="fas fa-calendar-times mr-1"></i>
+                                Due Date:
+                                <%= new Date(book.dueDate).toLocaleDateString('en-IN', {
+                                    year: 'numeric', month: 'short', day: 'numeric'
+                                }) %>
+                            </p>
+                        </div>
+                    </div>
+                <% }) %>                            
+            <% } %>
+        </div>
+    </div>
+
+    <div class="mb-8 toggle-section">
+        <!-- Section Header -->
+        <div class="flex items-center justify-between">
+            <div class="flex items-center w-full space-x-4">
+                <h1 class="text-xl font-semibold">
+                    Upcoming Returns
+                </h1>
+                <div class="flex-grow h-px bg-gray-300"></div>
+            </div>
+            <button class="toggle-button text-gray-500 hover:text-gray-700 text-xl transition ml-4">
+                <i class="fas fa-chevron-up toggle-icon"></i>
+            </button>
+        </div>
+    
+        <!-- Upcoming Card Grid -->
+        <div class="card-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-3 transition-all duration-300">
+            <% if (dueSoon.length === 0) { %>
+                <p class="text-gray-500 italic">No upcoming returns.</p>
+            <% } else { %>
+                <% dueSoon.forEach(book => { %>
+                    <div class="bg-white rounded-2xl shadow hover:shadow-lg p-6 transition border border-gray-200 flex flex-col gap-4">
+                        <!-- Top Content: Book Info & Image -->
+                        <div class="flex items-start justify-between gap-4">
+                            <!-- Book Info (Left) -->
+                            <div class="flex flex-col">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-1">
+                                    <%= book.bookId.bookname %>
+                                </h3>
+                                <p class="text-sm text-gray-600 mb-1">
+                                    <i class="fas fa-user text-gray-400 mr-1"></i>
+                                    <span class="font-medium"><%= book.bookId.authorname %></span>
+                                </p>
+                                <p class="text-sm text-gray-500">
+                                    <i class="fas fa-tag text-gray-400 mr-1"></i><%= book.bookId.category %>
+                                </p>
+                                <p class="text-sm text-gray-500">
+                                    <i class="fas fa-box text-gray-400 mr-1"></i> In Stock: <%= book.bookId.stock %>
+                                </p>
+                            </div>
+                
+                            <!-- Book Image (Right) -->
+                            <img src="<%= book.bookId.coverImage %>" alt="Book Cover"
+                                 class="w-24 h-32 object-cover rounded-lg border shadow-sm" />
+                        </div>
+                
+                        <!-- Due Info (Below Both Columns) -->
+                        <div class="pt-2 border-t border-gray-200">
+                            <p class="text-sm text-blue-600 font-semibold mt-2">
+                                <i class="fas fa-calendar-check mr-1"></i>
+                                Due in <%= book.daysLeft %> day<%= book.daysLeft > 1 ? 's' : '' %> —
+                                <%= new Date(book.dueDate).toLocaleDateString('en-IN', {
+                                    year: 'numeric', month: 'short', day: 'numeric'
+                                }) %>
+                            </p>
+                        </div>
+                    </div>
+                <% }) %>                            
+            <% } %>
+        </div>
+    </div>                               
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+<script>
+    document.querySelectorAll('.toggle-section').forEach(section => {
+      const button = section.querySelector('.toggle-button');
+      const icon = section.querySelector('.toggle-icon');
+      const cards = section.querySelector('.card-grid');
+  
+      button.addEventListener('click', () => {
+        cards.classList.toggle('hidden');
+        icon.classList.toggle('fa-chevron-up');
+        icon.classList.toggle('fa-chevron-down');
+      });
+    });
+</script>

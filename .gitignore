@@ -2,7 +2,7 @@
 node_modules/
 
 # Tailwind CSS output (generated file)
-public/css/mainstyle.css
+public/output.css
 
 # Optional: Ignore other generated CSS files if needed
 # public/css/*.css

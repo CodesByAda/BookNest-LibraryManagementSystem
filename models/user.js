@@ -16,7 +16,11 @@ const userSchema = new mongoose.Schema({
 
     borrowedBooks: [{
         bookId: { type: mongoose.Schema.Types.ObjectId, ref: "Book" },
+        borrowedDate: { type: Date, required: true },
         dueDate: { type: Date, required: true }
+    }],
+    wishlist: [{
+        bookId: { type: mongoose.Schema.Types.ObjectId, ref: "Book" }
     }]
 });
 

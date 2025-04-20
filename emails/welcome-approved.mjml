@@ -1,0 +1,67 @@
+<mjml>
+  <mj-head>
+    <mj-font name="Inter" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" />
+    <mj-attributes>
+      <mj-all font-family="Inter, Helvetica, Arial, sans-serif" />
+      <mj-text font-size="16px" line-height="1.6" color="#333" />
+      <mj-section padding="20px 0" />
+      <mj-column padding="0" />
+    </mj-attributes>
+  </mj-head>
+
+  <mj-body background-color="#f8f8f8">
+    <mj-section background-color="#ffffff" padding="40px" border-radius="8px" css-class="card" text-align="left">
+      <mj-column>
+        <!-- Header -->
+        <mj-text font-size="24px" font-weight="700" color="#8B4513" align="center">
+          🎉 Welcome to BookNest!
+        </mj-text>
+
+        <mj-divider border-color="#8B4513" border-width="2px" />
+
+        <!-- Greeting -->
+        <mj-text>
+          Hi <strong>{{username}}</strong>,
+          <br/><br/>
+          We're excited to let you know that your account has been <strong style="color:#4CAF50;">approved by the Admin</strong>!
+          <br/><br/>
+          You now have full access to your college library through this all-in-one library platform built just for students like you.
+        </mj-text>
+
+        <!-- Features -->
+        <mj-text font-size="18px" font-weight="600" color="#8B4513">
+          📚 What you can do:
+        </mj-text>
+
+        <mj-text padding="0">
+          <ul style="padding-left:20px; margin: 0;">
+            <li>Explore the complete Book Catalogue</li>
+            <li>Track book returns & due dates</li>
+            <li>Receive smart Email Notifications</li>
+            <li>See Announcements & Library Alerts</li>
+            <li>Rate and review your favorite books</li>
+            <li>Manage your profile in your own dashboard</li>
+            <li>Personalized Qrcode BookNest ID Card (Scan Tags)</li>
+          </ul>
+        </mj-text>
+
+        <!-- Button -->
+        <mj-button background-color="#8B4513" color="#ffffff" font-weight="600" href="{{ctaLink}}" padding-top="20px">
+          Go to BookNest
+        </mj-button>
+
+        <!-- Final Line -->
+        <mj-text font-style="italic" color="#555" padding-top="20px">
+          Wishing you an enriching journey ahead. Until then — <strong>keep reading, keep exploring, and let BookNest be your guide.</strong>
+        </mj-text>
+
+        <!-- Footer Note -->
+        <mj-divider border-color="#dddddd" />
+        <mj-text font-size="13px" color="#888888" align="center">
+          BookNest – Your College, Your Library, Your Choice.<br/>
+          Open Source | Modern | Student-Friendly
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

@@ -1,0 +1,136 @@
+<div class="p-6 bg-gray-50 min-h-screen">
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h2 class="text-3xl font-bold text-gray-800">Book Catalogue</h2>
+            <p class="text-gray-600">Explore our collection of books</p>
+        </div>
+        <div class="p-4 rounded-full bg-amber-100 text-[#553524]">
+            <i class="fa-solid fa-book-open text-lg"></i>
+        </div>
+    </div>
+    
+    <div class="bg-white p-4 rounded-xl shadow w-full mx-auto flex flex-wrap gap-3 items-center mb-6">
+        <!-- Search input -->
+        <div class="flex items-center flex-grow bg-[#f7f5ed] px-3 py-2 rounded border border-gray-300">
+            <i class="fas fa-search text-gray-400 mr-2"></i>
+            <input id="searchInput" type="text" placeholder="Search by title or author…" class="bg-transparent w-full focus:outline-none text-sm text-[#3e2723]" />
+        </div>
+    
+        <!-- Genre Dropdown -->
+        <select id="genreSelect" name="genre"
+            class="bg-[#f7f5ed] border border-gray-300 text-[#3e2723] text-sm px-4 py-2 rounded focus:outline-none">
+            <option value="">Genre</option>
+            <option value="Fiction">Fiction</option>
+            <option value="Non-Fiction">Non-Fiction</option>
+            <option value="Science">Science</option>
+            <option value="History">History</option>
+            <option value="Technology">Technology</option>
+        </select>
+    
+        <!-- Availability Dropdown -->
+        <select id="availabilitySelect" name="availability"
+            class="bg-[#f7f5ed] border border-gray-300 text-[#3e2723] text-sm px-4 py-2 rounded focus:outline-none">
+            <option value="">Availability</option>
+            <option value="Available">Available</option>
+            <option value="Unavailable">Unavailable</option>
+        </select>
+    </div>
+      
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <% 
+            for (let book of books) { 
+                let totalRating = 0; 
+                if (book.reviews.length > 0) {
+                    book.reviews.forEach(r => totalRating += r.rating);
+                }
+                let avgRating = book.reviews.length > 0 ? (totalRating / book.reviews.length).toFixed(1) : '0.0';
+        %>
+            <a href="/books/<%= book._id %>" class="block">
+                <div class="book-card bg-[#faf7f5] group rounded-lg shadow border border-gray-200 w-full max-w-xs mx-auto relative flex flex-col overflow-hidden transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:cursor-pointer">
+                    
+                    <!-- Availability -->
+                    <span class="book-status absolute top-2 right-2 <%= book.availability === 'Available' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' %> text-xs font-semibold px-3 py-1 rounded-full z-10">
+                        <%= book.availability %>
+                    </span>
+    
+                    <!-- Cover Image -->
+                    <div class="overflow-hidden">
+                        <% if (book.coverImage && book.coverImage.startsWith('data:image')) { %>
+                            <img src="<%= book.coverImage %>" alt="bookimg" class="h-80 w-full object-cover rounded-t-lg transition-transform duration-300 ease-in-out group-hover:scale-105" />
+                        <% } else { %>
+                            <img src="/images/book.jpg" alt="" class="h-80 w-full object-cover rounded-t-lg transition-transform duration-300 ease-in-out group-hover:scale-105" />
+                        <% } %>
+                    </div>
+    
+                    <!-- Book Info -->
+                    <div class="p-4 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="book-title text-sm font-semibold text-[#3e2723] group-hover:text-[#d4af37]">
+                                <%= book.bookname %>
+                            </h3>
+                            <p class="book-author text-sm text-gray-500 mb-2">by <%= book.authorname %></p>
+                            <span class="book-genre text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded-full inline-block mb-2 border border-gray-300">
+                                <%= book.category %>
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm text-gray-600 mt-auto pt-2">
+                            <div class="flex items-center gap-1 text-yellow-500">
+                                <i class="fas fa-star text-sm"></i>
+                                <span class="text-sm text-gray-800"><%= avgRating %></span>
+                            </div>
+                            <i class="fas fa-book-open-reader text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        <% } %>
+    </div>    
+    <div id="noResultsMessage" class="hidden text-center w-full text-gray-600 mt-8 text-sm">
+        <p class="bg-white inline-block px-4 py-2 rounded-lg shadow border border-gray-300">
+            No books found matching your filters.
+        </p>
+    </div>
+</div>
+
+<script>
+    const searchInput = document.getElementById('searchInput');
+    const genreSelect = document.getElementById('genreSelect');
+    const availabilitySelect = document.getElementById('availabilitySelect');
+    const bookCards = document.querySelectorAll('.book-card');
+    const noResultsMessage = document.getElementById('noResultsMessage');
+
+    function filterBooks() {
+        const searchText = searchInput.value.toLowerCase().trim();
+        const selectedGenre = genreSelect.value.toLowerCase().trim();
+        const selectedAvailability = availabilitySelect.value.toLowerCase().trim();
+
+        let anyVisible = false;
+
+        bookCards.forEach(card => {
+            const title = card.querySelector('.book-title')?.textContent.toLowerCase().trim() || '';
+            const author = card.querySelector('.book-author')?.textContent.toLowerCase().trim() || '';
+            const genre = card.querySelector('.book-genre')?.textContent.toLowerCase().trim() || '';
+            const availability = card.querySelector('.book-status')?.textContent.toLowerCase().trim() || '';
+
+            const matchesSearch = title.includes(searchText) || author.includes(searchText);
+            const matchesGenre = !selectedGenre || genre === selectedGenre;
+            const matchesAvailability = !selectedAvailability || availability === selectedAvailability;
+
+            const isVisible = matchesSearch && matchesGenre && matchesAvailability;
+            card.style.display = isVisible ? 'flex' : 'none';
+            if (isVisible) anyVisible = true;
+        });
+
+        if (noResultsMessage) {
+            noResultsMessage.classList.toggle('hidden', anyVisible);
+        }
+    }
+
+    searchInput.addEventListener('keydown', e => {
+        if (e.key === 'Enter') filterBooks();
+    });
+
+    genreSelect.addEventListener('change', filterBooks);
+    availabilitySelect.addEventListener('change', filterBooks);
+</script>

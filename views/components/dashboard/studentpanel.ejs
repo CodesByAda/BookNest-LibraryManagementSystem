@@ -1,0 +1,287 @@
+<style>
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+</style>
+
+<!-- Welcome Header -->
+<div class="mt-6 p-4 px-6">
+    <h2 class="text-3xl font-bold text-gray-800">Student Dashboard</h1>
+        <p class="text-gray-500 mt-1">Overview of your borrow status, due dates, and library activity.</p>
+</div>
+
+<!-- Stat Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 px-6">
+    <div class="bg-blue-100 p-4 rounded-xl">
+        <div class="flex justify-between items-center">
+            <div>
+                <h3 class="text-sm text-gray-600">Total Borrows</h3>
+                <p class="text-2xl font-bold">
+                    <%= profile.borrowedBooks.length %>
+                </p>
+                <p class="text-green-500 text-sm mt-1">↑ +12% since last month</p>
+            </div>
+            <i class="fas fa-book text-yellow-500 text-2xl"></i>
+        </div>
+    </div>
+    <div class="bg-yellow-100 p-4 rounded-xl">
+        <div class="flex justify-between items-center">
+            <div>
+                <h3 class="text-sm text-gray-600">Overdue Books</h3>
+                <p class="text-2xl font-bold">
+                    <%= expired.length %>
+                </p>
+                <p class="text-green-500 text-sm mt-1">↑ +7% since last month</p>
+            </div>
+            <i class="fas fa-user text-yellow-600 text-2xl"></i>
+        </div>
+    </div>
+    <div class="bg-green-100 p-4 rounded-xl">
+        <div class="flex justify-between items-center">
+            <div>
+                <h3 class="text-sm text-gray-600">Upcoming Returns</h3>
+                <p class="text-2xl font-bold">
+                    <%= dueSoon.length %>
+                </p>
+                <p class="text-green-500 text-sm mt-1">↑ +18% since last month</p>
+            </div>
+            <i class="fas fa-book-open text-green-600 text-2xl"></i>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 p-6">
+    <!-- Overdue Section -->
+    <div class="bg-white p-6 rounded-xl shadow-sm h-[350px] flex flex-col">
+        <!-- Header -->
+        <div class="flex items-center space-x-2 mb-4">
+          <i class="fas fa-exclamation-circle text-red-600"></i>
+          <h2 class="text-lg font-semibold text-gray-800">Overdue Books</h2>
+        </div>
+      
+        <!-- Scrollable List -->
+        <div class="overflow-y-auto space-y-4 pr-1 flex-1 scrollbar-hide">
+            <% if (expired.length === 0) { %>
+                <p class="text-gray-500 italic">No overdue books.</p>
+            <% } else { %>
+                <% expired.forEach(book => { %>
+                    <div class="bg-[#faf7f5] border border-gray-200 rounded-xl p-4 flex justify-between items-start gap-4">
+                        <!-- Book Info -->
+                        <div class="flex flex-col w-4/5">
+                            <h3 class="text-sm font-semibold text-red-800 mb-1"><%= book.bookId.bookname %></h3>
+                            <p class="text-xs text-gray-600 mb-1">
+                                <i class="fas fa-user text-gray-400 mr-1"></i><%= book.bookId.authorname %>
+                            </p>
+                            <p class="text-xs text-gray-500 mb-1">
+                                <i class="fas fa-box text-gray-400 mr-1"></i> In Stock: <%= book.bookId.stock %>
+                            </p>
+                            <p class="text-xs text-red-600 font-medium">
+                                <i class="fas fa-calendar-times mr-1"></i>
+                                Due:
+                                <%= new Date(book.dueDate).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }) %>
+                            </p>
+                        </div>
+                        <!-- Book Image -->
+                        <img src="<%= book.bookId.coverImage %>" alt="Book Cover" class="w-14 h-20 object-cover rounded-md shadow" />
+                    </div>
+                <% }) %>
+            <% } %>
+        </div>
+      
+        <!-- Sticky Bottom Button -->
+        <div class="pt-4">
+            <a href="/dashboard?section=track-borrows" class="block w-full text-center px-4 py-2 bg-yellow-100 text-yellow-800 font-medium rounded-md hover:bg-yellow-200">
+                Track Borrows
+            </a>
+        </div>
+    </div>
+      
+      
+      
+
+    <div class="bg-white p-6 rounded-xl shadow-sm h-[350px] flex flex-col relative">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-4">
+          <div class="flex items-center space-x-2">
+            <i class="fas fa-bell text-yellow-500"></i>
+            <h2 class="text-lg font-semibold text-gray-800">Recent Announcements</h2>
+          </div>
+          <a href="/announcements" class="text-sm text-yellow-800 hover:underline flex items-center space-x-1">
+            <span>View All</span>
+            <i class="fas fa-arrow-up-right-from-square text-xs"></i>
+          </a>
+        </div>
+      
+        <!-- Scrollable Content -->
+        <div class="overflow-y-auto space-y-3 pr-1 flex-1 scrollbar-hide pb-1">
+          <% announcements.slice(0, 2).forEach(a => { %>
+            <div class="bg-[#faf7f5] border border-gray-200 rounded-lg p-4">
+              <div class="flex items-center space-x-2 mb-1">
+                <i class="fas fa-bell text-yellow-600"></i>
+                <h3 class="font-medium text-gray-800"><%= a.title %></h3>
+                <% if (a.importance === 'High') { %>
+                  <span class="ml-auto bg-red-500 text-white text-xs font-semibold px-2 py-0.5 rounded-full">High</span>
+                <% } else if (a.importance === 'Medium') { %>
+                  <span class="ml-auto bg-yellow-200 text-yellow-800 text-xs font-semibold px-2 py-0.5 rounded-full">Medium</span>
+                <% } else { %>
+                  <span class="ml-auto bg-green-200 text-green-800 text-xs font-semibold px-2 py-0.5 rounded-full">Low</span>
+                <% } %>
+              </div>
+              <p class="text-sm text-gray-600 mb-1">
+                <i class="fas fa-calendar-alt mr-1"></i>
+                <%= a.formattedDateTime %>
+              </p>
+              <p class="text-sm text-gray-700">
+                <%= a.message %>
+              </p>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+</div>
+
+<div class="p-6">
+    <!-- Recommendations Header -->
+    <div class="bg-white p-6 rounded-xl shadow-sm">
+        <div class="flex items-center space-x-2 mb-4">
+            <h2 class="text-lg font-semibold text-gray-800">Reading Recommendations</h2>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-4">
+            <% recommendations.forEach((group, index) => { %>
+                <div class="bg-[#faf7f5] border border-gray-200 rounded-lg p-4">
+                    <h3 class="text-md font-semibold text-gray-700 mb-2">Set <%= index + 1 %></h3>
+                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                        <% group.forEach(book => { %>
+                            <li><%= book.bookname %></li>
+                        <% }) %>
+                    </ul>
+                </div>
+            <% }) %>
+        </div>          
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- JSON Data -->
+<script id="dashboard-data" type="application/json">
+    {
+        "totalUsers": <%= users.length %>,
+        "totalBooks": <%= books.length %>,
+        "booksBorrowed": <%= totalBorrowedBooksCount %>,
+        "pendingRequests": <%= pendingApprovals %>,
+        "bookRequests": <%= pendingApprovals %>
+    }
+</script>
+
+<script id="book-stats-data" type="application/json">
+    {
+        "totalStock": <%= totalStockCount %>,
+        "uniqueBooks": <%= books.length %>,
+        "booksBorrowed": <%= totalBorrowedBooksCount %>,
+        "bookRequests": <%= pendingApprovals %>
+    }
+</script>
+
+<script>
+    // Read the JSON data from the <script> tag
+    const data = JSON.parse(document.getElementById("dashboard-data").textContent);
+    const bookStats = JSON.parse(document.getElementById("book-stats-data").textContent);
+
+    // User Growth Chart Data
+    const userGrowthData = {
+        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+        datasets: [{
+            label: "New Users",
+            data: [
+                Math.max(0, data.totalUsers - 50),
+                Math.max(0, data.totalUsers - 40),
+                Math.max(0, data.totalUsers - 30),
+                Math.max(0, data.totalUsers - 20),
+                Math.max(0, data.totalUsers - 10),
+                data.totalUsers
+            ],
+            borderColor: "#316de5",
+            backgroundColor: "rgba(49, 109, 229, 0.2)",
+            fill: true,
+            tension: 0.4
+        }]
+    };
+
+    // Book Stats Chart Data
+    const bookStatsData = {
+        labels: ["Stocks Available", "Unique Books", "Books Borrowed", "Book Requests"],
+        datasets: [{
+            label: "Book Statistics",
+            data: [
+                bookStats.totalStock,
+                bookStats.uniqueBooks,
+                bookStats.booksBorrowed,
+                bookStats.bookRequests
+            ],
+            backgroundColor: ["#316de5", "#ff9f40", "#ffcd56", "#4bc0c0"],
+            borderColor: ["#316de5", "#ff9f40", "#ffcd56", "#4bc0c0"],
+            borderWidth: 1
+        }]
+    };
+
+    // Initialize Both Charts After DOM Loads
+    document.addEventListener("DOMContentLoaded", () => {
+        // User Growth Chart
+        const userCanvas = document.getElementById('userChart');
+        if (userCanvas) {
+            const userCtx = userCanvas.getContext('2d');
+            new Chart(userCtx, {
+                type: 'line',
+                data: userGrowthData,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 10
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Book Stats Chart
+        const bookCanvas = document.getElementById('bookStatsChart');
+        if (bookCanvas) {
+            const bookCtx = bookCanvas.getContext('2d');
+            new Chart(bookCtx, {
+                type: 'bar',
+                data: bookStatsData,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    });
+</script>

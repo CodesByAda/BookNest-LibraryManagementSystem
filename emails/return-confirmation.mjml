@@ -1,0 +1,58 @@
+<mjml>
+  <mj-head>
+    <mj-font name="Inter" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" />
+    <mj-attributes>
+      <mj-all font-family="Inter, Helvetica, Arial, sans-serif" />
+      <mj-text font-size="16px" line-height="1.6" color="#333" />
+      <mj-section padding="20px 0" />
+      <mj-column padding="0" />
+    </mj-attributes>
+  </mj-head>
+
+  <mj-body background-color="#f8f8f8">
+    <mj-section background-color="#ffffff" padding="40px" border-radius="8px" css-class="card" text-align="left">
+      <mj-column>
+        <!-- Header -->
+        <mj-text font-size="24px" font-weight="700" color="#4CAF50" align="center">
+          ✅ Book Returned Successfully!
+        </mj-text>
+
+        <mj-divider border-color="#4CAF50" border-width="2px" />
+
+        <!-- Message -->
+        <mj-text>
+          Hi <strong>{{username}}</strong>,
+          <br/><br/>
+          Your return of the book <strong style="color:#8B4513;">"{{bookTitle}}"</strong> has been <strong>confirmed</strong> and accepted by the admin.
+        </mj-text>
+
+        <!-- Return Details -->
+        <mj-text padding="0">
+          <ul style="padding-left:20px; margin: 0;">
+            <li><strong>Returned On:</strong> {{returnDate}}</li>
+            <li><strong>Borrowed On:</strong> {{BorrowDate}}</li>
+            <li><strong>Book ID:</strong> {{bookId}}</li>
+            <li><strong>Status:</strong> Successfully Returned</li>
+          </ul>
+        </mj-text>
+
+        <!-- Follow-up Message -->
+        <mj-text>
+          Great job staying on top of your reading! Feel free to explore more books in the library — your next adventure awaits.
+        </mj-text>
+
+        <!-- Closing -->
+        <mj-divider border-color="#dddddd" />
+        <mj-text font-size="14px" color="#666" align="center">
+          Wishing you many more literary adventures ahead. Until then — keep reading, keep exploring, and let BookNest be your guide. 📚✨
+        </mj-text>
+
+        <!-- Footer Note -->
+        <mj-text font-size="13px" color="#888888" align="center">
+          BookNest – Your College, Your Library, Your Choice.<br/>
+          Open Source | Modern | Student-Friendly
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

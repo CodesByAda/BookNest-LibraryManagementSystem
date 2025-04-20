@@ -1,0 +1,84 @@
+<div class="p-6 bg-gray-50 min-h-screen">
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h2 class="text-3xl font-bold text-gray-800">Manage Books</h2>
+            <p class="text-gray-600">Add, edit or remove books from your library collection.</p>
+        </div>
+        <button class="bg-[#8B4513] hover:cursor-pointer text-white px-4 py-2 rounded-md hover:bg-[#723911] flex items-center gap-2" data-modal-target="add-book-modal" data-modal-toggle="add-book-modal">
+            <i class="fas fa-plus-circle"></i> Add New Book
+        </button>
+        <%- include("../modals/books/addbook-modal") %>
+    </div>
+
+    <!-- Filters -->
+    <div class="flex flex-wrap gap-4 mb-4">
+        <div class="flex-1 min-w-[250px]">
+            <input type="text" placeholder="Search by title or author..."
+                class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500" />
+        </div>
+        <div class="w-[200px]">
+            <select
+                class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                <option>All</option>
+                <option>Available</option>
+                <option>Borrowed</option>
+                <option>Reserved</option>
+            </select>
+        </div>
+    </div>
+    
+    <!-- Table -->
+    <div class="bg-white shadow rounded-md overflow-x-auto">
+        <table class="w-full text-left text-sm text-gray-700">
+            <thead class="bg-gray-100 text-gray-500 uppercase text-xs">
+                <tr>
+                    <th class="px-6 py-3">Title</th>
+                    <th class="px-6 py-3">Author</th>
+                    <th class="px-6 py-3">Category</th>
+                    <th class="px-6 py-3">Rack Location</th>
+                    <th class="px-6 py-3">Status</th>
+                    <th class="px-6 py-3">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                <% books.forEach(book=> { %>
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 flex items-center gap-2 text-yellow-700 font-medium">
+                            <i class="fas fa-book-open"></i>
+                            <%= book.bookname %>
+                        </td>
+                        <td class="px-6 py-4">
+                            <%= book.authorname %>
+                        </td>
+                        <td class="px-6 py-4">
+                            <%= book.category %>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full">
+                                <%= book.rack_location %>
+                            </span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="<%= book.availability === 'Available' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' %> text-xs px-3 py-1 rounded-full">
+                                <%= book.availability %>
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 flex gap-3">
+                            <!-- Edit Button -->
+                            <button data-modal-target="edit-book-modal-<%= book._id %>" data-modal-toggle="edit-book-modal-<%= book._id %>" class="text-blue-600 hover:text-blue-800">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <%- include("../modals/books/edit-form-modal", { book: book }) %>
+                            <!-- Delete Button -->
+                            <button data-modal-target="delete-book-modal-<%= book._id %>" data-modal-toggle="delete-book-modal-<%= book._id %>" class="text-red-600 hover:text-red-800">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            <%- include("../modals/books/delete-modal", { book: book }) %>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+    
+</div>

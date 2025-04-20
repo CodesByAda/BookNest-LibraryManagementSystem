@@ -1,0 +1,59 @@
+<!-- Add Borrowed Book Modal -->
+<div id="add-book-modal-<%= profile._id %>" tabindex="-1"
+    class="hidden fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-screen bg-black/50 backdrop-blur-sm">
+
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <div class="relative bg-white rounded-lg shadow-sm">
+            <!-- Close Button -->
+            <button type="button"
+                class="absolute top-3 right-3 text-gray-400 hover:text-gray-900"
+                data-modal-hide="add-book-modal-<%= profile._id %>">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <!-- Modal Content -->
+            <div class="p-4 md:p-5 text-center">
+                <h3 class="mb-5 text-lg font-semibold text-gray-700">Add Borrowed Book</h3>
+
+                <!-- Form -->
+                <form action="/profile/<%= profile._id %>/addBook" method="POST">
+                    <!-- Student Name -->
+                    <div class="mb-4 text-left">
+                        <label class="block text-sm font-medium text-gray-600">Student Name</label>
+                        <input type="text"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700"
+                            value="<%= profile.name %>" readonly>
+                    </div>
+
+                    <!-- Book ID -->
+                    <div class="mb-4 text-left">
+                        <label class="block text-sm font-medium text-gray-600">Book ID</label>
+                        <input type="text" name="bookId" id="bookIdInput" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-50 focus:outline-none focus:ring focus:ring-blue-300"
+                            placeholder="Enter Book ID">
+                    </div>
+
+                    <!-- Due Date -->
+                    <div class="mb-4 text-left">
+                        <label class="block text-sm font-medium text-gray-600">Due Date</label>
+                        <input type="date" name="dueDate" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-50 focus:outline-none focus:ring focus:ring-blue-300">
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="mt-4 flex justify-center gap-2">
+                        <button type="button"
+                            data-modal-hide="add-book-modal-<%= profile._id %>"
+                            class="px-5 py-2.5 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100">
+                            Cancel
+                        </button>
+                        <button type="submit"
+                            class="px-5 py-2.5 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition">
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

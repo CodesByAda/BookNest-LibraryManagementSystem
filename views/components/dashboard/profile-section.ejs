@@ -1,0 +1,301 @@
+<div class="p-6 bg-gray-50 min-h-screen">
+  <h1 class="text-2xl font-bold">Your Profile</h1>
+  <p class="text-gray-600 mb-6">Manage your personal information and view your library statistics.</p>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Personal Info -->
+    <div class="lg:col-span-2 bg-white rounded-xl border border-gray-200 shadow-sm p-6 relative">
+      <form id="profileEditForm" action="/profile/edit/<%= profile._id %>" method="POST" >
+        
+        <div class="flex justify-between items-start mb-1">
+          <div>
+            <h2 class="text-xl font-semibold">Personal Information</h2>
+            <p class="text-gray-500 text-sm">Your account details and preferences</p>
+          </div>
+          <% if (isOwner) { %>
+            <button type="button" id="editBtn" class="text-yellow-600 hover:text-yellow-700">
+              <i class="fa-solid fa-pen-to-square text-lg"></i>
+            </button>
+          <% } %>
+        </div>
+  
+        <div class="flex flex-col md:flex-row gap-6 items-start md:items-center mt-4">
+          <!-- Profile Photo -->
+          <div class="flex flex-col items-center">
+            <div id="profilePicPreview"
+              class="w-24 h-24 rounded-full border-2 border-yellow-400 flex items-center justify-center text-gray-400 text-2xl overflow-hidden">
+              <% if (profile.profilePic) { %>
+                <img src="<%= profile.profilePic %>" alt="Profile Picture"
+                  class="w-20 h-20 rounded-full object-cover">
+              <% } else { %>
+                <img src="https://ui-avatars.com/api/?name=<%= profile.name %>&background=316de5&color=fff"
+                  alt="Default Profile Picture" class="w-20 h-20 rounded-full">
+              <% } %>
+            </div>
+  
+            <button type="button" id="changePhotoBtn"
+              class="mt-2 px-3 py-1 rounded-md border border-gray-300 text-sm bg-gray-50 text-gray-700 hover:bg-gray-100">
+              Change Photo
+            </button>
+            <input type="file" id="profilePicInput" name="profilePic" class="hidden" disabled>
+          </div>
+  
+          <!-- Info Fields -->
+          <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-semibold mb-1">Full Name</label>
+              <input name="name" type="text" value="<%= profile.name %>" readonly
+                class="profile-input w-full px-3 py-2 bg-gray-100 rounded border border-gray-300 text-gray-900 cursor-default" />
+            </div>
+  
+            <div>
+              <label class="block text-sm font-semibold mb-1">Email Address</label>
+              <input name="email" type="email" value="<%= profile.email %>" readonly
+                class="profile-input w-full px-3 py-2 bg-gray-100 rounded border border-gray-300 text-gray-900 cursor-default" />
+            </div>
+  
+            <div class="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <% if (profile.role === "student") { %>
+                <div class="flex gap-4">
+                  <div class="w-1/2">
+                    <label class="block text-sm font-semibold mb-1">Department</label>
+                    <input name="course" type="text" value="<%= profile.course %>" readonly
+                      class="profile-input w-full px-3 py-2 bg-gray-100 rounded border border-gray-300 text-gray-900 cursor-default" />
+                  </div>
+                  <div class="w-1/2">
+                    <label class="block text-sm font-semibold mb-1">Semester</label>
+                    <input name="semester" type="text" value="<%= profile.semester %>" readonly
+                      class="profile-input w-full px-3 py-2 bg-gray-100 rounded border border-gray-300 text-gray-900 cursor-default" />
+                  </div>
+                </div>
+              <% } %>
+              <div>
+                <label class="block text-sm font-semibold mb-1">Phone Number</label>
+                <input name="phone" type="text" value="<%= profile.phone %>" readonly
+                  class="profile-input w-full px-3 py-2 bg-gray-100 rounded border border-gray-300 text-gray-900 cursor-default" />
+              </div>
+            </div>
+  
+            <div class="sm:col-span-2">
+              <label class="block text-sm font-semibold mb-1">Address</label>
+              <input name="address" type="text" value="<%= profile.address %>" readonly
+                class="profile-input w-full px-3 py-2 bg-gray-100 rounded border border-gray-300 text-gray-900 cursor-default" />
+            </div>
+          </div>
+        </div>
+  
+        <!-- Footer -->
+        <div class="flex justify-between items-center mt-6">
+          <p class=" text-orange-700 font-semibold">
+            BookNest ID: <span class="text-gray-500 text-sm"><%= profile._id %></span>
+          </p>  
+          <div id="actionButtons" class="space-x-2 hidden">
+            <button type="button" id="cancelBtn"
+              class="px-4 py-1 text-sm border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">Cancel</button>
+            <button type="submit" id="saveBtn"
+              class="px-4 py-1 text-sm bg-yellow-500 hover:bg-yellow-600 text-white rounded-md">Save</button>
+          </div>
+        </div>
+      </form>
+      <% if (isOwner) { %>
+        <button type="button" data-modal-target="changePasswordModal-<%= profile._id %>"
+          data-modal-toggle="changePasswordModal-<%= profile._id %>"
+          class="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 hover:cursor-pointer">
+          <i class="fa-solid fa-pen-to-square"></i> Change Password
+        </button>
+      <%- include("../modals/profile/changePassModal") %>
+    <% } %>
+    </div>
+    
+
+    <!-- Right Column -->
+    <div class="flex flex-col gap-6">
+      <!-- Stats -->
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+        <h2 class="text-xl font-semibold mb-1">Library Stats</h2>
+        <p class="text-gray-500 text-sm mb-4">Your library activity overview</p>
+        <div class="space-y-4 text-sm">
+          <div class="flex justify-between border-b pb-2">
+            <span class="text-gray-600">Register Number:</span>
+            <span class="text-orange-700 font-semibold"><%= profile.rollno %></span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-600">Book Request:</span>
+            <span class="font-semibold text-gray-900">S<%= profile.semester %></span>
+          </div>
+          <% if (profile.role === "student") { %>
+            <div class="flex justify-between border-t pt-2">
+              <span class="text-gray-600">Books Borrowed</span>
+              <span class="font-semibold text-gray-900"><%= profile.borrowedBooks.length %></span>
+            </div>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- Borrowed Books or ID -->
+      <% if (isOwner && profile.role === "student") { %>
+        <div class="bg-gradient-to-r from-[#5c3c1c] to-[#b06e2a] text-white rounded-xl shadow-lg p-6 flex flex-col">
+          <h2 class="text-lg font-semibold mb-2">Digital ID Card</h2>
+          <p class="text-sm mb-4 text-white/90">View or print your library ID card</p>
+          <a href="/dashboard?section=scan-tag">
+            <button class="bg-white text-[#5c3c1c] px-4 py-2 rounded-lg font-medium hover:bg-gray-100 flex items-center gap-2 hover:cursor-pointer">
+              <i class="fa-solid fa-id-card"></i> View ID Card
+            </button>
+          </a>
+        </div>
+      <% } else if (isAdmin && profile.role === "student") { %>
+        <div class="bg-white text-black rounded-xl shadow-lg p-6 flex flex-col">
+          <h2 class="text-lg font-semibold mb-2">Borrowed Books</h2>
+          <div class="w-full max-h-[100px] overflow-y-auto pr-1">
+            <% if (profile.borrowedBooks && profile.borrowedBooks.length > 0) { %>
+              <div class="space-y-3">
+                <% profile.borrowedBooks.forEach(book => { %>
+                  <div class="bg-white shadow rounded-md p-3 border border-gray-300 flex items-start">
+                    <img src="<%= book.bookId && book.bookId.coverImage ? book.bookId.coverImage : '/images/book.jpg' %>"
+                      alt="Book Image" class="w-14 h-18 rounded-md mr-3 object-cover">
+                    <div class="flex-1">
+                      <p class="text-sm font-semibold text-gray-800"><%= book.bookId ? book.bookId.bookname : "Unknown Book" %></p>
+                      <p class="text-xs text-gray-600 font-medium mt-1">
+                        Due Date: <%= book.dueDate ? book.dueDate.toDateString() : "Not Set" %>
+                      </p>
+                      <form action="/profile/<%= profile._id %>/removeBook/<%= book.bookId._id %>" method="POST" class="mt-2">
+                        <button type="submit"
+                          class="w-full px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 text-sm">Remove</button>
+                      </form>
+                    </div>
+                  </div>
+                <% }); %>
+              </div>
+            <% } else { %>
+              <p class="text-sm text-black/80 italic">No borrowed books.</p>
+            <% } %>
+          </div>
+          <button data-modal-target="add-book-modal-<%= profile._id %>" data-modal-toggle="add-book-modal-<%= profile._id %>"
+            class="mt-4 bg-[#5c3c1c] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#5c3c1d] flex items-center gap-2">
+            <i class="fa-solid fa-id-card"></i> Add Book
+          </button>
+          <%- include("../modals/profile/addBorrowsModal") %>
+        </div>
+      <% } else { %>
+        <div class="bg-white text-black rounded-xl shadow-lg p-6 flex flex-col">
+          <h2 class="text-lg font-semibold mb-2">Borrowed Books</h2>
+          <div class="w-full max-h-[100px] overflow-y-auto pr-1">
+            <% if (profile.borrowedBooks && profile.borrowedBooks.length > 0) { %>
+              <div class="space-y-3">
+                <% profile.borrowedBooks.forEach(book => { %>
+                  <div class="bg-white shadow rounded-md p-3 border border-gray-300 flex items-start">
+                    <img src="<%= book.bookId && book.bookId.coverImage ? book.bookId.coverImage : '/images/book.jpg' %>"
+                      alt="Book Image" class="w-14 h-18 rounded-md mr-3 object-cover">
+                    <div class="flex-1">
+                      <p class="text-sm font-semibold text-gray-800"><%= book.bookId ? book.bookId.bookname : "Unknown Book" %></p>
+                      <p class="text-xs text-gray-600 font-medium mt-1">
+                        Due Date: <%= book.dueDate ? book.dueDate.toDateString() : "Not Set" %>
+                      </p>
+                    </div>
+                  </div>
+                <% }); %>
+              </div>
+            <% } else { %>
+              <p class="text-sm text-black/80 italic">No borrowed books.</p>
+            <% } %>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<script>
+    const editBtn = document.getElementById("editBtn");
+    const cancelBtn = document.getElementById("cancelBtn");
+    const saveBtn = document.getElementById("saveBtn");
+    const actionButtons = document.getElementById("actionButtons");
+    const inputs = document.querySelectorAll(".profile-input");
+
+    const changePhotoBtn = document.getElementById("changePhotoBtn");
+    const fileInput = document.getElementById("profilePicInput");
+    const previewContainer = document.getElementById("profilePicPreview");
+
+    // Keep base64 stored in the same input (profilePic) that already exists in form
+    let originalPreviewHTML = previewContainer.innerHTML;
+
+    changePhotoBtn.addEventListener("click", () => {
+        if (!fileInput.disabled) {
+            fileInput.click();
+        }
+    });
+
+    fileInput.addEventListener("change", () => {
+        const file = fileInput.files[0];
+        if (file && file.type.startsWith("image/")) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const base64Image = e.target.result;
+
+                // Live preview update
+                previewContainer.innerHTML = `<img src="${base64Image}" class="w-20 h-20 rounded-full object-cover">`;
+
+                // Assign base64 directly to the profilePic input (same name used in form)
+                fileInput.setAttribute("data-base64", base64Image);
+                fileInput.name = ""; // prevent uploading actual file
+                const hiddenBase64Input = document.createElement("input");
+                hiddenBase64Input.type = "hidden";
+                hiddenBase64Input.name = "profilePic";
+                hiddenBase64Input.value = base64Image;
+
+                // Remove any old hidden input if present
+                const existing = document.querySelector('input[name="profilePic"][type="hidden"]');
+                if (existing) existing.remove();
+
+                document.getElementById("profileEditForm").appendChild(hiddenBase64Input);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    editBtn.addEventListener("click", () => {
+        inputs.forEach(input => {
+            input.removeAttribute("readonly");
+            input.classList.remove("cursor-default", "bg-gray-100");
+            input.classList.add("bg-white");
+        });
+        fileInput.removeAttribute("disabled");
+
+        actionButtons.classList.remove("hidden");
+        editBtn.classList.add("hidden");
+    });
+
+    cancelBtn.addEventListener("click", () => {
+        inputs.forEach(input => {
+            input.setAttribute("readonly", true);
+            input.classList.remove("bg-white");
+            input.classList.add("cursor-default", "bg-gray-100");
+        });
+
+        fileInput.value = '';
+        fileInput.setAttribute("disabled", true);
+
+        // Reset preview and remove hidden base64 input
+        previewContainer.innerHTML = originalPreviewHTML;
+        const existing = document.querySelector('input[name="profilePic"][type="hidden"]');
+        if (existing) existing.remove();
+        fileInput.name = "profilePic";
+
+        actionButtons.classList.add("hidden");
+        editBtn.classList.remove("hidden");
+    });
+
+    saveBtn.addEventListener("click", () => {
+    inputs.forEach(input => {
+        input.setAttribute("readonly", true);
+        input.classList.remove("bg-white");
+        input.classList.add("cursor-default", "bg-gray-100");
+    });
+    fileInput.setAttribute("disabled", true);
+
+    actionButtons.classList.add("hidden");
+    editBtn.classList.remove("hidden");
+
+    document.getElementById("profileEditForm").submit();
+});
+</script>

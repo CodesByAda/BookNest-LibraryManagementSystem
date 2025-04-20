@@ -1,85 +1,196 @@
-<%- include("../components/header") %>
-<%- include("../components/alert") %>
-<%- include("../components/navbar") %>
+<!DOCTYPE html>
+<html lang="en">
 
-<div class="flex items-center justify-center">
-    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md my-4">
-        <h2 class="text-2xl font-bold text-center mb-6 text-blue-600">Register for BookNest</h2>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - BookNest</title>
+    <link rel="stylesheet" href="./output.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .scrollbar-hidden::-webkit-scrollbar {
+            display: none;
+        }
 
-        <form id="studentForm" action="/register" method="POST" class="space-y-4">
-            
+        .scrollbar-hidden {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+
+<body class="bg-[#f7f5e9] min-h-screen flex items-center justify-center px-4">
+    <%- include("../components/alert") %>
+    <div class="bg-white w-full max-w-md p-0 rounded-2xl shadow-sm overflow-hidden">
+        <div class="text-center p-6 border-b border-gray-200">
+            <i class="fas fa-book-open text-4xl text-[#803300] mb-2"></i>
+            <h1 class="text-2xl font-bold text-[#3b1f0b]">Create an account</h1>
+            <p class="text-sm text-gray-600">Join BookNest and start managing your library</p>
+        </div>
+
+        <!-- Scrollable form section -->
+        <form id="registerForm" action="/register" method="POST" novalidate
+            class="max-h-[440px] overflow-y-auto px-6 py-4 space-y-4 scrollbar-hidden">
             <div>
-                <input type="text" id="name" name="name" placeholder="Full Name"
-                    class="w-full p-2 border rounded focus:outline-blue-500" required>
-                <p id="nameError" class="text-red-500 text-sm min-h-[20px] hidden">Full Name is required</p>
+                <label class="block text-sm font-medium mb-1">Full Name</label>
+                <input name="name" type="text"
+                    class="form-input w-full border border-gray-200 px-3 py-2 rounded-md text-sm" />
+                <p class="text-xs text-red-500 mt-1 error-msg"></p>
             </div>
 
             <div>
-                <input type="text" id="address" name="address" placeholder="Address"
-                    class="w-full p-2 border rounded focus:outline-blue-500" required>
-                <p id="addressError" class="text-red-500 text-sm min-h-[20px] hidden">Address is required</p>
+                <label class="block text-sm font-medium mb-1">Address</label>
+                <input name="address" type="text"
+                    class="form-input w-full border border-gray-200 px-3 py-2 rounded-md text-sm" />
+                <p class="text-xs text-red-500 mt-1 error-msg"></p>
             </div>
 
             <div>
-                <input type="text" id="course" name="course" placeholder="Course"
-                    class="w-full p-2 border rounded focus:outline-blue-500" required>
-                <p id="courseError" class="text-red-500 text-sm min-h-[20px] hidden">Course is required</p>
+                <label class="block text-sm font-medium mb-1">Course</label>
+                <input name="course" type="text"
+                    class="form-input w-full border border-gray-200 px-3 py-2 rounded-md text-sm" />
+                <p class="text-xs text-red-500 mt-1 error-msg"></p>
             </div>
 
             <div>
-                <input type="number" id="semester" name="semester" placeholder="Semester"
-                    class="w-full p-2 border rounded focus:outline-blue-500" required>
-                <p id="semesterError" class="text-red-500 text-sm min-h-[20px] hidden">Semester is required</p>
+                <label class="block text-sm font-medium mb-1">Semester</label>
+                <input name="semester" type="number" min="1"
+                    class="form-input w-full border border-gray-200 px-3 py-2 rounded-md text-sm" />
+                <p class="text-xs text-red-500 mt-1 error-msg"></p>
             </div>
 
             <div>
-                <input type="text" id="rollno" name="rollno" placeholder="Roll Number"
-                    class="w-full p-2 border rounded focus:outline-blue-500" required>
-                <p id="rollnoError" class="text-red-500 text-sm min-h-[20px] hidden">Roll Number is required</p>
+                <label class="block text-sm font-medium mb-1">Roll Number</label>
+                <input name="rollno" type="text"
+                    class="form-input w-full border border-gray-200 px-3 py-2 rounded-md text-sm" />
+                <p class="text-xs text-red-500 mt-1 error-msg"></p>
             </div>
 
             <div>
-                <!-- ✅ UNIQUE ID for Email -->
-                <input type="email" id="user-email" name="email" placeholder="Email"
-                    class="w-full p-2 border rounded focus:outline-blue-500" required>
-                <p id="emailError" class="text-red-500 text-sm min-h-[20px] hidden">Enter a valid email</p>
+                <label class="block text-sm font-medium mb-1">Email Address</label>
+                <input name="email" type="email"
+                    class="form-input w-full border border-gray-200 px-3 py-2 rounded-md text-sm" />
+                <p class="text-xs text-red-500 mt-1 error-msg"></p>
             </div>
 
             <div>
-                <!-- ✅ UNIQUE ID for Phone -->
-                <input type="text" id="user-phone" name="phone" placeholder="Phone Number"
-                    class="w-full p-2 border rounded focus:outline-blue-500" required>
-                <p id="phoneError" class="text-red-500 text-sm min-h-[20px] hidden">Enter a valid phone number</p>
+                <label class="block text-sm font-medium mb-1">Phone</label>
+                <input name="phone" type="text"
+                    class="form-input w-full border border-gray-200 px-3 py-2 rounded-md text-sm" />
+                <p class="text-xs text-red-500 mt-1 error-msg"></p>
             </div>
 
             <div>
-                <!-- ✅ UNIQUE ID for Password -->
-                <input type="password" id="user-password" name="password" placeholder="Password"
-                    class="w-full p-2 border rounded focus:outline-blue-500" required>
-                <p id="passwordError" class="text-red-500 text-sm min-h-[20px] hidden">Password is required</p>
+                <label class="block text-sm font-medium mb-1">Password</label>
+                <input name="password" type="password"
+                    class="form-input w-full border border-gray-200 px-3 py-2 rounded-md text-sm" />
+                <p class="text-xs text-red-500 mt-1 error-msg"></p>
             </div>
 
-            <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Register</button>
+            <div class="flex items-start space-x-2">
+                <input type="checkbox" id="agree" class="mt-1">
+                <label for="agree" class="text-sm text-gray-600">
+                    I agree to the 
+                    <a href="#" class="text-[#803300] underline" data-modal-target="tos-modal" data-modal-toggle="tos-modal">Terms of Service</a> and
+                    <a href="#" class="text-[#803300] underline" data-modal-target="privacy-modal" data-modal-toggle="privacy-modal">Privacy Policy</a>.
+                </label>
+            </div>
         </form>
+        <%- include('../components/modals/login/tos-modal') %>
+        <%- include('../components/modals/login/privacy-modal') %>
 
-        <p class="text-center text-gray-600 mt-4">Already have an account?
-            <a href="/login" class="text-blue-600 hover:underline">Login</a>
-        </p>
+        <!-- Fixed button and footer -->
+        <div class="p-6 border-t border-gray-200 bg-white sticky bottom-0">
+            <button type="submit" form="registerForm"
+                class="w-full bg-[#803300] text-white py-2 rounded-md hover:bg-[#6b2a00] transition">
+                Create account
+            </button>
+            <p class="text-sm text-center text-gray-600 mt-2">
+                Already have an account?
+                <a href="/login" class="text-[#803300] font-medium hover:underline">Sign in</a>
+            </p>
+        </div>
     </div>
-</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+    <script>
+        document.getElementById("registerForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+    
+            let valid = true;
+    
+            // Helper to show/hide error messages
+            function showError(input, message) {
+                const error = input.parentElement.querySelector(".error-msg");
+                error.textContent = message;
+                error.classList.remove("hidden");
+                valid = false;
+            }
+    
+            function clearError(input) {
+                const error = input.parentElement.querySelector(".error-msg");
+                error.textContent = "";
+                error.classList.add("hidden");
+            }
+    
+            // Required fields
+            const fields = ["name", "address", "course", "semester", "rollno", "email", "phone", "password"];
+            fields.forEach((fieldName) => {
+                const input = document.querySelector(`input[name="${fieldName}"]`);
+                const value = input.value.trim();
+    
+                if (value === "") {
+                    showError(input, "This field is required");
+                } else {
+                    clearError(input);
+                }
+            });
+    
+            // Email validation
+            const emailInput = document.querySelector("input[name='email']");
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (emailInput.value.trim() !== "" && !emailRegex.test(emailInput.value.trim())) {
+                showError(emailInput, "Enter a valid email address");
+            }
+    
+            // Phone validation (Indian format)
+            const phoneInput = document.querySelector("input[name='phone']");
+            const phoneRegex = /^[6-9]\d{9}$/;
+            if (phoneInput.value.trim() !== "" && !phoneRegex.test(phoneInput.value.trim())) {
+                showError(phoneInput, "Enter a valid 10-digit phone number");
+            }
+    
+            // Semester should be number >= 1
+            const semesterInput = document.querySelector("input[name='semester']");
+            if (semesterInput.value.trim() !== "" && parseInt(semesterInput.value) < 1) {
+                showError(semesterInput, "Semester must be 1 or higher");
+            }
+    
+            // Password minimum length check
+            const passwordInput = document.querySelector("input[name='password']");
+            if (passwordInput.value.trim() !== "" && passwordInput.value.length < 6) {
+                showError(passwordInput, "Password must be at least 6 characters");
+            }
+    
+            // Agreement checkbox
+            const agreeCheckbox = document.getElementById("agree");
+            if (!agreeCheckbox.checked) {
+                alert("Please agree to the Terms of Service and Privacy Policy.");
+                valid = false;
+            }
+    
+            // Submit if valid
+            if (valid) {
+                this.submit();
+            }
+        });
+    </script>    
 
-<div role="status" id="loader"
-    class="fixed top-0 left-0 hidden bg-white w-full h-full items-center justify-center flex-col">
-    <p>You will receive an email from the library admin if your registration was successful. Then your account is ready to be logged in!</p>
-    <p>Redirecting to Homepage</p>
-    <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
-        viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591..." fill="currentColor" />
-        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116..." fill="currentFill" />
-    </svg>
-    <span class="sr-only">Loading...</span>
-</div>
-
-<script src="/javascript/registervalidation.js"></script>
+    <style>
+        .form-input {
+            @apply w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-yellow-300;
+        }
+    </style>
 </body>
+
 </html>

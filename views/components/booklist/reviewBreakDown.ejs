@@ -1,0 +1,63 @@
+<% 
+    const ratingCounts = [0, 0, 0, 0, 0]; 
+    let totalRating = 0; 
+    book.reviews.forEach(review => {
+        totalRating += review.rating;
+        ratingCounts[review.rating - 1]++;
+    });
+
+    const totalReviews = book.reviews.length;
+    const avgRating = totalReviews > 0 ? totalRating / totalReviews : 0;
+
+    function percentage(count) {
+        return totalReviews > 0 ? Math.round((count / totalReviews) * 100) : 0;
+    }
+%>
+<div class="bg-white p-6 rounded-xl shadow-sm w-full mt-4">
+    <h2 class="text-lg font-semibold mb-4">Rating Breakdown</h2>
+    <div class="flex items-center gap-6 mb-6">
+        <div class="text-center">
+            <div class="text-3xl font-bold">
+                <%= avgRating.toFixed(1) %>
+            </div>
+            <div class="flex justify-center text-yellow-400 text-lg mb-1">
+                <% for (let i = 1; i <= 5; i++) { %>
+                    <% if (i <= avgRating) { %>
+                        <i class="fa-solid fa-star"></i>
+                    <% } else if (i - avgRating < 1) { %>
+                        <i class="fa-solid fa-star-half-stroke"></i>
+                    <% } else { %>
+                        <i class="fa-regular fa-star text-gray-300"></i>
+                    <% } %>
+                <% } %>
+            </div>
+            <div class="text-sm text-gray-500">
+                <%= totalReviews %> ratings
+            </div>
+        </div>
+
+        <div class="flex-1 space-y-2 text-sm">
+            <% for (let star = 5; star >= 1; star--) { %>
+                <div class="flex items-center gap-2">
+                    <div class="w-10 flex items-center">
+                        <span class="text-yellow-500 font-medium"><%= star %></span>
+                        <svg class="w-3 h-3 text-yellow-400 ml-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.176 3.617h3.8c.969 0 1.371 1.24.588 1.81L13.64 11.59l1.176 3.618c.3.921-.755 1.688-1.538 1.118L10 13.348l-3.073 2.236c-.783.57-1.838-.197-1.538-1.118l1.176-3.618-3.073-2.236c-.783-.57-.38-1.81.588-1.81h3.8L9.049 2.927z" />
+                        </svg>
+                    </div>
+                    <div class="w-full h-2 bg-gray-200 rounded overflow-hidden">
+                        <% const percent = percentage(ratingCounts[star - 1]); %>
+                        <% if (percent > 0) { %>
+                            <div class="h-full bg-gray-800" style="width: <%= percent %>%"></div>
+                        <% } %>
+                    </div>
+                    <div class="w-24 text-right text-gray-600 flex justify-end gap-1">
+                        <span><%= ratingCounts[star - 1] %></span>
+                        <span class="text-gray-400">(<%= percent %>%)</span>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>
