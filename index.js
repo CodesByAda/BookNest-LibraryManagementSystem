@@ -92,6 +92,13 @@ app.use(notFoundMiddleware);
 app.use(errorMiddleware);
 
 
-server.listen(port, () => {
-    console.log(`✅ Server running on http://localhost:${port}/`);
+const PORT = process.env.PORT || 3000;
+
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`✅ Server running on port ${PORT}`);
+  if (process.env.NODE_ENV === 'production') {
+    console.log(`Visit your Render URL to access the app.`);
+  } else {
+    console.log(`Local: http://localhost:${PORT}/`);
+  }
 });
