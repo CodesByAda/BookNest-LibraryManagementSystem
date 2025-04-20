@@ -1,0 +1,145 @@
+<!-- Main Modal (Student Login) -->
+<div id="login-modal" tabindex="-1" aria-hidden="true" 
+    class="hidden fixed inset-0 z-50 flex items-center justify-center w-full h-full bg-black/10 backdrop-blur-[3px]">
+
+    <div class="relative p-4 w-full max-w-md">
+        <!-- Modal Content -->
+        <div class="bg-white rounded-lg shadow-lg">
+
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between p-5 text-white rounded-t bg-blue-500">
+                <h3 class="text-lg font-semibold flex items-center gap-2">
+                    <i class="fas fa-user-graduate"></i> Student Login
+                </h3>
+
+                <!-- Close Button -->
+                <button type="button" 
+                    class="hover:cursor-pointer bg-transparent rounded-lg text-sm p-2" 
+                    data-modal-hide="login-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-6">
+                <form action="/login" method="POST" class="space-y-6">
+
+                    <!-- Email Field with Floating Label -->
+                    <div class="relative">
+                        <input type="text" name="email" id="email" placeholder=" "
+                            class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" required>
+                        <label for="email" 
+                            class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 bg-white px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4">
+                            <i class="fas fa-envelope"></i> User Email
+                        </label>
+                    </div>
+
+                    <!-- Password Field with Floating Label -->
+                    <div class="relative">
+                        <input type="password" name="password" id="password" placeholder=" "
+                            class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" required>
+                        <label for="password" 
+                            class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 bg-white px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4">
+                            <i class="fas fa-lock"></i> Password
+                        </label>
+                    </div>
+
+                    <!-- Login Button -->
+                    <button type="submit" 
+                        class="w-full bg-[#316de5] text-white hover:bg-blue-700 rounded-md px-5 py-2.5 text-center font-medium">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                </form>
+
+                <!-- Links Section -->
+                <div class="mt-4 text-center text-sm space-y-2">
+                    <p>Don't have an account? 
+                        <a href="/register" class="text-[#316de5] hover:underline">Request here.</a>
+                    </p>
+                    <p>Admin? 
+                        <a href="#" class="text-[#316de5] hover:underline" id="open-admin-modal">Login here.</a>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Admin Modal -->
+<div id="admin-modal" tabindex="-1" aria-hidden="true" 
+    class="hidden fixed inset-0 z-50 flex items-center justify-center w-full h-full bg-black/10 backdrop-blur-[3px]">
+
+    <div class="relative p-4 w-full max-w-md">
+        <!-- Modal Content -->
+        <div class="bg-white rounded-lg shadow-lg">
+
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between p-5 text-white rounded-t bg-blue-500">
+                <h3 class="text-lg font-semibold flex items-center gap-2">
+                    <i class="fas fa-user-shield"></i> Admin Login
+                </h3>
+
+                <!-- Close Button -->
+                <button type="button" 
+                    class="hover:cursor-pointer bg-transparent rounded-lg text-sm p-2" 
+                    data-modal-hide="admin-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-6">
+                <form action="/adminlogin" method="POST" class="space-y-6">
+
+                    <!-- Username Field with Floating Label -->
+                    <div class="relative">
+                        <input type="text" name="email" id="admin-email" placeholder=" "
+                            class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" required>
+                        <label for="admin-email" 
+                            class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 bg-white px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4">
+                            <i class="fas fa-user"></i> Admin Username
+                        </label>
+                    </div>
+
+                    <!-- Password Field with Floating Label -->
+                    <div class="relative">
+                        <input type="password" name="password" id="admin-password" placeholder=" "
+                            class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" required>
+                        <label for="admin-password" 
+                            class="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 bg-white px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4">
+                            <i class="fas fa-lock"></i> Password
+                        </label>
+                    </div>
+
+                    <!-- Login Button -->
+                    <button type="submit" 
+                        class="w-full bg-[#316de5] text-white hover:bg-blue-700 rounded-md px-5 py-2.5 text-center font-medium">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    // Script to toggle between Student and Admin modals
+    const openAdminModal = document.getElementById('open-admin-modal');
+    const adminModal = document.getElementById('admin-modal');
+    const loginModal = document.getElementById('login-modal');
+
+    openAdminModal.addEventListener('click', () => {
+        // Hide student modal, show admin modal
+        loginModal.classList.add('hidden');
+        adminModal.classList.remove('hidden');
+    });
+
+    // Close buttons
+    document.querySelectorAll('[data-modal-hide]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            btn.closest('.z-50').classList.add('hidden');
+        });
+    });
+</script>
