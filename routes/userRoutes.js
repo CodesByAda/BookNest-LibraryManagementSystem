@@ -190,32 +190,6 @@ router.get("/dashboard", isLoggedIn, async (req, res, next) => {
     }
 });
 
-router.get("/announcements", isLoggedIn, async (req, res) => {
-    try {
-        const id = req.session.userId;
-
-        let profile = await User.findById(id) || await Admin.findById(id);
-        let isAdmin = await Admin.findById(req.session.userId) ? true : false;
-
-        if (!profile) {
-            return res.status(401).render("pages/error", {
-                errorCode: 401,
-                errorTitle: "Unauthorized",
-                errorMessage: "No student found with the current ID"
-            });
-        }
-        const announcements = await Announcement.find().sort({ createdAt: -1 });
-        res.render('pages/announcements', { announcements, profile, isAdmin });
-    } catch (err) {
-        console.error(err);
-        res.status(500).render("pages/error", {
-            errorCode: 500,
-            errorTitle: "Internal Server Error",
-            errorMessage: "Something went wrong. Please try again later."
-        });
-    }
-});
-
 router.post("/profile/:id/addBook", isLoggedIn, async (req, res) => {
     try {
         if (!req.session.userId) {

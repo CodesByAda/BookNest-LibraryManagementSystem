@@ -13,7 +13,7 @@
             <p class="text-gray-500 text-sm">Your account details and preferences</p>
           </div>
           <% if (isOwner) { %>
-            <button type="button" id="editBtn" class="text-yellow-600 hover:text-yellow-700">
+            <button type="button" id="editBtn" class="text-yellow-600 hover:text-yellow-700 hover:cursor-pointer">
               <i class="fa-solid fa-pen-to-square text-lg"></i>
             </button>
           <% } %>
@@ -85,15 +85,12 @@
         </div>
   
         <!-- Footer -->
-        <div class="flex justify-between items-center mt-6">
-          <p class=" text-orange-700 font-semibold">
-            BookNest ID: <span class="text-gray-500 text-sm"><%= profile._id %></span>
-          </p>  
-          <div id="actionButtons" class="space-x-2 hidden">
+        <div class="flex justify-between items-center mt-6">  
+          <div id="actionButtons" class="space-x-2 hidden mb-4">
             <button type="button" id="cancelBtn"
-              class="px-4 py-1 text-sm border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">Cancel</button>
+              class="px-4 py-1 text-sm border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 hover:cursor-pointer">Cancel</button>
             <button type="submit" id="saveBtn"
-              class="px-4 py-1 text-sm bg-yellow-500 hover:bg-yellow-600 text-white rounded-md">Save</button>
+              class="px-4 py-1 text-sm bg-green-500 hover:bg-green-600 text-white rounded-md hover:cursor-pointer">Save</button>
           </div>
         </div>
       </form>
@@ -105,6 +102,9 @@
         </button>
       <%- include("../modals/profile/changePassModal") %>
     <% } %>
+    <p class=" text-orange-700 font-semibold">
+      BookNest ID: <span class="text-gray-500 text-sm"><%= profile._id %></span>
+    </p>
     </div>
     
 
